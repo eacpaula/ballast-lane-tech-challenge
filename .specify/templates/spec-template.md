@@ -10,26 +10,27 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-<!--
-  IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
-  Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
-  you should still have a viable MVP (Minimum Viable Product) that delivers value.
-
-  Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
-  Think of each story as a standalone slice of functionality that can be:
-  - Developed independently
-  - Tested independently
-  - Deployed independently
-  - Demonstrated to users independently
--->
+User stories MUST be prioritized by delivery order and independently testable.
+For this repository, backend behavior is the primary unit of delivery: each
+story MUST state the business rules it exercises and the tests that will be
+written before implementation begins.
 
 ### User Story 1 - [Brief Title] (Priority: P1)
 
 [Describe this user journey in plain language]
 
-**Why this priority**: [Explain the value and why it has this priority level]
+**Why this priority**: [Explain why this story is first]
 
-**Independent Test**: [Describe how this can be tested independently - e.g., "Can be fully tested by [specific action] and delivers [specific value]"]
+**Business Rules Covered**: [List the validation, authorization, ownership, or
+other rules this story must enforce]
+
+**Independent Test**: [Describe how this story is proven end to end]
+
+**Required Failing Tests First**:
+
+- Unit/Application: [Describe the first failing test for the core rule]
+- API Integration: [Describe the failing endpoint test]
+- Repository: [Describe any PostgreSQL-backed repository test if applicable]
 
 **Acceptance Scenarios**:
 
@@ -42,9 +43,17 @@
 
 [Describe this user journey in plain language]
 
-**Why this priority**: [Explain the value and why it has this priority level]
+**Why this priority**: [Explain why this story follows P1]
 
-**Independent Test**: [Describe how this can be tested independently]
+**Business Rules Covered**: [List the important rules]
+
+**Independent Test**: [Describe how this story is proven independently]
+
+**Required Failing Tests First**:
+
+- Unit/Application: [Describe the first failing test]
+- API Integration: [Describe the failing endpoint test]
+- Repository: [Describe any repository test if applicable]
 
 **Acceptance Scenarios**:
 
@@ -56,9 +65,17 @@
 
 [Describe this user journey in plain language]
 
-**Why this priority**: [Explain the value and why it has this priority level]
+**Why this priority**: [Explain why this story is later]
 
-**Independent Test**: [Describe how this can be tested independently]
+**Business Rules Covered**: [List the important rules]
+
+**Independent Test**: [Describe how this story is proven independently]
+
+**Required Failing Tests First**:
+
+- Unit/Application: [Describe the first failing test]
+- API Integration: [Describe the failing endpoint test]
+- Repository: [Describe any repository test if applicable]
 
 **Acceptance Scenarios**:
 
@@ -68,35 +85,27 @@
 
 [Add more user stories as needed, each with an assigned priority]
 
-### Edge Cases
+## Edge Cases
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right edge cases.
--->
-
-- What happens when [boundary condition]?
-- How does system handle [error scenario]?
+- How does the backend reject unauthenticated access where protection is
+  required?
+- How does the backend reject non-admin access to admin-only behavior?
+- How does the backend reject ownership violations?
+- What happens when validation fails or related data does not exist?
+- What error contract should the API return for each failure mode?
 
 ## Requirements *(mandatory)*
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right functional requirements.
--->
-
 ### Functional Requirements
 
-- **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
-- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]
-- **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
-- **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
-- **FR-005**: System MUST [behavior, e.g., "log all security events"]
-
-*Example of marking unclear requirements:*
-
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-001**: System MUST [specific capability]
+- **FR-002**: System MUST enforce [specific business rule]
+- **FR-003**: System MUST return ProblemDetails-style responses for
+  [specific failure mode]
+- **FR-004**: System MUST persist [specific data] using the approved
+  architecture boundaries
+- **FR-005**: Frontend behavior MUST depend on backend-enforced rules rather
+  than replace them
 
 ### Key Entities *(include if feature involves data)*
 
@@ -105,27 +114,26 @@
 
 ## Success Criteria *(mandatory)*
 
-<!--
-  ACTION REQUIRED: Define measurable success criteria.
-  These must be technology-agnostic and measurable.
--->
-
 ### Measurable Outcomes
 
-- **SC-001**: [Measurable metric, e.g., "Users can complete account creation in under 2 minutes"]
-- **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
-- **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
-- **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+- **SC-001**: [Measurable user or API outcome]
+- **SC-002**: [Measurable validation, authorization, or workflow outcome]
+- **SC-003**: [Measurable end-to-end story outcome]
+
+## Backend-First Delivery Plan
+
+- Backend API changes required for this feature: [list endpoints/services first]
+- Domain/Application rules required before UI work: [list rules]
+- Persistence changes required before UI work: [list tables/queries]
+- Frontend work that depends on stable backend behavior: [list pages/components]
+
+## Out of Scope
+
+- [Explicitly list nearby ideas that are intentionally excluded]
 
 ## Assumptions
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right assumptions based on reasonable defaults
-  chosen when the feature description did not specify certain details.
--->
-
-- [Assumption about target users, e.g., "Users have stable internet connectivity"]
-- [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
-- [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
-- [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
+- [Assumption about target users or usage]
+- [Assumption about scope boundaries]
+- [Assumption about data or environment]
+- [Assumption about existing dependencies]
