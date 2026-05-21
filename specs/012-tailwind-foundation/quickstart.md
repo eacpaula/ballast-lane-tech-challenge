@@ -13,8 +13,9 @@ that the minimal validation shell reflects the approved design direction from
 
 ## Steps
 
-1. Install frontend dependencies from `src/frontend/blog-web`.
-2. Start the local development server.
+1. Install frontend dependencies from `src/frontend/blog-web` with
+   `npm install`.
+2. Start the local development server with `npm run dev`.
 3. Open the local frontend URL shown by the dev server.
 4. Confirm the starter Vite screen has been replaced by a minimal styling proof
    shell.
@@ -26,10 +27,12 @@ that the minimal validation shell reflects the approved design direction from
    - a metadata/tag treatment
 6. Resize to a mobile-width viewport and confirm spacing and layout still read
    cleanly.
-7. Run the frontend build and confirm it succeeds.
+7. Run `npm run lint`.
+8. Run the frontend build with `npm run build` and confirm it succeeds.
 
 ## Expected Outcome
 
 - TailwindCSS is active in the frontend app
 - Shared tokens drive the first-pass visual system
 - The frontend is ready for later UI slices without relying on starter CSS
+- Lint and build complete successfully for the Tailwind foundation slice

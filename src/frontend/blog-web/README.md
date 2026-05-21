@@ -1,73 +1,45 @@
-# React + TypeScript + Vite
+# Blog Web Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Purpose
 
-Currently, two official plugins are available:
+This app is the React + Vite frontend for the blog platform technical challenge.
+The current slice establishes the TailwindCSS styling foundation that future UI
+features will build on.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run Locally
 
-## React Compiler
+From this directory:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open the local URL printed by Vite, typically `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Validation Commands
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run lint
+npm run build
 ```
+
+## Tailwind Foundation Notes
+
+- The frontend uses TailwindCSS with the Vite integration plugin.
+- Shared design tokens are centralized in
+  [tailwind.config.ts](./tailwind.config.ts).
+- Global base styles are defined in [src/index.css](./src/index.css).
+- Reusable shell primitives for the first UI layer are defined in
+  [src/styles/components.css](./src/styles/components.css).
+- Visual direction comes from the repository-level `DESIGN.md`.
+
+## Current Scope
+
+- Tailwind configuration
+- Shared design tokens
+- Accessible base styles
+- Minimal validation shell
+
+The app intentionally does not include full pages, backend API integration,
+authentication UI, or admin workflows yet.

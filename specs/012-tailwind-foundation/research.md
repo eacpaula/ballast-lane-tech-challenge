@@ -73,3 +73,16 @@
     weight and weakens the interview value of the custom design direction.
   - Add dark mode now: possible, but not required and likely to distract from
     the primary styling foundation goal.
+
+## Decision 7: Normalize the first-pass token map around interview-proof use
+
+- **Decision**: Use a practical first-pass token map that captures the approved
+  background, surface, ink, brand, spacing, radius, shadow, and container
+  values while keeping the setup small.
+- **Rationale**: `DESIGN.md` provides a rich palette, but this slice only needs
+  the subset required to style a proof shell and establish future consistency.
+- **Alternatives considered**:
+  - Port every documented token immediately: more complete, but unnecessary for
+    the current scope.
+  - Keep only generic defaults with no named tokens: faster, but too weak for
+    future design-system reuse.

@@ -51,7 +51,7 @@ Anonymous visitors can read public posts and react with likes or dislikes. Authe
 - React
 - TypeScript
 - Vite
-- React Router
+- TailwindCSS
 
 ### Tooling
 
@@ -188,3 +188,31 @@ the configured local frontend origins for browser-based development:
 - Category create, update, and deactivate endpoints remain administrator-only.
 - Tag listing is intentionally deferred in this slice; the frontend should not
   assume a tag-selection endpoint exists yet.
+
+## Local Frontend Setup
+
+Run the frontend app from `src/frontend/blog-web`:
+
+```bash
+cd src/frontend/blog-web
+npm install
+npm run dev
+```
+
+Validation commands:
+
+```bash
+npm run lint
+npm run build
+```
+
+### Frontend Foundation Notes
+
+- TailwindCSS is configured as the frontend styling foundation.
+- Shared visual tokens live in
+  `src/frontend/blog-web/tailwind.config.ts`.
+- Global base styles live in `src/frontend/blog-web/src/index.css`.
+- The minimal shell is intentionally narrow and exists only to prove the
+  styling foundation before full screens are implemented.
+- Frontend design direction follows `DESIGN.md` and does not copy Ballast Lane
+  branding directly.

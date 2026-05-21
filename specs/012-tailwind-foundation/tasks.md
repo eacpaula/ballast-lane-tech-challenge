@@ -35,14 +35,14 @@ implementation and verification of the frontend foundation slice.
 **Purpose**: Confirm the current frontend shape and add the minimum dependencies
 needed for Tailwind foundation work.
 
-- [ ] T001 Review `DESIGN.md` and record the approved color, typography,
+- [X] T001 Review `DESIGN.md` and record the approved color, typography,
       spacing, radius, shadow, and layout guidance in
       `specs/012-tailwind-foundation/research.md`
-- [ ] T002 Inspect the existing frontend starter structure in
+- [X] T002 Inspect the existing frontend starter structure in
       `src/frontend/blog-web/package.json`, `src/frontend/blog-web/src/App.tsx`,
       and `src/frontend/blog-web/src/index.css` before replacing the demo
       styling
-- [ ] T003 Install TailwindCSS and the Vite integration dependency by updating
+- [X] T003 Install TailwindCSS and the Vite integration dependency by updating
       `src/frontend/blog-web/package.json` and
       `src/frontend/blog-web/package-lock.json`
 
@@ -56,22 +56,22 @@ work will inherit.
 **CRITICAL**: User-story UI validation work depends on this phase being
 complete.
 
-- [ ] T004 Configure Tailwind for the Vite app in
+- [X] T004 Configure Tailwind for the Vite app in
       `src/frontend/blog-web/vite.config.ts`
-- [ ] T005 Create the Tailwind configuration file in
+- [X] T005 Create the Tailwind configuration file in
       `src/frontend/blog-web/tailwind.config.ts`
-- [ ] T006 Configure Tailwind content paths for the existing app and planned
+- [X] T006 Configure Tailwind content paths for the existing app and planned
       shared folders in `src/frontend/blog-web/tailwind.config.ts`
-- [ ] T007 Create the shared frontend styles folder in
+- [X] T007 Create the shared frontend styles folder in
       `src/frontend/blog-web/src/styles/`
-- [ ] T008 Map color, typography, spacing, radius, shadow, and layout tokens
+- [X] T008 Map color, typography, spacing, radius, shadow, and layout tokens
       from `DESIGN.md` into `src/frontend/blog-web/tailwind.config.ts`
-- [ ] T009 Replace the starter global stylesheet with a clean Tailwind entry
+- [X] T009 Replace the starter global stylesheet with a clean Tailwind entry
       point and base layer in `src/frontend/blog-web/src/index.css`
-- [ ] T010 [P] Remove or simplify redundant starter demo styles in
+- [X] T010 [P] Remove or simplify redundant starter demo styles in
       `src/frontend/blog-web/src/App.css` after the global Tailwind layer is in
       place
-- [ ] T011 [P] Define reusable layout and surface utility patterns in
+- [X] T011 [P] Define reusable layout and surface utility patterns in
       `src/frontend/blog-web/src/styles/` if the tokenized foundation needs a
       small shared helper layer
 
@@ -93,29 +93,29 @@ build succeeds.
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Replace the starter Vite demo markup with a minimal validation
+- [X] T012 [US1] Replace the starter Vite demo markup with a minimal validation
       shell in `src/frontend/blog-web/src/App.tsx`
-- [ ] T013 [US1] Wire the validation shell to the Tailwind-driven global
+- [X] T013 [US1] Wire the validation shell to the Tailwind-driven global
       stylesheet through `src/frontend/blog-web/src/main.tsx` and
       `src/frontend/blog-web/src/App.tsx`
-- [ ] T014 [US1] Apply the approved headline, body, and metadata hierarchy in
+- [X] T014 [US1] Apply the approved headline, body, and metadata hierarchy in
       `src/frontend/blog-web/src/App.tsx` using centralized Tailwind tokens
-- [ ] T015 [US1] Add a centered responsive container and section spacing
+- [X] T015 [US1] Add a centered responsive container and section spacing
       foundation in `src/frontend/blog-web/src/App.tsx` and
       `src/frontend/blog-web/src/index.css`
-- [ ] T016 [US1] Add one surface/card example and one action/control example in
+- [X] T016 [US1] Add one surface/card example and one action/control example in
       `src/frontend/blog-web/src/App.tsx` to prove surface, border, radius, and
       shadow tokens are active
-- [ ] T017 [US1] Add one tag or metadata treatment in
+- [X] T017 [US1] Add one tag or metadata treatment in
       `src/frontend/blog-web/src/App.tsx` to prove mono/label styling is
       available for future technical UI
-- [ ] T018 [US1] Add accessibility-friendly defaults for focus states, readable
+- [X] T018 [US1] Add accessibility-friendly defaults for focus states, readable
       typography, and semantic structure in
       `src/frontend/blog-web/src/index.css` and
       `src/frontend/blog-web/src/App.tsx`
-- [ ] T019 [US1] Validate the minimal shell at mobile and desktop widths using
+- [X] T019 [US1] Validate the minimal shell at mobile and desktop widths using
       the criteria in `specs/012-tailwind-foundation/quickstart.md`
-- [ ] T020 [US1] Run the frontend build validation from
+- [X] T020 [US1] Run the frontend build validation from
       `src/frontend/blog-web/package.json` and confirm the Tailwind foundation
       compiles successfully
 
@@ -128,16 +128,16 @@ build succeeds.
 **Purpose**: Finish documentation and verify the slice remains small and
 maintainable.
 
-- [ ] T021 [P] Update frontend run/build instructions and Tailwind foundation
+- [X] T021 [P] Update frontend run/build instructions and Tailwind foundation
       notes in `src/frontend/blog-web/README.md`
-- [ ] T022 [P] Update root-level frontend execution guidance in `README.md` if
+- [X] T022 [P] Update root-level frontend execution guidance in `README.md` if
       the current instructions do not mention the frontend app clearly
-- [ ] T023 Re-run the frontend validation flow in
+- [X] T023 Re-run the frontend validation flow in
       `specs/012-tailwind-foundation/quickstart.md` and record any follow-up
       notes in `specs/012-tailwind-foundation/quickstart.md`
-- [ ] T024 Review `src/frontend/blog-web/` for unnecessary starter assets,
+- [X] T024 Review `src/frontend/blog-web/` for unnecessary starter assets,
       styles, or abstractions and remove anything no longer needed
-- [ ] T025 Confirm the implementation did not introduce full pages, backend API
+- [X] T025 Confirm the implementation did not introduce full pages, backend API
       integration, heavy UI frameworks, copied Ballast Lane branding, or other
       out-of-scope work
 
