@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: blog-platform-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${BLOG_PLATFORM_DB_NAME:-blogplatform}
+      POSTGRES_USER: ${BLOG_PLATFORM_DB_USER:-blogplatform}
+      POSTGRES_PASSWORD: ${BLOG_PLATFORM_DB_PASSWORD:-blogplatform}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${BLOG_PLATFORM_DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+      - ./database/scripts:/docker-entrypoint-initdb.d:ro
+      - ./database/seeds:/seed-data:ro

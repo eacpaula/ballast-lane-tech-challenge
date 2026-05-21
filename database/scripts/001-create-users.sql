@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    fullname VARCHAR(200) NOT NULL,
+    bio TEXT NULL,
+    birthday DATE NULL,
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    email VARCHAR(320) NOT NULL UNIQUE,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    creation_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    update_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    creation_user_id INTEGER NULL REFERENCES users(id),
+    update_user_id INTEGER NULL REFERENCES users(id)
+);
