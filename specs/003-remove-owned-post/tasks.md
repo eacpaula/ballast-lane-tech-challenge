@@ -30,8 +30,8 @@ description: "Task list for authenticated user removes only their own blog post"
 
 **Purpose**: Prepare the minimal test and source structure for the remove-post slice without expanding scope.
 
-- [ ] T001 Create remove-post test folder structure in `tests/backend/BlogPlatform.Application.Tests/Posts/`
-- [ ] T002 Create remove-post source folder structure in `src/backend/BlogPlatform.Application/Posts/`
+- [X] T001 Create remove-post test folder structure in `tests/backend/BlogPlatform.Application.Tests/Posts/`
+- [X] T002 Create remove-post source folder structure in `src/backend/BlogPlatform.Application/Posts/`
 
 ---
 
@@ -41,8 +41,8 @@ description: "Task list for authenticated user removes only their own blog post"
 
 **CRITICAL**: No remove-post behavior is implemented until the reusable Application abstractions are identified.
 
-- [ ] T003 Review read/delete reuse points in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
-- [ ] T004 Review loaded post ownership data reuse in `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
+- [X] T003 Review read/delete reuse points in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T004 Review loaded post ownership data reuse in `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
 
 **Checkpoint**: The project is ready for story-specific TDD work.
 
@@ -58,21 +58,21 @@ description: "Task list for authenticated user removes only their own blog post"
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T005 [P] [US1] Add failing Application test for successful owned-post removal in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerSuccessTests.cs`
-- [ ] T006 [P] [US1] Add failing Application test for missing post rejection in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerMissingPostTests.cs`
-- [ ] T007 [P] [US1] Add failing Application test for non-owner rejection in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerOwnershipTests.cs`
-- [ ] T008 [P] [US1] Add failing Application test for missing authenticated user in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerAuthenticationTests.cs`
-- [ ] T009 [P] [US1] Add failing Application assertion coverage for deletion occurring only after ownership validation in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerOwnershipTests.cs`
-- [ ] T010 [P] [US1] Add failing Application assertion coverage for clear success and failure results in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerSuccessTests.cs`, `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerMissingPostTests.cs`, and `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerAuthenticationTests.cs`
+- [X] T005 [P] [US1] Add failing Application test for successful owned-post removal in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerSuccessTests.cs`
+- [X] T006 [P] [US1] Add failing Application test for missing post rejection in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerMissingPostTests.cs`
+- [X] T007 [P] [US1] Add failing Application test for non-owner rejection in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerOwnershipTests.cs`
+- [X] T008 [P] [US1] Add failing Application test for missing authenticated user in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerAuthenticationTests.cs`
+- [X] T009 [P] [US1] Add failing Application assertion coverage for deletion occurring only after ownership validation in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerOwnershipTests.cs`
+- [X] T010 [P] [US1] Add failing Application assertion coverage for clear success and failure results in `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerSuccessTests.cs`, `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerMissingPostTests.cs`, and `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandlerAuthenticationTests.cs`
 
 ### Backend Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Create remove-post command input model in `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostCommand.cs`
-- [ ] T012 [P] [US1] Create remove-post result model in `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostResult.cs`
-- [ ] T013 [P] [US1] Extend repository abstraction for load/delete behavior in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
-- [ ] T014 [US1] Implement owned-post removal orchestration in `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostHandler.cs`
-- [ ] T015 [US1] Refactor handler result shaping and deletion flow in `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostHandler.cs` and `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostResult.cs`
-- [ ] T016 [US1] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandler*.cs`
+- [X] T011 [P] [US1] Create remove-post command input model in `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostCommand.cs`
+- [X] T012 [P] [US1] Create remove-post result model in `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostResult.cs`
+- [X] T013 [P] [US1] Extend repository abstraction for load/delete behavior in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T014 [US1] Implement owned-post removal orchestration in `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostHandler.cs`
+- [X] T015 [US1] Refactor handler result shaping and deletion flow in `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostHandler.cs` and `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostResult.cs`
+- [X] T016 [US1] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Application.Tests/Posts/RemoveBlogPostHandler*.cs`
 
 **Checkpoint**: User Story 1 is fully functional within Application and can be demonstrated without API, Infrastructure, frontend, or database work.
 
@@ -82,9 +82,9 @@ description: "Task list for authenticated user removes only their own blog post"
 
 **Purpose**: Confirm the slice remains small, reviewable, and aligned with the plan.
 
-- [ ] T017 [P] Update feature notes if needed in `specs/003-remove-owned-post/quickstart.md`
-- [ ] T018 Run the backend Application test project in `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`
-- [ ] T019 Review final remove-post code paths in `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostHandler.cs` and `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T017 [P] Update feature notes if needed in `specs/003-remove-owned-post/quickstart.md`
+- [X] T018 Run the backend Application test project in `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`
+- [X] T019 Review final remove-post code paths in `src/backend/BlogPlatform.Application/Posts/RemoveBlogPostHandler.cs` and `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
 
 ---
 

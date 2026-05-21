@@ -43,6 +43,11 @@ public class EditBlogPostHandlerOwnershipTests
             throw new NotSupportedException();
         }
 
+        public Task DeleteAsync(int postId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<BlogPost?> GetByIdAsync(int postId, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<BlogPost?>(existingPost);

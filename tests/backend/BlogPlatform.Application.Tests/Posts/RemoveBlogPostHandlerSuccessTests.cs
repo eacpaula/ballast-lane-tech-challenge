@@ -4,10 +4,10 @@ using BlogPlatform.Domain.Posts;
 
 namespace BlogPlatform.Application.Tests.Posts;
 
-public class EditBlogPostHandlerSuccessTests
+public class RemoveBlogPostHandlerSuccessTests
 {
     [Fact]
-    public async Task HandleAsync_WithOwnedPostAndValidInput_UpdatesPostAndReturnsSuccess()
+    public async Task HandleAsync_WithOwnedPost_RemovesPostAndReturnsSuccess()
     {
         var existingPost = BlogPost.Rehydrate(
             id: 42,
@@ -17,31 +17,29 @@ public class EditBlogPostHandlerSuccessTests
             summary: "Original summary",
             content: "Original content");
 
-        var postRepository = new FakePostRepository(existingPost);
-        var handler = new EditBlogPostHandler(postRepository);
+        var postRepository = new TrackingPostRepository(existingPost);
+        var handler = new RemoveBlogPostHandler(postRepository);
 
-        var command = new EditBlogPostCommand(
+        var command = new RemoveBlogPostCommand(
             AuthenticatedUserId: 7,
-            PostId: 42,
-            Title: "Updated title",
-            Summary: "Updated summary",
-            Content: "Updated content");
+            PostId: 42);
 
         var result = await handler.HandleAsync(command);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(42, result.PostId);
         Assert.Equal(7, result.AuthorUserId);
-        Assert.Equal("Updated title", result.Title);
-        Assert.Equal("Updated summary", result.Summary);
-        Assert.Equal("Updated content", result.Content);
-        Assert.NotNull(postRepository.UpdatedPost);
-        Assert.Equal("Updated title", postRepository.UpdatedPost!.Title);
+        Assert.Null(result.ErrorCode);
+        Assert.Null(result.ErrorMessage);
+        Assert.True(postRepository.DeleteWasCalled);
+        Assert.Equal(42, postRepository.DeletedPostId);
     }
 
-    private sealed class FakePostRepository(BlogPost existingPost) : IPostRepository
+    private sealed class TrackingPostRepository(BlogPost existingPost) : IPostRepository
     {
-        public BlogPost? UpdatedPost { get; private set; }
+        public bool DeleteWasCalled { get; private set; }
+
+        public int? DeletedPostId { get; private set; }
 
         public Task<BlogPost> CreateAsync(BlogPost post, CancellationToken cancellationToken = default)
         {
@@ -50,7 +48,9 @@ public class EditBlogPostHandlerSuccessTests
 
         public Task DeleteAsync(int postId, CancellationToken cancellationToken = default)
         {
-            throw new NotSupportedException();
+            DeleteWasCalled = true;
+            DeletedPostId = postId;
+            return Task.CompletedTask;
         }
 
         public Task<BlogPost?> GetByIdAsync(int postId, CancellationToken cancellationToken = default)
@@ -60,8 +60,7 @@ public class EditBlogPostHandlerSuccessTests
 
         public Task<BlogPost> UpdateAsync(BlogPost post, CancellationToken cancellationToken = default)
         {
-            UpdatedPost = post;
-            return Task.FromResult(post);
+            throw new NotSupportedException();
         }
     }
 }

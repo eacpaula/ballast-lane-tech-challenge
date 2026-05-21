@@ -84,3 +84,8 @@ Do not add or change:
 
 Those layers come only after the core remove-post use case is stable and
 test-covered.
+
+## Current implementation note
+
+The current core slice is satisfied by Application-layer tests and production
+code only. No remove-post-specific Domain behavior was required.
