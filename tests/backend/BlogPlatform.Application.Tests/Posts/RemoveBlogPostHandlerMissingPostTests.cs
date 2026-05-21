@@ -4,25 +4,25 @@ using BlogPlatform.Domain.Posts;
 
 namespace BlogPlatform.Application.Tests.Posts;
 
-public class EditBlogPostHandlerMissingPostTests
+public class RemoveBlogPostHandlerMissingPostTests
 {
     [Fact]
     public async Task HandleAsync_WithMissingPost_ReturnsPostNotFoundFailure()
     {
         var postRepository = new MissingPostRepository();
-        var handler = new EditBlogPostHandler(postRepository);
+        var handler = new RemoveBlogPostHandler(postRepository);
 
-        var command = new EditBlogPostCommand(
+        var command = new RemoveBlogPostCommand(
             AuthenticatedUserId: 7,
-            PostId: 42,
-            Title: "Updated title",
-            Summary: "Updated summary",
-            Content: "Updated content");
+            PostId: 42);
 
         var result = await handler.HandleAsync(command);
 
         Assert.False(result.IsSuccess);
+        Assert.Null(result.PostId);
+        Assert.Null(result.AuthorUserId);
         Assert.Equal("PostNotFound", result.ErrorCode);
+        Assert.Equal("The requested post was not found.", result.ErrorMessage);
     }
 
     private sealed class MissingPostRepository : IPostRepository

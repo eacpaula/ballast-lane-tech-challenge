@@ -4,45 +4,40 @@ using BlogPlatform.Domain.Posts;
 
 namespace BlogPlatform.Application.Tests.Posts;
 
-public class EditBlogPostHandlerValidationTests
+public class RemoveBlogPostHandlerOwnershipTests
 {
-    [Theory]
-    [InlineData("", "Updated content")]
-    [InlineData("   ", "Updated content")]
-    [InlineData("Updated title", "")]
-    [InlineData("Updated title", "   ")]
-    public async Task HandleAsync_WithInvalidTitleOrContent_ReturnsValidationFailure(
-        string title,
-        string content)
+    [Fact]
+    public async Task HandleAsync_WithNonOwner_ReturnsForbiddenFailureWithoutDeleting()
     {
         var existingPost = BlogPost.Rehydrate(
             id: 42,
-            authorUserId: 7,
+            authorUserId: 8,
             categoryId: 3,
             title: "Original title",
             summary: "Original summary",
             content: "Original content");
 
         var postRepository = new TrackingPostRepository(existingPost);
-        var handler = new EditBlogPostHandler(postRepository);
+        var handler = new RemoveBlogPostHandler(postRepository);
 
-        var command = new EditBlogPostCommand(
+        var command = new RemoveBlogPostCommand(
             AuthenticatedUserId: 7,
-            PostId: 42,
-            Title: title,
-            Summary: "Updated summary",
-            Content: content);
+            PostId: 42);
 
         var result = await handler.HandleAsync(command);
 
         Assert.False(result.IsSuccess);
-        Assert.Equal("ValidationError", result.ErrorCode);
-        Assert.False(postRepository.UpdateWasCalled);
+        Assert.Equal("ForbiddenPostRemoval", result.ErrorCode);
+        Assert.Equal("Users can remove only posts they own.", result.ErrorMessage);
+        Assert.True(postRepository.GetByIdWasCalled);
+        Assert.False(postRepository.DeleteWasCalled);
     }
 
     private sealed class TrackingPostRepository(BlogPost existingPost) : IPostRepository
     {
-        public bool UpdateWasCalled { get; private set; }
+        public bool GetByIdWasCalled { get; private set; }
+
+        public bool DeleteWasCalled { get; private set; }
 
         public Task<BlogPost> CreateAsync(BlogPost post, CancellationToken cancellationToken = default)
         {
@@ -51,18 +46,19 @@ public class EditBlogPostHandlerValidationTests
 
         public Task DeleteAsync(int postId, CancellationToken cancellationToken = default)
         {
-            throw new NotSupportedException();
+            DeleteWasCalled = true;
+            return Task.CompletedTask;
         }
 
         public Task<BlogPost?> GetByIdAsync(int postId, CancellationToken cancellationToken = default)
         {
+            GetByIdWasCalled = true;
             return Task.FromResult<BlogPost?>(existingPost);
         }
 
         public Task<BlogPost> UpdateAsync(BlogPost post, CancellationToken cancellationToken = default)
         {
-            UpdateWasCalled = true;
-            return Task.FromResult(post);
+            throw new NotSupportedException();
         }
     }
 }
