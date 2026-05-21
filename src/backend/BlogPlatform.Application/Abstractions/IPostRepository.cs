@@ -10,5 +10,9 @@ public interface IPostRepository
 
     Task<BlogPost?> GetByIdAsync(int postId, CancellationToken cancellationToken = default);
 
+    Task<BlogPost?> GetPublicReadByIdAsync(int postId, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<BlogPost>> ListPublicReadAsync(CancellationToken cancellationToken = default);
+
     Task<BlogPost> UpdateAsync(BlogPost post, CancellationToken cancellationToken = default);
 }

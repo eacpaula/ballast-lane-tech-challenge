@@ -58,6 +58,16 @@ public class EditBlogPostHandlerSuccessTests
             return Task.FromResult<BlogPost?>(existingPost.Id == postId ? existingPost : null);
         }
 
+        public Task<BlogPost?> GetPublicReadByIdAsync(int postId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<IReadOnlyList<BlogPost>> ListPublicReadAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<BlogPost> UpdateAsync(BlogPost post, CancellationToken cancellationToken = default)
         {
             UpdatedPost = post;

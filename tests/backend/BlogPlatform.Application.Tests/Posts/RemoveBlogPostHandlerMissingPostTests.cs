@@ -42,6 +42,16 @@ public class RemoveBlogPostHandlerMissingPostTests
             return Task.FromResult<BlogPost?>(null);
         }
 
+        public Task<BlogPost?> GetPublicReadByIdAsync(int postId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<IReadOnlyList<BlogPost>> ListPublicReadAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<BlogPost> UpdateAsync(BlogPost post, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();

@@ -53,6 +53,16 @@ public class EditBlogPostHandlerOwnershipTests
             return Task.FromResult<BlogPost?>(existingPost);
         }
 
+        public Task<BlogPost?> GetPublicReadByIdAsync(int postId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<IReadOnlyList<BlogPost>> ListPublicReadAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<BlogPost> UpdateAsync(BlogPost post, CancellationToken cancellationToken = default)
         {
             UpdateWasCalled = true;
