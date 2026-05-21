@@ -143,6 +143,33 @@ This slice does not include:
 
 - repository implementation
 - Npgsql data-access classes
-- API wiring
 - frontend integration
 - migration framework adoption
+
+## Local API Integration
+
+The backend API now consumes the seeded PostgreSQL environment directly through
+raw SQL repositories. Start the database first, then run:
+
+```bash
+dotnet run --project src/backend/BlogPlatform.Api/BlogPlatform.Api.csproj
+```
+
+Local API exploration endpoints:
+
+- Swagger UI: `http://localhost:5034/swagger`
+- OpenAPI document: `http://localhost:5034/swagger/v1/swagger.json`
+
+Demo credentials remain:
+
+- Administrator: `admin@blogplatform.local` / `Admin123!`
+- Regular user: `user@blogplatform.local` / `User123!`
+
+Suggested demo order:
+
+1. `POST /api/auth/login`
+2. `GET /api/posts`
+3. `GET /api/posts/{postId}`
+4. `POST /api/posts/{postId}/reactions`
+5. Authenticated post create/update/delete
+6. Administrator-only category create/update/deactivate

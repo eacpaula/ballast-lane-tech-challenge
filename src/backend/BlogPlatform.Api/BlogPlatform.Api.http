@@ -1,6 +1,67 @@
 @BlogPlatform.Api_HostAddress = http://localhost:5034
+@userToken = replace-with-jwt
+@adminToken = replace-with-jwt
 
-GET {{BlogPlatform.Api_HostAddress}}/weatherforecast/
+POST {{BlogPlatform.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "nameOrUsername": "api-demo-user",
+  "email": "api-demo-user@example.test",
+  "password": "Password123!"
+}
+
+###
+
+POST {{BlogPlatform.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@blogplatform.local",
+  "password": "User123!"
+}
+
+###
+
+GET {{BlogPlatform.Api_HostAddress}}/api/posts
 Accept: application/json
+
+###
+
+GET {{BlogPlatform.Api_HostAddress}}/api/posts/1
+Accept: application/json
+
+###
+
+POST {{BlogPlatform.Api_HostAddress}}/api/posts/1/reactions
+Content-Type: application/json
+
+{
+  "reactionType": "like",
+  "visitorIdentifier": "http-client-visitor-001"
+}
+
+###
+
+POST {{BlogPlatform.Api_HostAddress}}/api/posts
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "categoryId": 1,
+  "title": "Created from BlogPlatform.Api.http",
+  "summary": "Manual API verification",
+  "content": "This post was created through the protected API endpoint."
+}
+
+###
+
+PUT {{BlogPlatform.Api_HostAddress}}/api/categories/1
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Architecture and Design"
+}
 
 ###
