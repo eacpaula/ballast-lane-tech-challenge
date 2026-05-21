@@ -32,9 +32,9 @@ description: "Task list for user registration and login"
 
 **Purpose**: Prepare the minimal test and source structure for the auth slice without expanding scope.
 
-- [ ] T001 Create user-domain test folder structure in `tests/backend/BlogPlatform.Domain.Tests/Users/`
-- [ ] T002 Create user-application test folder structure in `tests/backend/BlogPlatform.Application.Tests/Users/`
-- [ ] T003 Create user source folder structure in `src/backend/BlogPlatform.Domain/Users/` and `src/backend/BlogPlatform.Application/Users/`
+- [X] T001 Create user-domain test folder structure in `tests/backend/BlogPlatform.Domain.Tests/Users/`
+- [X] T002 Create user-application test folder structure in `tests/backend/BlogPlatform.Application.Tests/Users/`
+- [X] T003 Create user source folder structure in `src/backend/BlogPlatform.Domain/Users/` and `src/backend/BlogPlatform.Application/Users/`
 
 ---
 
@@ -44,9 +44,9 @@ description: "Task list for user registration and login"
 
 **CRITICAL**: No registration or login behavior is implemented until the shared Domain/Application scope is clear.
 
-- [ ] T004 Review shared auth model scope in `specs/004-user-auth/data-model.md`
-- [ ] T005 Review shared security and repository boundary scope in `specs/004-user-auth/contracts/user-auth-use-cases.md`
-- [ ] T006 Review existing Application abstraction patterns in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T004 Review shared auth model scope in `specs/004-user-auth/data-model.md`
+- [X] T005 Review shared security and repository boundary scope in `specs/004-user-auth/contracts/user-auth-use-cases.md`
+- [X] T006 Review existing Application abstraction patterns in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
 
 **Checkpoint**: The project is ready for story-specific TDD work.
 
@@ -62,22 +62,22 @@ description: "Task list for user registration and login"
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T007 [P] [US1] Add Domain tests for valid user creation and invalid name or username, email, and password-hash state in `tests/backend/BlogPlatform.Domain.Tests/Users/UserAccountTests.cs`
-- [ ] T008 [P] [US1] Add failing Application test for successful registration with hashed password persistence in `tests/backend/BlogPlatform.Application.Tests/Users/RegisterUserHandlerSuccessTests.cs`
-- [ ] T009 [P] [US1] Add failing Application test for duplicate email rejection in `tests/backend/BlogPlatform.Application.Tests/Users/RegisterUserHandlerDuplicateEmailTests.cs`
-- [ ] T010 [P] [US1] Add failing Application tests for invalid registration input in `tests/backend/BlogPlatform.Application.Tests/Users/RegisterUserHandlerValidationTests.cs`
-- [ ] T011 [P] [US1] Add failing Application assertion coverage for password hashing before repository create in `tests/backend/BlogPlatform.Application.Tests/Users/RegisterUserHandlerSuccessTests.cs`
+- [X] T007 [P] [US1] Add Domain tests for valid user creation and invalid name or username, email, and password-hash state in `tests/backend/BlogPlatform.Domain.Tests/Users/UserAccountTests.cs`
+- [X] T008 [P] [US1] Add failing Application test for successful registration with hashed password persistence in `tests/backend/BlogPlatform.Application.Tests/Users/RegisterUserHandlerSuccessTests.cs`
+- [X] T009 [P] [US1] Add failing Application test for duplicate email rejection in `tests/backend/BlogPlatform.Application.Tests/Users/RegisterUserHandlerDuplicateEmailTests.cs`
+- [X] T010 [P] [US1] Add failing Application tests for invalid registration input in `tests/backend/BlogPlatform.Application.Tests/Users/RegisterUserHandlerValidationTests.cs`
+- [X] T011 [P] [US1] Add failing Application assertion coverage for password hashing before repository create in `tests/backend/BlogPlatform.Application.Tests/Users/RegisterUserHandlerSuccessTests.cs`
 
 ### Backend Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create user account Domain model in `src/backend/BlogPlatform.Domain/Users/UserAccount.cs`
-- [ ] T013 [P] [US1] Create user repository abstraction in `src/backend/BlogPlatform.Application/Abstractions/IUserRepository.cs`
-- [ ] T014 [P] [US1] Create password security abstraction in `src/backend/BlogPlatform.Application/Abstractions/IPasswordSecurityService.cs`
-- [ ] T015 [P] [US1] Create register-user command input model in `src/backend/BlogPlatform.Application/Users/RegisterUserCommand.cs`
-- [ ] T016 [P] [US1] Create register-user result model in `src/backend/BlogPlatform.Application/Users/RegisterUserResult.cs`
-- [ ] T017 [US1] Implement registration orchestration in `src/backend/BlogPlatform.Application/Users/RegisterUserHandler.cs`
-- [ ] T018 [US1] Refactor registration validation and result handling in `src/backend/BlogPlatform.Domain/Users/UserAccount.cs`, `src/backend/BlogPlatform.Application/Users/RegisterUserHandler.cs`, and `src/backend/BlogPlatform.Application/Users/RegisterUserResult.cs`
-- [ ] T019 [US1] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Domain.Tests/Users/UserAccountTests.cs` and `tests/backend/BlogPlatform.Application.Tests/Users/RegisterUserHandler*.cs`
+- [X] T012 [P] [US1] Create user account Domain model in `src/backend/BlogPlatform.Domain/Users/UserAccount.cs`
+- [X] T013 [P] [US1] Create user repository abstraction in `src/backend/BlogPlatform.Application/Abstractions/IUserRepository.cs`
+- [X] T014 [P] [US1] Create password security abstraction in `src/backend/BlogPlatform.Application/Abstractions/IPasswordSecurityService.cs`
+- [X] T015 [P] [US1] Create register-user command input model in `src/backend/BlogPlatform.Application/Users/RegisterUserCommand.cs`
+- [X] T016 [P] [US1] Create register-user result model in `src/backend/BlogPlatform.Application/Users/RegisterUserResult.cs`
+- [X] T017 [US1] Implement registration orchestration in `src/backend/BlogPlatform.Application/Users/RegisterUserHandler.cs`
+- [X] T018 [US1] Refactor registration validation and result handling in `src/backend/BlogPlatform.Domain/Users/UserAccount.cs`, `src/backend/BlogPlatform.Application/Users/RegisterUserHandler.cs`, and `src/backend/BlogPlatform.Application/Users/RegisterUserResult.cs`
+- [X] T019 [US1] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Domain.Tests/Users/UserAccountTests.cs` and `tests/backend/BlogPlatform.Application.Tests/Users/RegisterUserHandler*.cs`
 
 **Checkpoint**: User Story 1 is functional within Domain and Application and can be demonstrated without API, Infrastructure, database, JWT middleware, or frontend work.
 
@@ -91,19 +91,19 @@ description: "Task list for user registration and login"
 
 ### Tests for User Story 2 (MANDATORY) ⚠️
 
-- [ ] T020 [P] [US2] Add failing Application test for successful login with authentication result data in `tests/backend/BlogPlatform.Application.Tests/Users/LoginUserHandlerSuccessTests.cs`
-- [ ] T021 [P] [US2] Add failing Application test for unknown-user login rejection in `tests/backend/BlogPlatform.Application.Tests/Users/LoginUserHandlerInvalidCredentialsTests.cs`
-- [ ] T022 [P] [US2] Add failing Application test for incorrect-password rejection in `tests/backend/BlogPlatform.Application.Tests/Users/LoginUserHandlerInvalidCredentialsTests.cs`
-- [ ] T023 [P] [US2] Add failing Application assertion coverage for password verification and authentication payload generation abstractions in `tests/backend/BlogPlatform.Application.Tests/Users/LoginUserHandlerSuccessTests.cs`
+- [X] T020 [P] [US2] Add failing Application test for successful login with authentication result data in `tests/backend/BlogPlatform.Application.Tests/Users/LoginUserHandlerSuccessTests.cs`
+- [X] T021 [P] [US2] Add failing Application test for unknown-user login rejection in `tests/backend/BlogPlatform.Application.Tests/Users/LoginUserHandlerInvalidCredentialsTests.cs`
+- [X] T022 [P] [US2] Add failing Application test for incorrect-password rejection in `tests/backend/BlogPlatform.Application.Tests/Users/LoginUserHandlerInvalidCredentialsTests.cs`
+- [X] T023 [P] [US2] Add failing Application assertion coverage for password verification and authentication payload generation abstractions in `tests/backend/BlogPlatform.Application.Tests/Users/LoginUserHandlerSuccessTests.cs`
 
 ### Backend Implementation for User Story 2
 
-- [ ] T024 [P] [US2] Create authentication payload factory abstraction in `src/backend/BlogPlatform.Application/Abstractions/IAuthenticationPayloadFactory.cs`
-- [ ] T025 [P] [US2] Create login-user command input model in `src/backend/BlogPlatform.Application/Users/LoginUserCommand.cs`
-- [ ] T026 [P] [US2] Create login-user result model in `src/backend/BlogPlatform.Application/Users/LoginUserResult.cs`
-- [ ] T027 [US2] Implement login orchestration in `src/backend/BlogPlatform.Application/Users/LoginUserHandler.cs`
-- [ ] T028 [US2] Refactor login validation and authentication result handling in `src/backend/BlogPlatform.Application/Users/LoginUserHandler.cs` and `src/backend/BlogPlatform.Application/Users/LoginUserResult.cs`
-- [ ] T029 [US2] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Application.Tests/Users/LoginUserHandler*.cs`
+- [X] T024 [P] [US2] Create authentication payload factory abstraction in `src/backend/BlogPlatform.Application/Abstractions/IAuthenticationPayloadFactory.cs`
+- [X] T025 [P] [US2] Create login-user command input model in `src/backend/BlogPlatform.Application/Users/LoginUserCommand.cs`
+- [X] T026 [P] [US2] Create login-user result model in `src/backend/BlogPlatform.Application/Users/LoginUserResult.cs`
+- [X] T027 [US2] Implement login orchestration in `src/backend/BlogPlatform.Application/Users/LoginUserHandler.cs`
+- [X] T028 [US2] Refactor login validation and authentication result handling in `src/backend/BlogPlatform.Application/Users/LoginUserHandler.cs` and `src/backend/BlogPlatform.Application/Users/LoginUserResult.cs`
+- [X] T029 [US2] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Application.Tests/Users/LoginUserHandler*.cs`
 
 **Checkpoint**: User Stories 1 and 2 both work independently inside Domain and Application without API, Infrastructure, database, JWT middleware, or frontend work.
 
@@ -113,9 +113,9 @@ description: "Task list for user registration and login"
 
 **Purpose**: Confirm the slice remains small, reviewable, and aligned with the plan.
 
-- [ ] T030 [P] Update feature notes if needed in `specs/004-user-auth/quickstart.md`
-- [ ] T031 Run the backend core test sweep in `tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj` and `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`
-- [ ] T032 Review final auth core scope in `specs/004-user-auth/plan.md`
+- [X] T030 [P] Update feature notes if needed in `specs/004-user-auth/quickstart.md`
+- [X] T031 Run the backend core test sweep in `tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj` and `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`
+- [X] T032 Review final auth core scope in `specs/004-user-auth/plan.md`
 
 ---
 

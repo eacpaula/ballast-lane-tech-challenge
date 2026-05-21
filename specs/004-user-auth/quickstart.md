@@ -100,3 +100,9 @@ Do not add or change:
 
 Those layers come only after the core registration and login use cases are
 stable and test-covered.
+
+## Current implementation note
+
+The current core slice is satisfied by Domain and Application tests and
+production code only. JWT middleware, API endpoints, persistence
+implementations, and frontend behavior remain deferred.
