@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS post_categories (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title VARCHAR(150) NOT NULL UNIQUE,
+    description TEXT NULL,
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    creation_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    update_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    creation_user_id INTEGER NULL REFERENCES users(id),
+    update_user_id INTEGER NULL REFERENCES users(id)
+);

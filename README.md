@@ -84,3 +84,42 @@ Anonymous visitors can read public posts and react with likes or dislikes. Authe
 ├── commitlint.config.cjs
 ├── package.json
 └── README.md
+```
+
+## Local Database Setup
+
+The repository includes a Docker Compose-based PostgreSQL environment for local
+development and interview demos.
+
+### Quick Start
+
+1. Copy `.env.example` to `.env` if you want to override the defaults.
+   Set `BLOG_PLATFORM_DB_PORT` if local port `5432` is already in use.
+2. Start PostgreSQL:
+
+```bash
+docker compose up -d postgres
+```
+
+3. Check container health:
+
+```bash
+docker compose ps
+```
+
+The container initializes the current-use-case schema and demo seed data on the
+first startup.
+
+### Demo Credentials
+
+- Administrator: `admin@blogplatform.local` / `Admin123!`
+- Regular user: `user@blogplatform.local` / `User123!`
+
+These credentials are for local/demo usage only.
+
+### Reset the Database
+
+```bash
+docker compose down -v
+docker compose up -d postgres
+```

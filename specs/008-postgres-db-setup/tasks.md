@@ -16,9 +16,9 @@ database bootstrap flow can be delivered and validated incrementally.
 **Purpose**: Create or normalize the database workspace and local environment
 entry points used by the rest of the feature.
 
-- [ ] T001 Create or normalize the database workspace structure in `database/scripts/.gitignore`, `database/seeds/.gitignore`, and `database/migrations/.gitignore`
-- [ ] T002 Create or update the database bootstrap workspace note in `docs/Database-Implementation-Strategy.md`
-- [ ] T003 Create or update a local environment sample for PostgreSQL settings in `.env.example`
+- [X] T001 Create or normalize the database workspace structure in `database/scripts/.gitignore`, `database/seeds/.gitignore`, and `database/migrations/.gitignore`
+- [X] T002 Create or update the database bootstrap workspace note in `docs/Database-Implementation-Strategy.md`
+- [X] T003 Create or update a local environment sample for PostgreSQL settings in `.env.example`
 
 ---
 
@@ -27,9 +27,9 @@ entry points used by the rest of the feature.
 **Purpose**: Add shared local container and initialization foundations that
 block all later schema and seed work.
 
-- [ ] T004 Create the local PostgreSQL service definition in `docker-compose.yml`
-- [ ] T005 [P] Document the expected local database variables in `.env.example`
-- [ ] T006 [P] Add a bootstrap execution note or helper entrypoint reference in `docs/Database-Implementation-Strategy.md`
+- [X] T004 Create the local PostgreSQL service definition in `docker-compose.yml`
+- [X] T005 [P] Document the expected local database variables in `.env.example`
+- [X] T006 [P] Add a bootstrap execution note or helper entrypoint reference in `docs/Database-Implementation-Strategy.md`
 
 **Checkpoint**: The repository has a consistent local PostgreSQL bootstrap
 entry point and documented environment variables.
@@ -45,17 +45,17 @@ use-case schema from repository-managed raw SQL scripts.
 ordered schema scripts, and inspect the required current-use-case tables
 without adding repository or API code.
 
-- [ ] T007 [US1] Create the base schema initialization script for shared extensions, timestamps, or setup comments in `database/scripts/000-bootstrap.sql`
-- [ ] T008 [P] [US1] Create the users table schema script in `database/scripts/001-create-users.sql`
-- [ ] T009 [P] [US1] Create the roles table schema script in `database/scripts/002-create-roles.sql`
-- [ ] T010 [P] [US1] Create the user-role junction schema script in `database/scripts/003-create-user-roles.sql`
-- [ ] T011 [P] [US1] Create the post-categories schema script in `database/scripts/004-create-post-categories.sql`
-- [ ] T012 [P] [US1] Create the posts schema script with category and ownership relationships in `database/scripts/005-create-posts.sql`
-- [ ] T013 [P] [US1] Create the tags schema script in `database/scripts/006-create-tags.sql`
-- [ ] T014 [P] [US1] Create the post-tags junction schema script in `database/scripts/007-create-post-tags.sql`
-- [ ] T015 [P] [US1] Create the post-reactions schema script with user or visitor reaction support in `database/scripts/008-create-post-reactions.sql`
-- [ ] T016 [US1] Review schema ordering and cross-table constraints against `docs/Database-Schema-Diagram.md` in `database/scripts/000-bootstrap.sql`, `database/scripts/001-create-users.sql`, `database/scripts/002-create-roles.sql`, `database/scripts/003-create-user-roles.sql`, `database/scripts/004-create-post-categories.sql`, `database/scripts/005-create-posts.sql`, `database/scripts/006-create-tags.sql`, `database/scripts/007-create-post-tags.sql`, and `database/scripts/008-create-post-reactions.sql`
-- [ ] T017 [US1] Validate that the PostgreSQL container starts and the schema scripts are mounted and applied successfully through `docker-compose.yml`
+- [X] T007 [US1] Create the base schema initialization script for shared extensions, timestamps, or setup comments in `database/scripts/000-bootstrap.sql`
+- [X] T008 [P] [US1] Create the users table schema script in `database/scripts/001-create-users.sql`
+- [X] T009 [P] [US1] Create the roles table schema script in `database/scripts/002-create-roles.sql`
+- [X] T010 [P] [US1] Create the user-role junction schema script in `database/scripts/003-create-user-roles.sql`
+- [X] T011 [P] [US1] Create the post-categories schema script in `database/scripts/004-create-post-categories.sql`
+- [X] T012 [P] [US1] Create the posts schema script with category and ownership relationships in `database/scripts/005-create-posts.sql`
+- [X] T013 [P] [US1] Create the tags schema script in `database/scripts/006-create-tags.sql`
+- [X] T014 [P] [US1] Create the post-tags junction schema script in `database/scripts/007-create-post-tags.sql`
+- [X] T015 [P] [US1] Create the post-reactions schema script with user or visitor reaction support in `database/scripts/008-create-post-reactions.sql`
+- [X] T016 [US1] Review schema ordering and cross-table constraints against `docs/Database-Schema-Diagram.md` in `database/scripts/000-bootstrap.sql`, `database/scripts/001-create-users.sql`, `database/scripts/002-create-roles.sql`, `database/scripts/003-create-user-roles.sql`, `database/scripts/004-create-post-categories.sql`, `database/scripts/005-create-posts.sql`, `database/scripts/006-create-tags.sql`, `database/scripts/007-create-post-tags.sql`, and `database/scripts/008-create-post-reactions.sql`
+- [X] T017 [US1] Validate that the PostgreSQL container starts and the schema scripts are mounted and applied successfully through `docker-compose.yml`
 
 **Checkpoint**: The local PostgreSQL environment can start and create the
 current-use-case schema from repository-managed SQL.
@@ -71,19 +71,19 @@ credentials, and reset the database predictably for repeatable interview usage.
 load demo users/roles/categories/posts/tags/reactions, inspect the resulting
 records, and repeat the reset flow predictably.
 
-- [ ] T018 [US2] Create the demo users seed script with one administrator and one regular user in `database/seeds/001-seed-users.sql`
-- [ ] T019 [P] [US2] Create the demo roles seed script for administrator and regular-user roles in `database/seeds/002-seed-roles.sql`
-- [ ] T020 [P] [US2] Create the demo user-role assignment seed script in `database/seeds/003-seed-user-roles.sql`
-- [ ] T021 [P] [US2] Create the demo categories seed script in `database/seeds/004-seed-post-categories.sql`
-- [ ] T022 [P] [US2] Create the demo posts seed script for public content and ownership coverage in `database/seeds/005-seed-posts.sql`
-- [ ] T023 [P] [US2] Create the demo tags seed script in `database/seeds/006-seed-tags.sql`
-- [ ] T024 [P] [US2] Create the demo post-tag link seed script in `database/seeds/007-seed-post-tags.sql`
-- [ ] T025 [P] [US2] Create the demo post-reactions seed script in `database/seeds/008-seed-post-reactions.sql`
-- [ ] T026 [US2] Add a simple local reset helper workflow in `docs/Database-Implementation-Strategy.md`
-- [ ] T027 [US2] Document demo credentials, startup, initialization, inspection, and reset steps in `docs/Database-Implementation-Strategy.md`
-- [ ] T028 [US2] Update `README.md` with database start and reset commands if the file exists, otherwise document the final workflow only in `docs/Database-Implementation-Strategy.md`
-- [ ] T029 [US2] Validate that demo seed data is applied successfully and inspect seeded users, roles, categories, posts, tags, and reactions through `docker-compose.yml` and `database/seeds/001-seed-users.sql`, `database/seeds/002-seed-roles.sql`, `database/seeds/003-seed-user-roles.sql`, `database/seeds/004-seed-post-categories.sql`, `database/seeds/005-seed-posts.sql`, `database/seeds/006-seed-tags.sql`, `database/seeds/007-seed-post-tags.sql`, and `database/seeds/008-seed-post-reactions.sql`
-- [ ] T030 [US2] Validate the reset-and-rebuild flow from a clean local state through `docker-compose.yml` and `docs/Database-Implementation-Strategy.md`
+- [X] T018 [US2] Create the demo users seed script with one administrator and one regular user in `database/seeds/001-seed-users.sql`
+- [X] T019 [P] [US2] Create the demo roles seed script for administrator and regular-user roles in `database/seeds/002-seed-roles.sql`
+- [X] T020 [P] [US2] Create the demo user-role assignment seed script in `database/seeds/003-seed-user-roles.sql`
+- [X] T021 [P] [US2] Create the demo categories seed script in `database/seeds/004-seed-post-categories.sql`
+- [X] T022 [P] [US2] Create the demo posts seed script for public content and ownership coverage in `database/seeds/005-seed-posts.sql`
+- [X] T023 [P] [US2] Create the demo tags seed script in `database/seeds/006-seed-tags.sql`
+- [X] T024 [P] [US2] Create the demo post-tag link seed script in `database/seeds/007-seed-post-tags.sql`
+- [X] T025 [P] [US2] Create the demo post-reactions seed script in `database/seeds/008-seed-post-reactions.sql`
+- [X] T026 [US2] Add a simple local reset helper workflow in `docs/Database-Implementation-Strategy.md`
+- [X] T027 [US2] Document demo credentials, startup, initialization, inspection, and reset steps in `docs/Database-Implementation-Strategy.md`
+- [X] T028 [US2] Update `README.md` with database start and reset commands if the file exists, otherwise document the final workflow only in `docs/Database-Implementation-Strategy.md`
+- [X] T029 [US2] Validate that demo seed data is applied successfully and inspect seeded users, roles, categories, posts, tags, and reactions through `docker-compose.yml` and `database/seeds/001-seed-users.sql`, `database/seeds/002-seed-roles.sql`, `database/seeds/003-seed-user-roles.sql`, `database/seeds/004-seed-post-categories.sql`, `database/seeds/005-seed-posts.sql`, `database/seeds/006-seed-tags.sql`, `database/seeds/007-seed-post-tags.sql`, and `database/seeds/008-seed-post-reactions.sql`
+- [X] T030 [US2] Validate the reset-and-rebuild flow from a clean local state through `docker-compose.yml` and `docs/Database-Implementation-Strategy.md`
 
 **Checkpoint**: The local PostgreSQL environment is demo-ready, documented,
 and repeatable from a clean reset.
@@ -95,9 +95,9 @@ and repeatable from a clean reset.
 **Purpose**: Finalize feature guidance, scope boundaries, and implementation
 readiness for later Infrastructure/Data Access work.
 
-- [ ] T031 [P] Update the feature quickstart to match the implemented Compose, schema, seed, and reset workflow in `specs/008-postgres-db-setup/quickstart.md`
-- [ ] T032 Review the implemented database scope against deferred tables and document any intentional omissions in `docs/Database-Implementation-Strategy.md`
-- [ ] T033 Mark completed work and final validation status in `specs/008-postgres-db-setup/tasks.md`
+- [X] T031 [P] Update the feature quickstart to match the implemented Compose, schema, seed, and reset workflow in `specs/008-postgres-db-setup/quickstart.md`
+- [X] T032 Review the implemented database scope against deferred tables and document any intentional omissions in `docs/Database-Implementation-Strategy.md`
+- [X] T033 Mark completed work and final validation status in `specs/008-postgres-db-setup/tasks.md`
 
 ---
 

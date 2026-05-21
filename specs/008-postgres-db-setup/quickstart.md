@@ -15,6 +15,9 @@ Recommended files:
 - `docker-compose.yml`
 - `.env.example` or equivalent documented environment sample
 
+If local port `5432` is already in use, override `BLOG_PLATFORM_DB_PORT` before
+starting the service.
+
 ## Step 2: Create executable schema artifacts
 
 Add ordered SQL initialization files under `database/scripts/`.
@@ -32,6 +35,7 @@ Recommended scope for the first schema slice:
 
 Recommended file organization:
 
+- `database/scripts/000-bootstrap.sql`
 - `database/scripts/001-create-users.sql`
 - `database/scripts/002-create-roles.sql`
 - `database/scripts/003-create-user-roles.sql`
@@ -40,6 +44,7 @@ Recommended file organization:
 - `database/scripts/006-create-tags.sql`
 - `database/scripts/007-create-post-tags.sql`
 - `database/scripts/008-create-post-reactions.sql`
+- `database/scripts/009-apply-seeds.sql`
 
 ## Step 3: Add demo seed data
 
