@@ -4,6 +4,8 @@ namespace BlogPlatform.Application.Abstractions;
 
 public interface ICategoryRepository
 {
+    Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default);
+
     Task<bool> ExistsAndAvailableAsync(int categoryId, CancellationToken cancellationToken = default);
 
     Task<bool> TitleExistsAsync(

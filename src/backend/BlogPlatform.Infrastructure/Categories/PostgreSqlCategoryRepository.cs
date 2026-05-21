@@ -30,6 +30,28 @@ public sealed class PostgreSqlCategoryRepository : ICategoryRepository
         return result is true;
     }
 
+    public async Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            SELECT id, title, available
+            FROM post_categories
+            WHERE available = TRUE
+            ORDER BY id;
+            """;
+
+        var categories = new List<PostCategory>();
+        await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
+        await using var command = new NpgsqlCommand(sql, connection);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+        while (await reader.ReadAsync(cancellationToken))
+        {
+            categories.Add(MapCategory(reader));
+        }
+
+        return categories;
+    }
+
     public async Task<bool> TitleExistsAsync(string title, int? excludingCategoryId = null, CancellationToken cancellationToken = default)
     {
         var sql = excludingCategoryId.HasValue

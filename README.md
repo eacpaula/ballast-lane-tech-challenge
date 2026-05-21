@@ -158,3 +158,33 @@ Default local API URLs:
 
 The sample request flow is also documented in
 `src/backend/BlogPlatform.Api/BlogPlatform.Api.http`.
+
+## Local API Setup With Docker Compose
+
+Run the database and API together from the repository root:
+
+```bash
+docker compose up -d postgres api
+docker compose ps
+```
+
+Default local Docker-based API URLs:
+
+- Swagger UI: `http://localhost:5034/swagger`
+- OpenAPI JSON: `http://localhost:5034/swagger/v1/swagger.json`
+
+The API container connects to PostgreSQL through the Compose network and uses
+the configured local frontend origins for browser-based development:
+
+- `http://localhost:5173`
+- `http://127.0.0.1:5173`
+
+### Frontend Integration Notes
+
+- Frontend post forms can load available categories from
+  `GET /api/categories/available`.
+- The available-categories endpoint is public because category names are not
+  sensitive and the form needs them before any admin workflow.
+- Category create, update, and deactivate endpoints remain administrator-only.
+- Tag listing is intentionally deferred in this slice; the frontend should not
+  assume a tag-selection endpoint exists yet.

@@ -173,3 +173,25 @@ Suggested demo order:
 4. `POST /api/posts/{postId}/reactions`
 5. Authenticated post create/update/delete
 6. Administrator-only category create/update/deactivate
+
+## Local API With Docker Compose
+
+The API can now run beside PostgreSQL in the same local Compose stack:
+
+```bash
+docker compose up -d postgres api
+docker compose ps
+```
+
+Container-to-container database access uses the `postgres` service name as the
+database host. Swagger remains available at:
+
+- `http://localhost:5034/swagger`
+- `http://localhost:5034/swagger/v1/swagger.json`
+
+For frontend integration, the API exposes:
+
+- `GET /api/categories/available`
+
+This endpoint is public and returns only available categories for post form
+selection. Category write operations remain administrator-only.

@@ -28,6 +28,12 @@ Accept: application/json
 
 ###
 
+GET {{BlogPlatform.Api_HostAddress}}/api/categories/available
+Accept: application/json
+Origin: http://localhost:5173
+
+###
+
 GET {{BlogPlatform.Api_HostAddress}}/api/posts/1
 Accept: application/json
 
