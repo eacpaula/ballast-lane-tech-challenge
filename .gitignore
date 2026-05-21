@@ -4,6 +4,10 @@ build/
 bin/
 obj/
 packages/
+TestResults/
+database/data/
+*.user
+*.suo
 .env
 .env.*
 !.env.example

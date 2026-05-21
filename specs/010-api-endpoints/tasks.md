@@ -17,10 +17,10 @@ completed first.
 **Purpose**: Prepare API project dependencies, settings, and test project
 baseline for the new controller layer.
 
-- [ ] T001 Update API package dependencies for controllers, authentication, authorization, and OpenAPI support in `src/backend/BlogPlatform.Api/BlogPlatform.Api.csproj`
-- [ ] T002 Update API test project dependencies for ASP.NET Core integration testing in `tests/backend/BlogPlatform.Api.Tests/BlogPlatform.Api.Tests.csproj`
-- [ ] T003 Create the API test support workspace in `tests/backend/BlogPlatform.Api.Tests/TestSupport/.gitkeep` and `tests/backend/BlogPlatform.Api.Tests/README.md`
-- [ ] T004 Add JWT and database configuration placeholders for the API layer in `src/backend/BlogPlatform.Api/appsettings.json`, `src/backend/BlogPlatform.Api/appsettings.Development.json`, and `.env.example`
+- [X] T001 Update API package dependencies for controllers, authentication, authorization, and OpenAPI support in `src/backend/BlogPlatform.Api/BlogPlatform.Api.csproj`
+- [X] T002 Update API test project dependencies for ASP.NET Core integration testing in `tests/backend/BlogPlatform.Api.Tests/BlogPlatform.Api.Tests.csproj`
+- [X] T003 Create the API test support workspace in `tests/backend/BlogPlatform.Api.Tests/TestSupport/.gitkeep` and `tests/backend/BlogPlatform.Api.Tests/README.md`
+- [X] T004 Add JWT and database configuration placeholders for the API layer in `src/backend/BlogPlatform.Api/appsettings.json`, `src/backend/BlogPlatform.Api/appsettings.Development.json`, and `.env.example`
 
 ---
 
@@ -29,13 +29,13 @@ baseline for the new controller layer.
 **Purpose**: Add shared API composition, auth, error handling, and test-host
 infrastructure that blocks all story work.
 
-- [ ] T005 Create API JWT settings binding model in `src/backend/BlogPlatform.Api/Configuration/JwtAuthenticationSettings.cs`
-- [ ] T006 [P] Create API dependency-registration helpers for Application and Infrastructure services in `src/backend/BlogPlatform.Api/Extensions/ServiceCollectionExtensions.cs`
-- [ ] T007 [P] Create Infrastructure auth-support services for password hashing and authentication payload creation if they are not already present in `src/backend/BlogPlatform.Infrastructure/Security/PostgreSqlPasswordSecurityService.cs` and `src/backend/BlogPlatform.Infrastructure/Security/JwtAuthenticationPayloadFactory.cs`
-- [ ] T008 Create consistent ProblemDetails-style error mapping support in `src/backend/BlogPlatform.Api/Errors/ProblemDetailsFactoryExtensions.cs`
-- [ ] T009 Create API authentication and authorization configuration in `src/backend/BlogPlatform.Api/Extensions/AuthenticationExtensions.cs`
-- [ ] T010 Create API integration test host bootstrap and seeded-auth helpers in `tests/backend/BlogPlatform.Api.Tests/TestSupport/BlogPlatformApiFactory.cs` and `tests/backend/BlogPlatform.Api.Tests/TestSupport/ApiAuthenticationTestHelper.cs`
-- [ ] T011 Update `src/backend/BlogPlatform.Api/Program.cs` to register controllers, OpenAPI, auth, error handling, and the shared composition path
+- [X] T005 Create API JWT settings binding model in `src/backend/BlogPlatform.Api/Configuration/JwtAuthenticationSettings.cs`
+- [X] T006 [P] Create API dependency-registration helpers for Application and Infrastructure services in `src/backend/BlogPlatform.Api/Extensions/ServiceCollectionExtensions.cs`
+- [X] T007 [P] Create Infrastructure auth-support services for password hashing and authentication payload creation if they are not already present in `src/backend/BlogPlatform.Infrastructure/Security/PostgreSqlPasswordSecurityService.cs` and `src/backend/BlogPlatform.Infrastructure/Security/JwtAuthenticationPayloadFactory.cs`
+- [X] T008 Create consistent ProblemDetails-style error mapping support in `src/backend/BlogPlatform.Api/Errors/ProblemDetailsFactoryExtensions.cs`
+- [X] T009 Create API authentication and authorization configuration in `src/backend/BlogPlatform.Api/Extensions/AuthenticationExtensions.cs`
+- [X] T010 Create API integration test host bootstrap and seeded-auth helpers in `tests/backend/BlogPlatform.Api.Tests/TestSupport/BlogPlatformApiFactory.cs` and `tests/backend/BlogPlatform.Api.Tests/TestSupport/ApiAuthenticationTestHelper.cs`
+- [X] T011 Update `src/backend/BlogPlatform.Api/Program.cs` to register controllers, OpenAPI, auth, error handling, and the shared composition path
 
 **Checkpoint**: The API project has a reusable composition path, JWT/auth
 settings model, ProblemDetails mapping strategy, and an integration-test host
@@ -54,15 +54,15 @@ consistent success and failure responses.
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T012 [US1] Add failing API tests for successful registration in `tests/backend/BlogPlatform.Api.Tests/Auth/AuthRegisterSuccessTests.cs`
-- [ ] T013 [P] [US1] Add failing API tests for invalid or duplicate registration in `tests/backend/BlogPlatform.Api.Tests/Auth/AuthRegisterFailureTests.cs`
-- [ ] T014 [P] [US1] Add failing API tests for successful login and invalid login in `tests/backend/BlogPlatform.Api.Tests/Auth/AuthLoginTests.cs`
+- [X] T012 [US1] Add failing API tests for successful registration in `tests/backend/BlogPlatform.Api.Tests/Auth/AuthRegisterSuccessTests.cs`
+- [X] T013 [P] [US1] Add failing API tests for invalid or duplicate registration in `tests/backend/BlogPlatform.Api.Tests/Auth/AuthRegisterFailureTests.cs`
+- [X] T014 [P] [US1] Add failing API tests for successful login and invalid login in `tests/backend/BlogPlatform.Api.Tests/Auth/AuthLoginTests.cs`
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Create auth request and response DTOs in `src/backend/BlogPlatform.Api/Contracts/Auth/RegisterUserRequest.cs`, `src/backend/BlogPlatform.Api/Contracts/Auth/LoginUserRequest.cs`, and `src/backend/BlogPlatform.Api/Contracts/Auth/AuthResponse.cs`
-- [ ] T016 [US1] Implement the auth controller in `src/backend/BlogPlatform.Api/Controllers/AuthController.cs`
-- [ ] T017 [US1] Re-run the auth API tests and stabilize success, validation, and conflict response mapping in `src/backend/BlogPlatform.Api/Controllers/AuthController.cs` and `src/backend/BlogPlatform.Api/Errors/ProblemDetailsFactoryExtensions.cs`
+- [X] T015 [P] [US1] Create auth request and response DTOs in `src/backend/BlogPlatform.Api/Contracts/Auth/RegisterUserRequest.cs`, `src/backend/BlogPlatform.Api/Contracts/Auth/LoginUserRequest.cs`, and `src/backend/BlogPlatform.Api/Contracts/Auth/AuthResponse.cs`
+- [X] T016 [US1] Implement the auth controller in `src/backend/BlogPlatform.Api/Controllers/AuthController.cs`
+- [X] T017 [US1] Re-run the auth API tests and stabilize success, validation, and conflict response mapping in `src/backend/BlogPlatform.Api/Controllers/AuthController.cs` and `src/backend/BlogPlatform.Api/Errors/ProblemDetailsFactoryExtensions.cs`
 
 **Checkpoint**: Auth registration and login are exposed through HTTP with
 stable DTOs and ProblemDetails-style failures.
@@ -80,17 +80,17 @@ reactions through HTTP without requiring authentication.
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T018 [US2] Add failing API tests for anonymous public post listing in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostListTests.cs`
-- [ ] T019 [P] [US2] Add failing API tests for public post detail success and unavailable/not-found rejection in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostDetailTests.cs`
-- [ ] T020 [P] [US2] Add failing API tests for valid like and dislike reactions in `tests/backend/BlogPlatform.Api.Tests/Reactions/PublicPostReactionSuccessTests.cs`
-- [ ] T021 [P] [US2] Add failing API tests for invalid reaction type and unavailable-post rejection in `tests/backend/BlogPlatform.Api.Tests/Reactions/PublicPostReactionFailureTests.cs`
+- [X] T018 [US2] Add failing API tests for anonymous public post listing in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostListTests.cs`
+- [X] T019 [P] [US2] Add failing API tests for public post detail success and unavailable/not-found rejection in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostDetailTests.cs`
+- [X] T020 [P] [US2] Add failing API tests for valid like and dislike reactions in `tests/backend/BlogPlatform.Api.Tests/Reactions/PublicPostReactionSuccessTests.cs`
+- [X] T021 [P] [US2] Add failing API tests for invalid reaction type and unavailable-post rejection in `tests/backend/BlogPlatform.Api.Tests/Reactions/PublicPostReactionFailureTests.cs`
 
 ### Implementation for User Story 2
 
-- [ ] T022 [P] [US2] Create public post and reaction DTOs in `src/backend/BlogPlatform.Api/Contracts/Posts/PublicPostSummaryResponse.cs`, `src/backend/BlogPlatform.Api/Contracts/Posts/PublicPostDetailResponse.cs`, `src/backend/BlogPlatform.Api/Contracts/Reactions/ReactToPostRequest.cs`, and `src/backend/BlogPlatform.Api/Contracts/Reactions/ReactionResponse.cs`
-- [ ] T023 [P] [US2] Implement the public posts controller in `src/backend/BlogPlatform.Api/Controllers/PublicPostsController.cs`
-- [ ] T024 [P] [US2] Implement the public post reactions controller in `src/backend/BlogPlatform.Api/Controllers/PostReactionsController.cs`
-- [ ] T025 [US2] Re-run the public API tests and stabilize anonymous access plus not-found/error response behavior in `src/backend/BlogPlatform.Api/Controllers/PublicPostsController.cs`, `src/backend/BlogPlatform.Api/Controllers/PostReactionsController.cs`, and `src/backend/BlogPlatform.Api/Errors/ProblemDetailsFactoryExtensions.cs`
+- [X] T022 [P] [US2] Create public post and reaction DTOs in `src/backend/BlogPlatform.Api/Contracts/Posts/PublicPostSummaryResponse.cs`, `src/backend/BlogPlatform.Api/Contracts/Posts/PublicPostDetailResponse.cs`, `src/backend/BlogPlatform.Api/Contracts/Reactions/ReactToPostRequest.cs`, and `src/backend/BlogPlatform.Api/Contracts/Reactions/ReactionResponse.cs`
+- [X] T023 [P] [US2] Implement the public posts controller in `src/backend/BlogPlatform.Api/Controllers/PublicPostsController.cs`
+- [X] T024 [P] [US2] Implement the public post reactions controller in `src/backend/BlogPlatform.Api/Controllers/PostReactionsController.cs`
+- [X] T025 [US2] Re-run the public API tests and stabilize anonymous access plus not-found/error response behavior in `src/backend/BlogPlatform.Api/Controllers/PublicPostsController.cs`, `src/backend/BlogPlatform.Api/Controllers/PostReactionsController.cs`, and `src/backend/BlogPlatform.Api/Errors/ProblemDetailsFactoryExtensions.cs`
 
 **Checkpoint**: Public read and reaction flows are available anonymously and
 return stable success and failure contracts.
@@ -108,16 +108,16 @@ that rely on JWT auth and the existing ownership rules.
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T026 [US3] Add failing API tests for unauthorized access to protected post endpoints in `tests/backend/BlogPlatform.Api.Tests/Posts/ProtectedPostUnauthorizedTests.cs`
-- [ ] T027 [P] [US3] Add failing API tests for successful authenticated post creation in `tests/backend/BlogPlatform.Api.Tests/Posts/CreatePostApiTests.cs`
-- [ ] T028 [P] [US3] Add failing API tests for successful owned-post update and non-owner rejection in `tests/backend/BlogPlatform.Api.Tests/Posts/UpdatePostApiTests.cs`
-- [ ] T029 [P] [US3] Add failing API tests for successful owned-post removal and non-owner rejection in `tests/backend/BlogPlatform.Api.Tests/Posts/DeletePostApiTests.cs`
+- [X] T026 [US3] Add failing API tests for unauthorized access to protected post endpoints in `tests/backend/BlogPlatform.Api.Tests/Posts/ProtectedPostUnauthorizedTests.cs`
+- [X] T027 [P] [US3] Add failing API tests for successful authenticated post creation in `tests/backend/BlogPlatform.Api.Tests/Posts/CreatePostApiTests.cs`
+- [X] T028 [P] [US3] Add failing API tests for successful owned-post update and non-owner rejection in `tests/backend/BlogPlatform.Api.Tests/Posts/UpdatePostApiTests.cs`
+- [X] T029 [P] [US3] Add failing API tests for successful owned-post removal and non-owner rejection in `tests/backend/BlogPlatform.Api.Tests/Posts/DeletePostApiTests.cs`
 
 ### Implementation for User Story 3
 
-- [ ] T030 [P] [US3] Create protected post request and response DTOs in `src/backend/BlogPlatform.Api/Contracts/Posts/CreatePostRequest.cs`, `src/backend/BlogPlatform.Api/Contracts/Posts/UpdatePostRequest.cs`, and `src/backend/BlogPlatform.Api/Contracts/Posts/PostMutationResponse.cs`
-- [ ] T031 [US3] Implement the protected posts controller in `src/backend/BlogPlatform.Api/Controllers/PostsController.cs`
-- [ ] T032 [US3] Re-run the protected post API tests and stabilize authenticated-user claim mapping plus forbidden/unauthorized responses in `src/backend/BlogPlatform.Api/Controllers/PostsController.cs` and `src/backend/BlogPlatform.Api/Extensions/AuthenticationExtensions.cs`
+- [X] T030 [P] [US3] Create protected post request and response DTOs in `src/backend/BlogPlatform.Api/Contracts/Posts/CreatePostRequest.cs`, `src/backend/BlogPlatform.Api/Contracts/Posts/UpdatePostRequest.cs`, and `src/backend/BlogPlatform.Api/Contracts/Posts/PostMutationResponse.cs`
+- [X] T031 [US3] Implement the protected posts controller in `src/backend/BlogPlatform.Api/Controllers/PostsController.cs`
+- [X] T032 [US3] Re-run the protected post API tests and stabilize authenticated-user claim mapping plus forbidden/unauthorized responses in `src/backend/BlogPlatform.Api/Controllers/PostsController.cs` and `src/backend/BlogPlatform.Api/Extensions/AuthenticationExtensions.cs`
 
 **Checkpoint**: Protected post mutation endpoints require authentication and
 preserve the existing ownership behavior through HTTP.
@@ -135,16 +135,16 @@ admin success, non-admin rejection, and unauthenticated rejection behavior.
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T033 [US4] Add failing API tests for unauthorized and non-admin rejection on category endpoints in `tests/backend/BlogPlatform.Api.Tests/Categories/CategoryAuthorizationApiTests.cs`
-- [ ] T034 [P] [US4] Add failing API tests for successful admin category creation and duplicate-title conflict in `tests/backend/BlogPlatform.Api.Tests/Categories/CreateCategoryApiTests.cs`
-- [ ] T035 [P] [US4] Add failing API tests for successful admin category update and not-found behavior in `tests/backend/BlogPlatform.Api.Tests/Categories/UpdateCategoryApiTests.cs`
-- [ ] T036 [P] [US4] Add failing API tests for successful admin category deactivation in `tests/backend/BlogPlatform.Api.Tests/Categories/DeactivateCategoryApiTests.cs`
+- [X] T033 [US4] Add failing API tests for unauthorized and non-admin rejection on category endpoints in `tests/backend/BlogPlatform.Api.Tests/Categories/CategoryAuthorizationApiTests.cs`
+- [X] T034 [P] [US4] Add failing API tests for successful admin category creation and duplicate-title conflict in `tests/backend/BlogPlatform.Api.Tests/Categories/CreateCategoryApiTests.cs`
+- [X] T035 [P] [US4] Add failing API tests for successful admin category update and not-found behavior in `tests/backend/BlogPlatform.Api.Tests/Categories/UpdateCategoryApiTests.cs`
+- [X] T036 [P] [US4] Add failing API tests for successful admin category deactivation in `tests/backend/BlogPlatform.Api.Tests/Categories/DeactivateCategoryApiTests.cs`
 
 ### Implementation for User Story 4
 
-- [ ] T037 [P] [US4] Create category request and response DTOs in `src/backend/BlogPlatform.Api/Contracts/Categories/CreateCategoryRequest.cs`, `src/backend/BlogPlatform.Api/Contracts/Categories/UpdateCategoryRequest.cs`, and `src/backend/BlogPlatform.Api/Contracts/Categories/CategoryResponse.cs`
-- [ ] T038 [US4] Implement the categories controller in `src/backend/BlogPlatform.Api/Controllers/CategoriesController.cs`
-- [ ] T039 [US4] Re-run the category API tests and stabilize admin-role authorization plus conflict/not-found responses in `src/backend/BlogPlatform.Api/Controllers/CategoriesController.cs` and `src/backend/BlogPlatform.Api/Extensions/AuthenticationExtensions.cs`
+- [X] T037 [P] [US4] Create category request and response DTOs in `src/backend/BlogPlatform.Api/Contracts/Categories/CreateCategoryRequest.cs`, `src/backend/BlogPlatform.Api/Contracts/Categories/UpdateCategoryRequest.cs`, and `src/backend/BlogPlatform.Api/Contracts/Categories/CategoryResponse.cs`
+- [X] T038 [US4] Implement the categories controller in `src/backend/BlogPlatform.Api/Controllers/CategoriesController.cs`
+- [X] T039 [US4] Re-run the category API tests and stabilize admin-role authorization plus conflict/not-found responses in `src/backend/BlogPlatform.Api/Controllers/CategoriesController.cs` and `src/backend/BlogPlatform.Api/Extensions/AuthenticationExtensions.cs`
 
 **Checkpoint**: Administrator-only category management is available through
 HTTP with correct auth and error behavior.
@@ -156,11 +156,11 @@ HTTP with correct auth and error behavior.
 **Purpose**: Finalize API documentation, demo flow guidance, and end-to-end
 validation without expanding scope.
 
-- [ ] T040 [P] Update OpenAPI configuration and local API exploration notes in `src/backend/BlogPlatform.Api/Program.cs`, `src/backend/BlogPlatform.Api/BlogPlatform.Api.http`, and `README.md`
-- [ ] T041 [P] Document API run instructions, demo credentials, Swagger URL, and the basic demo flow in `README.md` and `docs/Database-Implementation-Strategy.md`
-- [ ] T042 Re-run the full API, Application, and Infrastructure backend test suites through `tests/backend/BlogPlatform.Api.Tests/BlogPlatform.Api.Tests.csproj`, `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`, and `tests/backend/BlogPlatform.Infrastructure.Tests/BlogPlatform.Infrastructure.Tests.csproj`
-- [ ] T043 Validate the local Swagger/OpenAPI surface and basic manual demo flow through `src/backend/BlogPlatform.Api/Program.cs` and `src/backend/BlogPlatform.Api/BlogPlatform.Api.http`
-- [ ] T044 Review the API slice for thin-controller compliance and confirm no out-of-scope features were introduced in `src/backend/BlogPlatform.Api` and `specs/010-api-endpoints/tasks.md`
+- [X] T040 [P] Update OpenAPI configuration and local API exploration notes in `src/backend/BlogPlatform.Api/Program.cs`, `src/backend/BlogPlatform.Api/BlogPlatform.Api.http`, and `README.md`
+- [X] T041 [P] Document API run instructions, demo credentials, Swagger URL, and the basic demo flow in `README.md` and `docs/Database-Implementation-Strategy.md`
+- [X] T042 Re-run the full API, Application, and Infrastructure backend test suites through `tests/backend/BlogPlatform.Api.Tests/BlogPlatform.Api.Tests.csproj`, `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`, and `tests/backend/BlogPlatform.Infrastructure.Tests/BlogPlatform.Infrastructure.Tests.csproj`
+- [X] T043 Validate the local Swagger/OpenAPI surface and basic manual demo flow through `src/backend/BlogPlatform.Api/Program.cs` and `src/backend/BlogPlatform.Api/BlogPlatform.Api.http`
+- [X] T044 Review the API slice for thin-controller compliance and confirm no out-of-scope features were introduced in `src/backend/BlogPlatform.Api` and `specs/010-api-endpoints/tasks.md`
 
 ---
 

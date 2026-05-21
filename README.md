@@ -123,3 +123,38 @@ These credentials are for local/demo usage only.
 docker compose down -v
 docker compose up -d postgres
 ```
+
+## Local API Setup
+
+Run the backend API from the repository root after PostgreSQL is healthy:
+
+```bash
+dotnet run --project src/backend/BlogPlatform.Api/BlogPlatform.Api.csproj
+```
+
+Default local API URLs:
+
+- Swagger UI: `http://localhost:5034/swagger`
+- OpenAPI JSON: `http://localhost:5034/swagger/v1/swagger.json`
+
+### API Demo Flow
+
+1. Start PostgreSQL with `docker compose up -d postgres`.
+2. Start the API with `dotnet run --project src/backend/BlogPlatform.Api/BlogPlatform.Api.csproj`.
+3. Open Swagger and call `POST /api/auth/login` with:
+   - `admin@blogplatform.local` / `Admin123!`
+   - `user@blogplatform.local` / `User123!`
+4. Use the returned bearer token in Swagger for protected endpoints:
+   - `POST /api/posts`
+   - `PUT /api/posts/{postId}`
+   - `DELETE /api/posts/{postId}`
+   - `POST /api/categories`
+   - `PUT /api/categories/{categoryId}`
+   - `DELETE /api/categories/{categoryId}`
+5. Verify public endpoints anonymously:
+   - `GET /api/posts`
+   - `GET /api/posts/{postId}`
+   - `POST /api/posts/{postId}/reactions`
+
+The sample request flow is also documented in
+`src/backend/BlogPlatform.Api/BlogPlatform.Api.http`.

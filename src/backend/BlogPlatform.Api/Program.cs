@@ -1,41 +1,73 @@
-var builder = WebApplication.CreateBuilder(args);
+using BlogPlatform.Api.Configuration;
+using BlogPlatform.Api.Errors;
+using BlogPlatform.Api.Extensions;
+using Microsoft.OpenApi.Models;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+var builder = WebApplication.CreateBuilder(args);
+var jwtSettings = JwtAuthenticationSettings.FromConfiguration(builder.Configuration);
+
+builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "BlogPlatform API",
+        Version = "v1",
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Provide a valid JWT bearer token.",
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme,
+                },
+            },
+            Array.Empty<string>()
+        },
+    });
+});
+
+builder.Services.AddBlogPlatformApplication();
+builder.Services.AddBlogPlatformInfrastructure(builder.Configuration, jwtSettings);
+builder.Services.AddBlogPlatformAuthentication(jwtSettings);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseExceptionHandler(errorApp =>
 {
-    app.MapOpenApi();
-}
+    errorApp.Run(async context =>
+    {
+        var problem = context.CreateProblemDetails(
+            statusCode: StatusCodes.Status500InternalServerError,
+            title: "Unexpected Error",
+            detail: "An unexpected error occurred while processing the request.");
 
-app.UseHttpsRedirection();
+        await context.WriteProblemDetailsAsync(problem);
+    });
+});
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+public partial class Program;
