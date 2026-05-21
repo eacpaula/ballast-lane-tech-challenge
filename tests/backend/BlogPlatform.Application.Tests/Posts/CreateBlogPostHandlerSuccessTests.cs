@@ -1,0 +1,63 @@
+using BlogPlatform.Application.Abstractions;
+using BlogPlatform.Application.Posts;
+using BlogPlatform.Domain.Posts;
+
+namespace BlogPlatform.Application.Tests.Posts;
+
+public class CreateBlogPostHandlerSuccessTests
+{
+    [Fact]
+    public async Task HandleAsync_WithValidCommand_CreatesPostAndReturnsSuccess()
+    {
+        var categoryRepository = new FakeCategoryRepository(isAvailable: true);
+        var postRepository = new FakePostRepository();
+        var handler = new CreateBlogPostHandler(postRepository, categoryRepository);
+
+        var command = new CreateBlogPostCommand(
+            AuthenticatedUserId: 7,
+            CategoryId: 3,
+            Title: "Valid title",
+            Summary: "Summary",
+            Content: "Useful content");
+
+        var result = await handler.HandleAsync(command);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(101, result.PostId);
+        Assert.Equal(7, result.AuthorUserId);
+        Assert.Equal(3, result.CategoryId);
+        Assert.Equal("Valid title", result.Title);
+        Assert.Equal("Summary", result.Summary);
+        Assert.Equal("Useful content", result.Content);
+        Assert.Single(postRepository.CreatedPosts);
+        Assert.Equal(7, postRepository.CreatedPosts[0].AuthorUserId);
+    }
+
+    private sealed class FakeCategoryRepository(bool isAvailable) : ICategoryRepository
+    {
+        public Task<bool> ExistsAndAvailableAsync(int categoryId, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(isAvailable);
+        }
+    }
+
+    private sealed class FakePostRepository : IPostRepository
+    {
+        public List<BlogPost> CreatedPosts { get; } = [];
+
+        public Task<BlogPost> CreateAsync(BlogPost post, CancellationToken cancellationToken = default)
+        {
+            var savedPost = BlogPost.Rehydrate(
+                id: 101,
+                authorUserId: post.AuthorUserId,
+                categoryId: post.CategoryId,
+                title: post.Title,
+                summary: post.Summary,
+                content: post.Content);
+
+            CreatedPosts.Add(savedPost);
+
+            return Task.FromResult(savedPost);
+        }
+    }
+}
