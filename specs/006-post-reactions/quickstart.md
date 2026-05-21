@@ -24,6 +24,10 @@ Recommended first test cases:
 8. Application persists accepted reactions through a reaction repository
    abstraction only.
 
+This implementation keeps the public-post availability rule reused from
+`BlogPost.IsPubliclyReadable`, while expressing reaction type and actor identity
+as small Domain concepts instead of pushing those invariants into the handler.
+
 Concrete first test files:
 
 - `tests/backend/BlogPlatform.Domain.Tests/Reactions/PostReactionTests.cs`
@@ -58,6 +62,7 @@ Concrete production files:
 - `src/backend/BlogPlatform.Application/Posts/ReactToPostCommand.cs`
 - `src/backend/BlogPlatform.Application/Posts/ReactToPostResult.cs`
 - `src/backend/BlogPlatform.Application/Posts/ReactToPostHandler.cs`
+- `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
 
 ## Step 3: Implement behavior in the correct layer
 
@@ -76,6 +81,9 @@ Run the core test projects repeatedly during red-green-refactor:
 dotnet test tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj
 dotnet test tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj
 ```
+
+For the current implementation, both suites should pass with the new reaction
+tests included in the existing backend test projects.
 
 ## Step 5: Defer everything else
 

@@ -32,9 +32,9 @@ description: "Task list for public visitor reacts to posts"
 
 **Purpose**: Prepare the minimal test and source structure for the post-reactions slice without expanding scope.
 
-- [ ] T001 Create reaction-domain test folder structure in `tests/backend/BlogPlatform.Domain.Tests/Reactions/`
-- [ ] T002 Create reaction-application test folder structure in `tests/backend/BlogPlatform.Application.Tests/Reactions/`
-- [ ] T003 Create reaction source folder structure in `src/backend/BlogPlatform.Domain/Reactions/` and `src/backend/BlogPlatform.Application/Posts/`
+- [X] T001 Create reaction-domain test folder structure in `tests/backend/BlogPlatform.Domain.Tests/Reactions/`
+- [X] T002 Create reaction-application test folder structure in `tests/backend/BlogPlatform.Application.Tests/Reactions/`
+- [X] T003 Create reaction source folder structure in `src/backend/BlogPlatform.Domain/Reactions/` and `src/backend/BlogPlatform.Application/Posts/`
 
 ---
 
@@ -44,9 +44,9 @@ description: "Task list for public visitor reacts to posts"
 
 **CRITICAL**: No reaction behavior is implemented until the reusable Domain/Application boundaries are identified.
 
-- [ ] T004 Review public-post eligibility reuse in `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
-- [ ] T005 Review post-loading reuse points in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
-- [ ] T006 Review reaction boundary decisions in `specs/006-post-reactions/research.md` and `specs/006-post-reactions/contracts/post-reactions-use-case.md`
+- [X] T004 Review public-post eligibility reuse in `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
+- [X] T005 Review post-loading reuse points in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T006 Review reaction boundary decisions in `specs/006-post-reactions/research.md` and `specs/006-post-reactions/contracts/post-reactions-use-case.md`
 
 **Checkpoint**: The project is ready for story-specific TDD work.
 
@@ -62,26 +62,26 @@ description: "Task list for public visitor reacts to posts"
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T007 [P] [US1] Add failing Domain tests for valid and invalid reaction types in `tests/backend/BlogPlatform.Domain.Tests/Reactions/PostReactionTests.cs`
-- [ ] T008 [P] [US1] Add failing Domain tests for valid and invalid reaction actor identity in `tests/backend/BlogPlatform.Domain.Tests/Reactions/PostReactionTests.cs`
-- [ ] T009 [P] [US1] Add failing Application test for successful like reaction against a public, available post in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerSuccessTests.cs`
-- [ ] T010 [P] [US1] Add failing Application test for successful dislike reaction against a public, available post in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerSuccessTests.cs`
-- [ ] T011 [P] [US1] Add failing Application tests for invalid reaction type and invalid actor rejection in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerValidationTests.cs`
-- [ ] T012 [P] [US1] Add failing Application tests for missing, non-public, and unavailable post rejection in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerPostAvailabilityTests.cs`
-- [ ] T013 [P] [US1] Add failing Application assertion coverage for reaction persistence and actor association in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerSuccessTests.cs`
-- [ ] T014 [P] [US1] Add failing Application assertion coverage for clear success and failure results in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerSuccessTests.cs`, `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerValidationTests.cs`, and `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerPostAvailabilityTests.cs`
+- [X] T007 [P] [US1] Add failing Domain tests for valid and invalid reaction types in `tests/backend/BlogPlatform.Domain.Tests/Reactions/PostReactionTests.cs`
+- [X] T008 [P] [US1] Add failing Domain tests for valid and invalid reaction actor identity in `tests/backend/BlogPlatform.Domain.Tests/Reactions/PostReactionTests.cs`
+- [X] T009 [P] [US1] Add failing Application test for successful like reaction against a public, available post in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerSuccessTests.cs`
+- [X] T010 [P] [US1] Add failing Application test for successful dislike reaction against a public, available post in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerSuccessTests.cs`
+- [X] T011 [P] [US1] Add failing Application tests for invalid reaction type and invalid actor rejection in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerValidationTests.cs`
+- [X] T012 [P] [US1] Add failing Application tests for missing, non-public, and unavailable post rejection in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerPostAvailabilityTests.cs`
+- [X] T013 [P] [US1] Add failing Application assertion coverage for reaction persistence and actor association in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerSuccessTests.cs`
+- [X] T014 [P] [US1] Add failing Application assertion coverage for clear success and failure results in `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerSuccessTests.cs`, `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerValidationTests.cs`, and `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerPostAvailabilityTests.cs`
 
 ### Backend Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Create reaction type Domain concept in `src/backend/BlogPlatform.Domain/Reactions/ReactionType.cs`
-- [ ] T016 [P] [US1] Create reaction actor Domain concept in `src/backend/BlogPlatform.Domain/Reactions/ReactionActor.cs`
-- [ ] T017 [P] [US1] Create post reaction Domain model in `src/backend/BlogPlatform.Domain/Reactions/PostReaction.cs`
-- [ ] T018 [P] [US1] Create reaction repository abstraction in `src/backend/BlogPlatform.Application/Abstractions/IPostReactionRepository.cs`
-- [ ] T019 [P] [US1] Create react-to-post command input model in `src/backend/BlogPlatform.Application/Posts/ReactToPostCommand.cs`
-- [ ] T020 [P] [US1] Create react-to-post result model in `src/backend/BlogPlatform.Application/Posts/ReactToPostResult.cs`
-- [ ] T021 [US1] Implement public reaction orchestration in `src/backend/BlogPlatform.Application/Posts/ReactToPostHandler.cs`
-- [ ] T022 [US1] Refactor reaction validation and result handling in `src/backend/BlogPlatform.Domain/Reactions/PostReaction.cs`, `src/backend/BlogPlatform.Application/Posts/ReactToPostHandler.cs`, and `src/backend/BlogPlatform.Application/Posts/ReactToPostResult.cs`
-- [ ] T023 [US1] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Domain.Tests/Reactions/PostReactionTests.cs`, `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerSuccessTests.cs`, `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerValidationTests.cs`, and `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerPostAvailabilityTests.cs`
+- [X] T015 [P] [US1] Create reaction type Domain concept in `src/backend/BlogPlatform.Domain/Reactions/ReactionType.cs`
+- [X] T016 [P] [US1] Create reaction actor Domain concept in `src/backend/BlogPlatform.Domain/Reactions/ReactionActor.cs`
+- [X] T017 [P] [US1] Create post reaction Domain model in `src/backend/BlogPlatform.Domain/Reactions/PostReaction.cs`
+- [X] T018 [P] [US1] Create reaction repository abstraction in `src/backend/BlogPlatform.Application/Abstractions/IPostReactionRepository.cs`
+- [X] T019 [P] [US1] Create react-to-post command input model in `src/backend/BlogPlatform.Application/Posts/ReactToPostCommand.cs`
+- [X] T020 [P] [US1] Create react-to-post result model in `src/backend/BlogPlatform.Application/Posts/ReactToPostResult.cs`
+- [X] T021 [US1] Implement public reaction orchestration in `src/backend/BlogPlatform.Application/Posts/ReactToPostHandler.cs`
+- [X] T022 [US1] Refactor reaction validation and result handling in `src/backend/BlogPlatform.Domain/Reactions/PostReaction.cs`, `src/backend/BlogPlatform.Application/Posts/ReactToPostHandler.cs`, and `src/backend/BlogPlatform.Application/Posts/ReactToPostResult.cs`
+- [X] T023 [US1] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Domain.Tests/Reactions/PostReactionTests.cs`, `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerSuccessTests.cs`, `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerValidationTests.cs`, and `tests/backend/BlogPlatform.Application.Tests/Reactions/ReactToPostHandlerPostAvailabilityTests.cs`
 
 **Checkpoint**: User Story 1 is fully functional inside Domain and Application and can be demonstrated without API, Infrastructure, database, authentication changes, or frontend work.
 
@@ -91,9 +91,9 @@ description: "Task list for public visitor reacts to posts"
 
 **Purpose**: Confirm the slice remains small, reviewable, and aligned with the plan.
 
-- [ ] T024 [P] Update feature notes if needed in `specs/006-post-reactions/quickstart.md`
-- [ ] T025 Run the backend core test sweep in `tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj` and `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`
-- [ ] T026 Review final reaction core scope in `specs/006-post-reactions/plan.md`
+- [X] T024 [P] Update feature notes if needed in `specs/006-post-reactions/quickstart.md`
+- [X] T025 Run the backend core test sweep in `tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj` and `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`
+- [X] T026 Review final reaction core scope in `specs/006-post-reactions/plan.md`
 
 ---
 
