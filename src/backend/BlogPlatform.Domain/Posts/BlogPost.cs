@@ -8,7 +8,9 @@ public sealed class BlogPost
         int categoryId,
         string title,
         string? summary,
-        string content)
+        string content,
+        bool isPublic,
+        bool isAvailable)
     {
         Id = id;
         AuthorUserId = authorUserId;
@@ -16,6 +18,8 @@ public sealed class BlogPost
         Title = title;
         Summary = summary;
         Content = content;
+        IsPublic = isPublic;
+        IsAvailable = isAvailable;
     }
 
     public int Id { get; }
@@ -30,12 +34,20 @@ public sealed class BlogPost
 
     public string Content { get; }
 
+    public bool IsPublic { get; }
+
+    public bool IsAvailable { get; }
+
+    public bool IsPubliclyReadable => IsPublic && IsAvailable;
+
     public static BlogPost Create(
         int authorUserId,
         int categoryId,
         string title,
         string? summary,
-        string content)
+        string content,
+        bool isPublic = true,
+        bool isAvailable = true)
     {
         if (authorUserId <= 0)
         {
@@ -57,7 +69,9 @@ public sealed class BlogPost
             categoryId: categoryId,
             title: normalizedTitle,
             summary: normalizedSummary,
-            content: normalizedContent);
+            content: normalizedContent,
+            isPublic: isPublic,
+            isAvailable: isAvailable);
     }
 
     public static BlogPost Rehydrate(
@@ -66,7 +80,9 @@ public sealed class BlogPost
         int categoryId,
         string title,
         string? summary,
-        string content)
+        string content,
+        bool isPublic = true,
+        bool isAvailable = true)
     {
         if (id <= 0)
         {
@@ -83,7 +99,9 @@ public sealed class BlogPost
             categoryId: categoryId,
             title: normalizedTitle,
             summary: normalizedSummary,
-            content: normalizedContent);
+            content: normalizedContent,
+            isPublic: isPublic,
+            isAvailable: isAvailable);
     }
 
     public BlogPost Update(
@@ -106,7 +124,9 @@ public sealed class BlogPost
             categoryId: CategoryId,
             title: normalizedTitle,
             summary: normalizedSummary,
-            content: normalizedContent);
+            content: normalizedContent,
+            isPublic: IsPublic,
+            isAvailable: IsAvailable);
     }
 
     private static string NormalizeRequired(string value, string paramName)

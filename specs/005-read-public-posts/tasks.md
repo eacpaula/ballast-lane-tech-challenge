@@ -30,8 +30,8 @@ description: "Task list for public visitor reads posts"
 
 **Purpose**: Prepare the minimal test and source structure for the public-read slice without expanding scope.
 
-- [ ] T001 Create public-read application test folder structure in `tests/backend/BlogPlatform.Application.Tests/Posts/`
-- [ ] T002 Create public-read source folder structure in `src/backend/BlogPlatform.Application/Posts/`
+- [X] T001 Create public-read application test folder structure in `tests/backend/BlogPlatform.Application.Tests/Posts/`
+- [X] T002 Create public-read source folder structure in `src/backend/BlogPlatform.Application/Posts/`
 
 ---
 
@@ -41,9 +41,9 @@ description: "Task list for public visitor reads posts"
 
 **CRITICAL**: No public-read behavior is implemented until the existing post abstractions and contract boundaries are reviewed.
 
-- [ ] T003 Review shared repository extension points in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
-- [ ] T004 Review whether public visibility and availability state can be reused from `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
-- [ ] T005 Review public-read contract expectations in `specs/005-read-public-posts/contracts/public-read-posts-use-cases.md`
+- [X] T003 Review shared repository extension points in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T004 Review whether public visibility and availability state can be reused from `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
+- [X] T005 Review public-read contract expectations in `specs/005-read-public-posts/contracts/public-read-posts-use-cases.md`
 
 **Checkpoint**: The project is ready for story-specific TDD work.
 
@@ -59,18 +59,18 @@ description: "Task list for public visitor reads posts"
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T006 [P] [US1] Add failing Application test for public listing without authentication context in `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
-- [ ] T007 [P] [US1] Add failing Application test for excluding non-public posts from the listing in `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
-- [ ] T008 [P] [US1] Add failing Application test for excluding unavailable posts from the listing in `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
-- [ ] T009 [P] [US1] Add failing Application assertion coverage for retrieving list results through the repository abstraction in `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
+- [X] T006 [P] [US1] Add failing Application test for public listing without authentication context in `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
+- [X] T007 [P] [US1] Add failing Application test for excluding non-public posts from the listing in `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
+- [X] T008 [P] [US1] Add failing Application test for excluding unavailable posts from the listing in `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
+- [X] T009 [P] [US1] Add failing Application assertion coverage for retrieving list results through the repository abstraction in `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
 
 ### Backend Implementation for User Story 1
 
-- [ ] T010 [P] [US1] Create public-post list item result model in `src/backend/BlogPlatform.Application/Posts/PublicPostListItem.cs`
-- [ ] T011 [P] [US1] Extend the post repository abstraction for public listing reads in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
-- [ ] T012 [US1] Implement public post listing orchestration in `src/backend/BlogPlatform.Application/Posts/ListPublicPostsHandler.cs`
-- [ ] T013 [US1] Refactor public listing filtering and result shaping in `src/backend/BlogPlatform.Application/Posts/ListPublicPostsHandler.cs` and `src/backend/BlogPlatform.Application/Posts/PublicPostListItem.cs`
-- [ ] T014 [US1] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
+- [X] T010 [P] [US1] Create public-post list item result model in `src/backend/BlogPlatform.Application/Posts/PublicPostListItem.cs`
+- [X] T011 [P] [US1] Extend the post repository abstraction for public listing reads in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T012 [US1] Implement public post listing orchestration in `src/backend/BlogPlatform.Application/Posts/ListPublicPostsHandler.cs`
+- [X] T013 [US1] Refactor public listing filtering and result shaping in `src/backend/BlogPlatform.Application/Posts/ListPublicPostsHandler.cs` and `src/backend/BlogPlatform.Application/Posts/PublicPostListItem.cs`
+- [X] T014 [US1] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
 
 **Checkpoint**: User Story 1 is functional within Application and can be demonstrated without API, Infrastructure, database, or frontend work.
 
@@ -84,19 +84,19 @@ description: "Task list for public visitor reads posts"
 
 ### Tests for User Story 2 (MANDATORY) ⚠️
 
-- [ ] T015 [P] [US2] Add failing Application test for reading a public and available post by id without authentication context in `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
-- [ ] T016 [P] [US2] Add failing Application test for returning a clear not-found or not-available result when the post does not exist in `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
-- [ ] T017 [P] [US2] Add failing Application test for returning a clear not-found or not-available result when the post is not public in `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
-- [ ] T018 [P] [US2] Add failing Application test for returning a clear not-found or not-available result when the post is unavailable in `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
-- [ ] T019 [P] [US2] Add failing Application assertion coverage for retrieving the post detail through the repository abstraction in `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
+- [X] T015 [P] [US2] Add failing Application test for reading a public and available post by id without authentication context in `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
+- [X] T016 [P] [US2] Add failing Application test for returning a clear not-found or not-available result when the post does not exist in `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
+- [X] T017 [P] [US2] Add failing Application test for returning a clear not-found or not-available result when the post is not public in `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
+- [X] T018 [P] [US2] Add failing Application test for returning a clear not-found or not-available result when the post is unavailable in `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
+- [X] T019 [P] [US2] Add failing Application assertion coverage for retrieving the post detail through the repository abstraction in `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
 
 ### Backend Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Create public-post detail result model in `src/backend/BlogPlatform.Application/Posts/GetPublicPostByIdResult.cs`
-- [ ] T021 [P] [US2] Extend the post repository abstraction for public detail reads in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
-- [ ] T022 [US2] Implement public post detail orchestration in `src/backend/BlogPlatform.Application/Posts/GetPublicPostByIdHandler.cs`
-- [ ] T023 [US2] Refactor public detail result handling in `src/backend/BlogPlatform.Application/Posts/GetPublicPostByIdHandler.cs` and `src/backend/BlogPlatform.Application/Posts/GetPublicPostByIdResult.cs`
-- [ ] T024 [US2] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
+- [X] T020 [P] [US2] Create public-post detail result model in `src/backend/BlogPlatform.Application/Posts/GetPublicPostByIdResult.cs`
+- [X] T021 [P] [US2] Extend the post repository abstraction for public detail reads in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T022 [US2] Implement public post detail orchestration in `src/backend/BlogPlatform.Application/Posts/GetPublicPostByIdHandler.cs`
+- [X] T023 [US2] Refactor public detail result handling in `src/backend/BlogPlatform.Application/Posts/GetPublicPostByIdHandler.cs` and `src/backend/BlogPlatform.Application/Posts/GetPublicPostByIdResult.cs`
+- [X] T024 [US2] Re-run focused TDD test suite for `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
 
 **Checkpoint**: User Stories 1 and 2 both work independently inside Application without API, Infrastructure, database, authentication, or frontend changes.
 
@@ -106,9 +106,9 @@ description: "Task list for public visitor reads posts"
 
 **Purpose**: Confirm the slice remains small, reviewable, and aligned with the plan.
 
-- [ ] T025 [P] Update feature notes if needed in `specs/005-read-public-posts/quickstart.md`
-- [ ] T026 Run the backend Application test project in `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`
-- [ ] T027 Review final public-read scope in `specs/005-read-public-posts/plan.md`
+- [X] T025 [P] Update feature notes if needed in `specs/005-read-public-posts/quickstart.md`
+- [X] T026 Run the backend Application test project in `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`
+- [X] T027 Review final public-read scope in `specs/005-read-public-posts/plan.md`
 
 ---
 

@@ -2,8 +2,8 @@
 
 ## Goal
 
-Implement the smallest possible Application-first slice for public post listing
-and public post detail reads without touching API, Infrastructure, database, or
+Implement the smallest possible backend-core slice for public post listing and
+public post detail reads without touching API, Infrastructure, database, or
 frontend code.
 
 ## Step 1: Write failing tests first
@@ -27,8 +27,9 @@ Concrete first test files:
 - `tests/backend/BlogPlatform.Application.Tests/Posts/ListPublicPostsHandlerTests.cs`
 - `tests/backend/BlogPlatform.Application.Tests/Posts/GetPublicPostByIdHandlerTests.cs`
 
-Add Domain tests only if implementation reveals a real public-availability
-state behavior worth protecting in the post model.
+This implementation required a small `BlogPost` state extension for `IsPublic`
+and `IsAvailable`, so Application tests remain the primary driver while Domain
+state is kept explicit instead of hidden inside repository behavior.
 
 ## Step 2: Add only compile-minimum production types
 
@@ -53,12 +54,14 @@ Concrete production files:
 - `src/backend/BlogPlatform.Application/Posts/ListPublicPostsHandler.cs`
 - `src/backend/BlogPlatform.Application/Posts/GetPublicPostByIdHandler.cs`
 - `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
 
 ## Step 3: Implement behavior in the correct layer
 
 - Keep public filtering outcomes and not-available detail handling in the
   Application handlers.
-- Reuse the existing post concept where that keeps the slice smaller.
+- Reuse the existing post concept and make the minimum explicit Domain change
+  needed to represent `IsPublic` and `IsAvailable`.
 - Use test doubles in Application tests instead of real database access.
 - Do not introduce controller logic, SQL, authentication, or transport concerns
   in this slice.
@@ -74,6 +77,13 @@ dotnet test tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Applicatio
 If Domain tests are added later for a justified reason, run:
 
 ```bash
+dotnet test tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj
+```
+
+For the current implementation, both suites should pass:
+
+```bash
+dotnet test tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj
 dotnet test tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj
 ```
 
