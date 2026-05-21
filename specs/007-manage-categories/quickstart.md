@@ -16,13 +16,15 @@ Recommended first test cases:
 
 1. Domain creates a category with a normalized valid title.
 2. Domain rejects blank or invalid category titles.
-3. Application allows an administrator to create a category with a valid title.
-4. Application allows an administrator to update a category with a valid
+3. Domain updates a persisted category title and preserves availability state.
+4. Domain deactivates a persisted category and marks it unavailable.
+5. Application allows an administrator to create a category with a valid title.
+6. Application allows an administrator to update a category with a valid
    non-duplicate title.
-5. Application allows an administrator to deactivate a category.
-6. Application rejects non-admin create, update, and deactivate attempts.
-7. Application rejects duplicate titles on create and update.
-8. Application rejects update and deactivate requests for missing categories.
+7. Application allows an administrator to deactivate a category.
+8. Application rejects non-admin create, update, and deactivate attempts.
+9. Application rejects duplicate titles on create and update.
+10. Application rejects update and deactivate requests for missing categories.
 
 Concrete first test files:
 
@@ -79,6 +81,8 @@ Run the core test projects repeatedly during red-green-refactor:
 dotnet test tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj
 dotnet test tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj
 ```
+
+Both commands pass for the current implementation slice.
 
 ## Step 5: Defer everything else
 
