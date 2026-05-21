@@ -5,9 +5,19 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = JwtAuthenticationSettings.FromConfiguration(builder.Configuration);
+var localCorsSettings = LocalCorsSettings.FromConfiguration(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("LocalFrontend", policy =>
+    {
+        policy.WithOrigins(localCorsSettings.AllowedOrigins.ToArray())
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -64,6 +74,7 @@ app.UseExceptionHandler(errorApp =>
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseCors("LocalFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

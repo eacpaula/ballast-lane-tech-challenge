@@ -57,3 +57,4 @@ Finally confirm:
 - Swagger is reachable through the API service URL
 - `GET /api/categories/available` returns only available categories
 - Existing admin category write routes still require administrator access
+- No tag-list endpoint is expected yet in this slice

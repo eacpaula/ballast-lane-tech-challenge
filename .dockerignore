@@ -3,6 +3,8 @@ node_modules/
 dist/
 build/
 coverage/
+**/bin/
+**/obj/
 database/data/
 *.log
 .env

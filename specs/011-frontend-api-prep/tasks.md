@@ -16,10 +16,10 @@ and category-listing behavior can be implemented and validated independently.
 **Purpose**: Prepare the API container build inputs and local runtime
 configuration defaults shared by the rest of the feature.
 
-- [ ] T001 Add API container runtime placeholders and local frontend origin variables in `.env.example`
-- [ ] T002 Create the API container build definition in `src/backend/BlogPlatform.Api/Dockerfile`
-- [ ] T003 Update root Docker build exclusions for the new API image context in `.dockerignore`
-- [ ] T004 Add API runtime configuration placeholders for container execution in `src/backend/BlogPlatform.Api/appsettings.json` and `src/backend/BlogPlatform.Api/appsettings.Development.json`
+- [X] T001 Add API container runtime placeholders and local frontend origin variables in `.env.example`
+- [X] T002 Create the API container build definition in `src/backend/BlogPlatform.Api/Dockerfile`
+- [X] T003 Update root Docker build exclusions for the new API image context in `.dockerignore`
+- [X] T004 Add API runtime configuration placeholders for container execution in `src/backend/BlogPlatform.Api/appsettings.json` and `src/backend/BlogPlatform.Api/appsettings.Development.json`
 
 ---
 
@@ -28,10 +28,10 @@ configuration defaults shared by the rest of the feature.
 **Purpose**: Add the shared runtime and abstraction changes that block both user
 stories.
 
-- [ ] T005 Add the API service skeleton with PostgreSQL dependency and exposed API port in `docker-compose.yml`
-- [ ] T006 Create configuration-driven local CORS settings support in `src/backend/BlogPlatform.Api/Configuration/LocalCorsSettings.cs`
-- [ ] T007 [P] Extend API configuration binding for container-safe environment overrides in `src/backend/BlogPlatform.Api/Configuration/JwtAuthenticationSettings.cs` and `src/backend/BlogPlatform.Infrastructure/Configuration/PostgreSqlConnectionSettings.cs`
-- [ ] T008 [P] Extend the category repository abstraction for available-category reads in `src/backend/BlogPlatform.Application/Abstractions/ICategoryRepository.cs`
+- [X] T005 Add the API service skeleton with PostgreSQL dependency and exposed API port in `docker-compose.yml`
+- [X] T006 Create configuration-driven local CORS settings support in `src/backend/BlogPlatform.Api/Configuration/LocalCorsSettings.cs`
+- [X] T007 [P] Extend API configuration binding for container-safe environment overrides in `src/backend/BlogPlatform.Api/Configuration/JwtAuthenticationSettings.cs` and `src/backend/BlogPlatform.Infrastructure/Configuration/PostgreSqlConnectionSettings.cs`
+- [X] T008 [P] Extend the category repository abstraction for available-category reads in `src/backend/BlogPlatform.Application/Abstractions/ICategoryRepository.cs`
 
 **Checkpoint**: Docker/runtime configuration and the shared category read
 abstraction are ready; story-level work can begin.
@@ -51,15 +51,15 @@ route.
 
 ### Tests for User Story 1
 
-- [ ] T009 [US1] Add a failing API integration test for local frontend CORS behavior on a public endpoint in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostsCorsTests.cs`
+- [X] T009 [US1] Add a failing API integration test for local frontend CORS behavior on a public endpoint in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostsCorsTests.cs`
 
 ### Implementation for User Story 1
 
-- [ ] T010 [P] [US1] Wire local-development CORS and environment-driven API runtime settings in `src/backend/BlogPlatform.Api/Program.cs` and `src/backend/BlogPlatform.Api/Configuration/LocalCorsSettings.cs`
-- [ ] T011 [P] [US1] Finalize the API Docker Compose service configuration and container environment mapping in `docker-compose.yml` and `src/backend/BlogPlatform.Api/Dockerfile`
-- [ ] T012 [US1] Validate API container startup and PostgreSQL connectivity through `docker-compose.yml` and `README.md`
-- [ ] T013 [US1] Validate Swagger availability through the containerized API using `src/backend/BlogPlatform.Api/BlogPlatform.Api.http` and `README.md`
-- [ ] T014 [US1] Re-run the CORS/API regression test and confirm the documented local runtime flow in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostsCorsTests.cs` and `specs/011-frontend-api-prep/quickstart.md`
+- [X] T010 [P] [US1] Wire local-development CORS and environment-driven API runtime settings in `src/backend/BlogPlatform.Api/Program.cs` and `src/backend/BlogPlatform.Api/Configuration/LocalCorsSettings.cs`
+- [X] T011 [P] [US1] Finalize the API Docker Compose service configuration and container environment mapping in `docker-compose.yml` and `src/backend/BlogPlatform.Api/Dockerfile`
+- [X] T012 [US1] Validate API container startup and PostgreSQL connectivity through `docker-compose.yml` and `README.md`
+- [X] T013 [US1] Validate Swagger availability through the containerized API using `src/backend/BlogPlatform.Api/BlogPlatform.Api.http` and `README.md`
+- [X] T014 [US1] Re-run the CORS/API regression test and confirm the documented local runtime flow in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostsCorsTests.cs` and `specs/011-frontend-api-prep/quickstart.md`
 
 **Checkpoint**: The API is reachable through Docker Compose and can be called
 from the local frontend origin with Swagger still available.
@@ -79,17 +79,17 @@ categories, and existing category write endpoints remain administrator-only.
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T015 [P] [US2] Add a failing Application test for listing only available categories in `tests/backend/BlogPlatform.Application.Tests/Categories/ListAvailablePostCategoriesHandlerTests.cs`
-- [ ] T016 [P] [US2] Add a failing PostgreSQL-backed repository test for available-category filtering in `tests/backend/BlogPlatform.Infrastructure.Tests/Categories/CategoryRepositoryListAvailableTests.cs`
-- [ ] T017 [P] [US2] Add failing API integration tests for anonymous category listing and unavailable-category exclusion in `tests/backend/BlogPlatform.Api.Tests/Categories/AvailableCategoryListApiTests.cs`
+- [X] T015 [P] [US2] Add a failing Application test for listing only available categories in `tests/backend/BlogPlatform.Application.Tests/Categories/ListAvailablePostCategoriesHandlerTests.cs`
+- [X] T016 [P] [US2] Add a failing PostgreSQL-backed repository test for available-category filtering in `tests/backend/BlogPlatform.Infrastructure.Tests/Categories/CategoryRepositoryListAvailableTests.cs`
+- [X] T017 [P] [US2] Add failing API integration tests for anonymous category listing and unavailable-category exclusion in `tests/backend/BlogPlatform.Api.Tests/Categories/AvailableCategoryListApiTests.cs`
 
 ### Implementation for User Story 2
 
-- [ ] T018 [P] [US2] Create the available-category Application read model and handler in `src/backend/BlogPlatform.Application/Posts/AvailablePostCategoryListItem.cs` and `src/backend/BlogPlatform.Application/Posts/ListAvailablePostCategoriesHandler.cs`
-- [ ] T019 [P] [US2] Implement the raw SQL available-category query in `src/backend/BlogPlatform.Infrastructure/Categories/PostgreSqlCategoryRepository.cs`
-- [ ] T020 [P] [US2] Register the new handler and add the read-only response DTO in `src/backend/BlogPlatform.Api/Extensions/ServiceCollectionExtensions.cs` and `src/backend/BlogPlatform.Api/Contracts/Categories/AvailableCategoryResponse.cs`
-- [ ] T021 [US2] Implement the public available-categories endpoint in `src/backend/BlogPlatform.Api/Controllers/PublicCategoriesController.cs`
-- [ ] T022 [US2] Re-run the category listing API tests and the existing category authorization regression tests in `tests/backend/BlogPlatform.Api.Tests/Categories/AvailableCategoryListApiTests.cs` and `tests/backend/BlogPlatform.Api.Tests/Categories/CategoryAuthorizationApiTests.cs`
+- [X] T018 [P] [US2] Create the available-category Application read model and handler in `src/backend/BlogPlatform.Application/Posts/AvailablePostCategoryListItem.cs` and `src/backend/BlogPlatform.Application/Posts/ListAvailablePostCategoriesHandler.cs`
+- [X] T019 [P] [US2] Implement the raw SQL available-category query in `src/backend/BlogPlatform.Infrastructure/Categories/PostgreSqlCategoryRepository.cs`
+- [X] T020 [P] [US2] Register the new handler and add the read-only response DTO in `src/backend/BlogPlatform.Api/Extensions/ServiceCollectionExtensions.cs` and `src/backend/BlogPlatform.Api/Contracts/Categories/AvailableCategoryResponse.cs`
+- [X] T021 [US2] Implement the public available-categories endpoint in `src/backend/BlogPlatform.Api/Controllers/PublicCategoriesController.cs`
+- [X] T022 [US2] Re-run the category listing API tests and the existing category authorization regression tests in `tests/backend/BlogPlatform.Api.Tests/Categories/AvailableCategoryListApiTests.cs` and `tests/backend/BlogPlatform.Api.Tests/Categories/CategoryAuthorizationApiTests.cs`
 
 **Checkpoint**: The frontend can anonymously load available categories, and
 category write operations remain administrator-only.
@@ -101,12 +101,12 @@ category write operations remain administrator-only.
 **Purpose**: Finalize documentation, demo flow, and full-slice validation
 without expanding scope.
 
-- [ ] T023 [P] Update backend startup and frontend-consumption documentation in `README.md` and `docs/Database-Implementation-Strategy.md`
-- [ ] T024 [P] Update local API exploration examples and feature verification notes in `src/backend/BlogPlatform.Api/BlogPlatform.Api.http` and `specs/011-frontend-api-prep/quickstart.md`
-- [ ] T025 [P] Document that tag listing is deferred for this slice in `specs/011-frontend-api-prep/spec.md` and `README.md`
-- [ ] T026 Re-run the backend suites in `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`, `tests/backend/BlogPlatform.Infrastructure.Tests/BlogPlatform.Infrastructure.Tests.csproj`, and `tests/backend/BlogPlatform.Api.Tests/BlogPlatform.Api.Tests.csproj`
-- [ ] T027 Validate the Docker-based demo flow and Swagger surface through `docker-compose.yml`, `README.md`, and `src/backend/BlogPlatform.Api/BlogPlatform.Api.http`
-- [ ] T028 Review the API/runtime slice for thin-controller compliance and confirm no out-of-scope frontend or authorization changes were introduced in `src/backend/BlogPlatform.Api`, `src/backend/BlogPlatform.Application`, and `specs/011-frontend-api-prep/tasks.md`
+- [X] T023 [P] Update backend startup and frontend-consumption documentation in `README.md` and `docs/Database-Implementation-Strategy.md`
+- [X] T024 [P] Update local API exploration examples and feature verification notes in `src/backend/BlogPlatform.Api/BlogPlatform.Api.http` and `specs/011-frontend-api-prep/quickstart.md`
+- [X] T025 [P] Document that tag listing is deferred for this slice in `specs/011-frontend-api-prep/spec.md` and `README.md`
+- [X] T026 Re-run the backend suites in `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`, `tests/backend/BlogPlatform.Infrastructure.Tests/BlogPlatform.Infrastructure.Tests.csproj`, and `tests/backend/BlogPlatform.Api.Tests/BlogPlatform.Api.Tests.csproj`
+- [X] T027 Validate the Docker-based demo flow and Swagger surface through `docker-compose.yml`, `README.md`, and `src/backend/BlogPlatform.Api/BlogPlatform.Api.http`
+- [X] T028 Review the API/runtime slice for thin-controller compliance and confirm no out-of-scope frontend or authorization changes were introduced in `src/backend/BlogPlatform.Api`, `src/backend/BlogPlatform.Application`, and `specs/011-frontend-api-prep/tasks.md`
 
 ---
 

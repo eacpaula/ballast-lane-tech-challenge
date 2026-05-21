@@ -36,6 +36,11 @@ public class CreateBlogPostHandlerSuccessTests
 
     private sealed class FakeCategoryRepository(bool isAvailable) : ICategoryRepository
     {
+        public Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<PostCategory> CreateAsync(PostCategory category, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();

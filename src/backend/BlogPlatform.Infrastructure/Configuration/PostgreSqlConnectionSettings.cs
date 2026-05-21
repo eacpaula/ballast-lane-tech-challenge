@@ -50,14 +50,14 @@ public sealed class PostgreSqlConnectionSettings
 
         string GetValue(string sectionKey, string envKey, string fallback)
         {
-            var value = configuration[$"Database:{sectionKey}"];
+            var value = Environment.GetEnvironmentVariable(envKey);
 
             if (!string.IsNullOrWhiteSpace(value))
             {
                 return value.Trim();
             }
 
-            value = Environment.GetEnvironmentVariable(envKey);
+            value = configuration[$"Database:{sectionKey}"];
 
             return !string.IsNullOrWhiteSpace(value)
                 ? value.Trim()

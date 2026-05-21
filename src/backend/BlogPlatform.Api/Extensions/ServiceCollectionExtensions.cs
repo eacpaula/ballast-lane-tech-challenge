@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<RegisterUserHandler>();
         services.AddTransient<LoginUserHandler>();
         services.AddTransient<ListPublicPostsHandler>();
+        services.AddTransient<ListAvailablePostCategoriesHandler>();
         services.AddTransient<GetPublicPostByIdHandler>();
         services.AddTransient<ReactToPostHandler>();
         services.AddTransient<CreateBlogPostHandler>();
