@@ -86,6 +86,29 @@ public sealed class BlogPost
             content: normalizedContent);
     }
 
+    public BlogPost Update(
+        string title,
+        string? summary,
+        string content)
+    {
+        if (Id <= 0)
+        {
+            throw new InvalidOperationException("Only persisted posts can be updated.");
+        }
+
+        var normalizedTitle = NormalizeRequired(title, nameof(title));
+        var normalizedContent = NormalizeRequired(content, nameof(content));
+        var normalizedSummary = NormalizeOptional(summary);
+
+        return new BlogPost(
+            id: Id,
+            authorUserId: AuthorUserId,
+            categoryId: CategoryId,
+            title: normalizedTitle,
+            summary: normalizedSummary,
+            content: normalizedContent);
+    }
+
     private static string NormalizeRequired(string value, string paramName)
     {
         if (string.IsNullOrWhiteSpace(value))

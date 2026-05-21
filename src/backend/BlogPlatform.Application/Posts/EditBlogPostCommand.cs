@@ -1,0 +1,8 @@
+namespace BlogPlatform.Application.Posts;
+
+public sealed record EditBlogPostCommand(
+    int AuthenticatedUserId,
+    int PostId,
+    string Title,
+    string? Summary,
+    string Content);

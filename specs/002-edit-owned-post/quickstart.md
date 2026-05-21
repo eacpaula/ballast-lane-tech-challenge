@@ -22,6 +22,15 @@ Recommended first test cases:
 6. Application rejects editing a post owned by another user.
 7. Application saves and returns an owned-post edit successfully.
 
+Concrete first test files:
+
+- `tests/backend/BlogPlatform.Domain.Tests/Posts/BlogPostEditTests.cs`
+- `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerSuccessTests.cs`
+- `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerMissingPostTests.cs`
+- `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerOwnershipTests.cs`
+- `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerAuthenticationTests.cs`
+- `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerValidationTests.cs`
+
 ## Step 2: Add only compile-minimum production types
 
 Introduce only the types required to make those tests compile:
@@ -37,6 +46,14 @@ Keep these types inside:
 
 - `src/backend/BlogPlatform.Domain`
 - `src/backend/BlogPlatform.Application`
+
+Concrete production files:
+
+- `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
+- `src/backend/BlogPlatform.Application/Posts/EditBlogPostCommand.cs`
+- `src/backend/BlogPlatform.Application/Posts/EditBlogPostResult.cs`
+- `src/backend/BlogPlatform.Application/Posts/EditBlogPostHandler.cs`
+- `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
 
 ## Step 3: Implement behavior in the correct layer
 

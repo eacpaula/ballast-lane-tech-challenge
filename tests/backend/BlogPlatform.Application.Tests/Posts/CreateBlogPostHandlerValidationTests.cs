@@ -72,5 +72,15 @@ public class CreateBlogPostHandlerValidationTests
             CreatedPosts.Add(post);
             return Task.FromResult(post);
         }
+
+        public Task<BlogPost?> GetByIdAsync(int postId, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult<BlogPost?>(null);
+        }
+
+        public Task<BlogPost> UpdateAsync(BlogPost post, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(post);
+        }
     }
 }

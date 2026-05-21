@@ -59,5 +59,15 @@ public class CreateBlogPostHandlerSuccessTests
 
             return Task.FromResult(savedPost);
         }
+
+        public Task<BlogPost?> GetByIdAsync(int postId, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult<BlogPost?>(null);
+        }
+
+        public Task<BlogPost> UpdateAsync(BlogPost post, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(post);
+        }
     }
 }

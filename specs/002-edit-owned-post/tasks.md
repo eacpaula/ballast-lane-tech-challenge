@@ -30,8 +30,8 @@ description: "Task list for authenticated user edits only their own blog post"
 
 **Purpose**: Prepare the minimal test and source structure for the edit-post slice without expanding scope.
 
-- [ ] T001 Create edit-post test folder structure in `tests/backend/BlogPlatform.Domain.Tests/Posts/` and `tests/backend/BlogPlatform.Application.Tests/Posts/`
-- [ ] T002 Create edit-post source folder structure in `src/backend/BlogPlatform.Application/Posts/`
+- [X] T001 Create edit-post test folder structure in `tests/backend/BlogPlatform.Domain.Tests/Posts/` and `tests/backend/BlogPlatform.Application.Tests/Posts/`
+- [X] T002 Create edit-post source folder structure in `src/backend/BlogPlatform.Application/Posts/`
 
 ---
 
@@ -41,8 +41,8 @@ description: "Task list for authenticated user edits only their own blog post"
 
 **CRITICAL**: No edit-post behavior is implemented until the baseline folders and target files are identified.
 
-- [ ] T003 Review and prepare reuse of `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs` for edit behavior
-- [ ] T004 Review and prepare reuse of `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs` for read/update behavior
+- [X] T003 Review and prepare reuse of `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs` for edit behavior
+- [X] T004 Review and prepare reuse of `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs` for read/update behavior
 
 **Checkpoint**: The project is ready for story-specific TDD work.
 
@@ -58,22 +58,22 @@ description: "Task list for authenticated user edits only their own blog post"
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T005 [P] [US1] Add Domain tests for valid post updates and invalid title/content in `tests/backend/BlogPlatform.Domain.Tests/Posts/BlogPostEditTests.cs`
-- [ ] T006 [P] [US1] Add failing Application test for successful owned-post update in `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerSuccessTests.cs`
-- [ ] T007 [P] [US1] Add failing Application test for missing post in `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerMissingPostTests.cs`
-- [ ] T008 [P] [US1] Add failing Application test for non-owner edit rejection in `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerOwnershipTests.cs`
-- [ ] T009 [P] [US1] Add failing Application test for missing authenticated user in `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerAuthenticationTests.cs`
-- [ ] T010 [P] [US1] Add failing Application tests for invalid title/content in `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerValidationTests.cs`
+- [X] T005 [P] [US1] Add Domain tests for valid post updates and invalid title/content in `tests/backend/BlogPlatform.Domain.Tests/Posts/BlogPostEditTests.cs`
+- [X] T006 [P] [US1] Add failing Application test for successful owned-post update in `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerSuccessTests.cs`
+- [X] T007 [P] [US1] Add failing Application test for missing post in `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerMissingPostTests.cs`
+- [X] T008 [P] [US1] Add failing Application test for non-owner edit rejection in `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerOwnershipTests.cs`
+- [X] T009 [P] [US1] Add failing Application test for missing authenticated user in `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerAuthenticationTests.cs`
+- [X] T010 [P] [US1] Add failing Application tests for invalid title/content in `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerValidationTests.cs`
 
 ### Backend Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Add minimal edit behavior to `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
-- [ ] T012 [P] [US1] Create edit-post command input model in `src/backend/BlogPlatform.Application/Posts/EditBlogPostCommand.cs`
-- [ ] T013 [P] [US1] Create edit-post result model in `src/backend/BlogPlatform.Application/Posts/EditBlogPostResult.cs`
-- [ ] T014 [P] [US1] Extend repository abstraction for load/update behavior in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
-- [ ] T015 [US1] Implement owned-post edit orchestration in `src/backend/BlogPlatform.Application/Posts/EditBlogPostHandler.cs`
-- [ ] T016 [US1] Refactor ownership, validation, and result handling in `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`, `src/backend/BlogPlatform.Application/Posts/EditBlogPostHandler.cs`, and `src/backend/BlogPlatform.Application/Posts/EditBlogPostResult.cs`
-- [ ] T017 [US1] Re-run focused TDD test suite in `tests/backend/BlogPlatform.Domain.Tests/Posts/BlogPostEditTests.cs` and `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandler*.cs`
+- [X] T011 [P] [US1] Add minimal edit behavior to `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`
+- [X] T012 [P] [US1] Create edit-post command input model in `src/backend/BlogPlatform.Application/Posts/EditBlogPostCommand.cs`
+- [X] T013 [P] [US1] Create edit-post result model in `src/backend/BlogPlatform.Application/Posts/EditBlogPostResult.cs`
+- [X] T014 [P] [US1] Extend repository abstraction for load/update behavior in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T015 [US1] Implement owned-post edit orchestration in `src/backend/BlogPlatform.Application/Posts/EditBlogPostHandler.cs`
+- [X] T016 [US1] Refactor ownership, validation, and result handling in `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`, `src/backend/BlogPlatform.Application/Posts/EditBlogPostHandler.cs`, and `src/backend/BlogPlatform.Application/Posts/EditBlogPostResult.cs`
+- [X] T017 [US1] Re-run focused TDD test suite in `tests/backend/BlogPlatform.Domain.Tests/Posts/BlogPostEditTests.cs` and `tests/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandler*.cs`
 
 **Checkpoint**: User Story 1 is fully functional within Domain and Application and can be demonstrated without API, Infrastructure, frontend, or database work.
 
@@ -83,9 +83,9 @@ description: "Task list for authenticated user edits only their own blog post"
 
 **Purpose**: Confirm the slice remains small, reviewable, and aligned with the plan.
 
-- [ ] T018 [P] Update feature notes if needed in `specs/002-edit-owned-post/quickstart.md`
-- [ ] T019 Run the full backend core test sweep for `tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj` and `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`
-- [ ] T020 Review final code paths in `src/backend/BlogPlatform.Domain/Posts/`, `src/backend/BlogPlatform.Application/Posts/`, and `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs` to confirm no API/Infrastructure/frontend scope was introduced
+- [X] T018 [P] Update feature notes if needed in `specs/002-edit-owned-post/quickstart.md`
+- [X] T019 Run the full backend core test sweep for `tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj` and `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`
+- [X] T020 Review final code paths in `src/backend/BlogPlatform.Domain/Posts/`, `src/backend/BlogPlatform.Application/Posts/`, and `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs` to confirm no API/Infrastructure/frontend scope was introduced
 
 ---
 
