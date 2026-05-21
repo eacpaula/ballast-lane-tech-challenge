@@ -1,5 +1,6 @@
 using BlogPlatform.Application.Abstractions;
 using BlogPlatform.Application.Posts;
+using BlogPlatform.Domain.Categories;
 using BlogPlatform.Domain.Posts;
 
 namespace BlogPlatform.Application.Tests.Posts;
@@ -35,9 +36,34 @@ public class CreateBlogPostHandlerSuccessTests
 
     private sealed class FakeCategoryRepository(bool isAvailable) : ICategoryRepository
     {
+        public Task<PostCategory> CreateAsync(PostCategory category, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<PostCategory> DeactivateAsync(PostCategory category, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<bool> ExistsAndAvailableAsync(int categoryId, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(isAvailable);
+        }
+
+        public Task<PostCategory?> GetByIdAsync(int categoryId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<bool> TitleExistsAsync(string title, int? excludingCategoryId = null, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<PostCategory> UpdateAsync(PostCategory category, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
         }
     }
 
