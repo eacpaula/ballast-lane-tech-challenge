@@ -13,7 +13,9 @@
 User stories MUST be prioritized by delivery order and independently testable.
 For this repository, backend behavior is the primary unit of delivery: each
 story MUST state the business rules it exercises and the tests that will be
-written before implementation begins.
+written before implementation begins. If frontend work is in scope, each story
+MUST also state the `DESIGN.md` constraints it depends on and the accessibility
+behavior that must remain intact.
 
 ### User Story 1 - [Brief Title] (Priority: P1)
 
@@ -106,6 +108,9 @@ other rules this story must enforce]
   architecture boundaries
 - **FR-005**: Frontend behavior MUST depend on backend-enforced rules rather
   than replace them
+- **FR-006**: When UI work is in scope, the frontend MUST follow `DESIGN.md`,
+  use centralized TailwindCSS theme tokens, preserve visual consistency across
+  shared components, and meet the project accessibility baseline
 
 ### Key Entities *(include if feature involves data)*
 
@@ -126,6 +131,8 @@ other rules this story must enforce]
 - Domain/Application rules required before UI work: [list rules]
 - Persistence changes required before UI work: [list tables/queries]
 - Frontend work that depends on stable backend behavior: [list pages/components]
+- Frontend design-system constraints from `DESIGN.md`: [list tokens,
+  components, responsive, and accessibility expectations if UI is in scope]
 
 ## Out of Scope
 

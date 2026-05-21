@@ -11,6 +11,8 @@ description: "Task list template for feature implementation"
 
 **Tests**: Backend tests are mandatory. For each backend story, create the
 relevant unit, API integration, and repository tests before production code.
+When frontend work is in scope, include targeted UI and accessibility checks
+only after the supporting backend flow and contracts are stable.
 
 **Organization**: Tasks are grouped by user story to enable independent
 implementation and testing of each story.
@@ -29,6 +31,8 @@ implementation and testing of each story.
   `backend/tests/Application.Tests`, `backend/tests/Api.IntegrationTests`,
   `backend/tests/Infrastructure.Tests`
 - **Frontend**: `frontend/src/`
+- **Frontend theme/config**: `frontend/tailwind.config.*`,
+  `frontend/src/styles/`
 
 <!--
   ============================================================================
@@ -101,6 +105,11 @@ implementation
 
 - [ ] T017 [US1] Implement UI integration in `frontend/src/[path]` after T010
       through T016 are passing
+- [ ] T018 [US1] Update centralized Tailwind theme tokens or shared component
+      primitives in `frontend/tailwind.config.*` or `frontend/src/styles/[file]`
+      instead of introducing arbitrary one-off styles
+- [ ] T019 [US1] Verify keyboard access, focus states, semantic HTML, and
+      readable contrast for the new UI path
 
 **Checkpoint**: User Story 1 is functional and independently testable
 
@@ -114,27 +123,32 @@ implementation
 
 ### Tests for User Story 2 (MANDATORY) ⚠️
 
-- [ ] T018 [P] [US2] Add Domain/Application test in
+- [ ] T020 [P] [US2] Add Domain/Application test in
       `backend/tests/[Project].Tests/[file].cs`
-- [ ] T019 [P] [US2] Add API integration test in
+- [ ] T021 [P] [US2] Add API integration test in
       `backend/tests/Api.IntegrationTests/[file].cs`
-- [ ] T020 [P] [US2] Add repository test in
+- [ ] T022 [P] [US2] Add repository test in
       `backend/tests/Infrastructure.Tests/[file].cs` if applicable
 
 ### Backend Implementation for User Story 2
 
-- [ ] T021 [P] [US2] Implement Domain/Application logic in
+- [ ] T023 [P] [US2] Implement Domain/Application logic in
       `backend/src/[layer]/[file].cs`
-- [ ] T022 [P] [US2] Implement parameterized SQL repository changes in
+- [ ] T024 [P] [US2] Implement parameterized SQL repository changes in
       `backend/src/Infrastructure/[file].cs`
-- [ ] T023 [US2] Implement API endpoint and DTO updates in
+- [ ] T025 [US2] Implement API endpoint and DTO updates in
       `backend/src/Api/[file].cs`
-- [ ] T024 [US2] Re-run tests and confirm authorization and validation behavior
+- [ ] T026 [US2] Re-run tests and confirm authorization and validation behavior
 
 ### Frontend for User Story 2
 
-- [ ] T025 [US2] Implement UI integration in `frontend/src/[path]` after T018
-      through T024 are passing
+- [ ] T027 [US2] Implement UI integration in `frontend/src/[path]` after T020
+      through T026 are passing
+- [ ] T028 [US2] Update centralized Tailwind theme tokens or shared component
+      primitives in `frontend/tailwind.config.*` or `frontend/src/styles/[file]`
+      instead of introducing arbitrary one-off styles
+- [ ] T029 [US2] Verify keyboard access, focus states, semantic HTML, and
+      readable contrast for the new UI path
 
 **Checkpoint**: User Stories 1 and 2 both work independently
 
@@ -148,27 +162,32 @@ implementation
 
 ### Tests for User Story 3 (MANDATORY) ⚠️
 
-- [ ] T026 [P] [US3] Add Domain/Application test in
+- [ ] T030 [P] [US3] Add Domain/Application test in
       `backend/tests/[Project].Tests/[file].cs`
-- [ ] T027 [P] [US3] Add API integration test in
+- [ ] T031 [P] [US3] Add API integration test in
       `backend/tests/Api.IntegrationTests/[file].cs`
-- [ ] T028 [P] [US3] Add repository test in
+- [ ] T032 [P] [US3] Add repository test in
       `backend/tests/Infrastructure.Tests/[file].cs` if applicable
 
 ### Backend Implementation for User Story 3
 
-- [ ] T029 [P] [US3] Implement Domain/Application logic in
+- [ ] T033 [P] [US3] Implement Domain/Application logic in
       `backend/src/[layer]/[file].cs`
-- [ ] T030 [P] [US3] Implement parameterized SQL repository changes in
+- [ ] T034 [P] [US3] Implement parameterized SQL repository changes in
       `backend/src/Infrastructure/[file].cs`
-- [ ] T031 [US3] Implement API endpoint and DTO updates in
+- [ ] T035 [US3] Implement API endpoint and DTO updates in
       `backend/src/Api/[file].cs`
-- [ ] T032 [US3] Re-run tests and confirm security and error behavior
+- [ ] T036 [US3] Re-run tests and confirm security and error behavior
 
 ### Frontend for User Story 3
 
-- [ ] T033 [US3] Implement UI integration in `frontend/src/[path]` after T026
-      through T032 are passing
+- [ ] T037 [US3] Implement UI integration in `frontend/src/[path]` after T030
+      through T036 are passing
+- [ ] T038 [US3] Update centralized Tailwind theme tokens or shared component
+      primitives in `frontend/tailwind.config.*` or `frontend/src/styles/[file]`
+      instead of introducing arbitrary one-off styles
+- [ ] T039 [US3] Verify keyboard access, focus states, semantic HTML, and
+      readable contrast for the new UI path
 
 **Checkpoint**: All planned user stories are independently functional
 
@@ -179,12 +198,12 @@ implementation
 **Purpose**: Improvements that affect multiple user stories without expanding
 scope
 
-- [ ] T034 [P] Update documentation in `docs/` or feature quickstart files
-- [ ] T035 Re-run the full backend and frontend test suite
-- [ ] T036 Review generated code and simplify any unnecessary abstractions
-- [ ] T037 Verify OpenAPI output and ProblemDetails-style responses still match
+- [ ] T040 [P] Update documentation in `docs/` or feature quickstart files
+- [ ] T041 Re-run the full backend and frontend test suite
+- [ ] T042 Review generated code and simplify any unnecessary abstractions
+- [ ] T043 Verify OpenAPI output and ProblemDetails-style responses still match
       implementation
-- [ ] T038 Confirm no out-of-scope features were introduced
+- [ ] T044 Confirm no out-of-scope features were introduced
 
 ---
 
@@ -204,6 +223,8 @@ scope
 - Domain/Application work precedes API wiring when business rules are involved
 - Infrastructure SQL changes remain isolated to backend infrastructure code
 - Frontend tasks wait for passing backend tests and stable contracts
+- Frontend tasks MUST reference `DESIGN.md` through centralized Tailwind theme
+  updates and reusable component patterns rather than arbitrary scattered styles
 
 ### Parallel Opportunities
 
@@ -231,7 +252,7 @@ scope
 1. Finish shared backend foundations
 2. Add the next highest-priority story
 3. Prove it with passing tests and stable API behavior
-4. Add dependent frontend work
+4. Add dependent frontend work with `DESIGN.md` and accessibility checks
 5. Repeat without expanding beyond the approved MVP
 
 ## Notes
@@ -239,4 +260,5 @@ scope
 - `[P]` tasks indicate parallelizable work across different files
 - Story labels maintain traceability to spec.md
 - Every backend story must leave behind useful automated tests
-- Avoid vague tasks, cross-story coupling, and frontend-first sequencing
+- Avoid vague tasks, cross-story coupling, frontend-first sequencing, and
+  scattered one-off UI styling

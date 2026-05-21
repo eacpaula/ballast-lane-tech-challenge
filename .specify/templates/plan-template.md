@@ -15,7 +15,8 @@
 
 **Language/Version**: .NET 10 LTS (backend), TypeScript (frontend)
 
-**Primary Dependencies**: ASP.NET Core Web API, Npgsql, xUnit, React, Vite
+**Primary Dependencies**: ASP.NET Core Web API, Npgsql, xUnit, React, Vite,
+TailwindCSS
 
 **Storage**: PostgreSQL
 
@@ -53,6 +54,10 @@ authorization enforcement; explicit DTOs; no unnecessary enterprise patterns
   expansions?
 - API consistency: Will validation and failures use ProblemDetails-style
   responses, explicit DTOs, and OpenAPI derived from implementation?
+- Frontend governance: If frontend work is in scope, does it follow `DESIGN.md`,
+  centralize tokens in TailwindCSS theme configuration, keep components
+  reusable, avoid direct Ballast Lane branding, and include accessibility from
+  the start?
 
 ## Project Structure
 
@@ -88,13 +93,17 @@ frontend/
 │   ├── components/
 │   ├── features/
 │   ├── pages/
-│   └── services/
+│   ├── services/
+│   └── styles/
+├── tailwind.config.*
 └── tests/
 ```
 
 **Structure Decision**: Keep the backend layered by responsibility and isolated
-from the frontend. Any deviation from this structure must be justified in the
-Complexity Tracking section.
+from the frontend. Frontend structure SHOULD centralize shared UI primitives,
+Tailwind theme configuration, and reusable feature-level composition. Any
+deviation from this structure must be justified in the Complexity Tracking
+section.
 
 ## Complexity Tracking
 

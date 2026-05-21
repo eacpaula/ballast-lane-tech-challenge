@@ -1,19 +1,10 @@
 <!--
 Sync Impact Report
-Version change: unversioned template -> 1.0.0
+Version change: 1.0.0 -> 1.1.0
 Modified principles:
-- Template Core Principle 1 -> I. Test-First Development (Non-Negotiable)
-- Template Core Principle 2 -> II. Backend-First Delivery
-- Template Core Principle 3 -> III. Lightweight Clean Architecture
-- Template Core Principle 4 -> IV. Custom Data Access Discipline
-- Template Core Principle 5 -> V. Security and Authorization
-- added VI. Scope-Controlled MVP
-- added VII. Reviewable Interview-Quality Code
-- added VIII. Consistent API Behavior
-- added IX. Practical Test Strategy
+- added X. Frontend Design-System Governance
 Added sections:
-- Delivery Constraints
-- Spec and Task Enforcement
+- None
 Removed sections:
 - None
 Templates requiring updates:
@@ -105,15 +96,34 @@ especially around mapping, filtering, and write safety. The test suite MUST
 prioritize high-risk behavior over superficial coverage targets. Rationale:
 useful tests prove the architecture and rules that matter most in this challenge.
 
+### X. Frontend Design-System Governance
+Frontend implementation MUST treat `DESIGN.md` as the normative visual and UI
+governance source for this repository. TailwindCSS theme configuration MUST
+centralize the approved design tokens for color, typography, spacing, radius,
+and elevation rather than scattering arbitrary values across components. UI
+work MUST remain professional, clean, responsive, accessible, and appropriate
+for technical interview presentation. Components MUST be reusable, consistently
+organized, and simple enough to explain without introducing a heavy UI
+framework unless the constitution is amended later. The app MUST follow the
+approved design direction but MUST NOT copy Ballast Lane branding directly.
+Visual consistency MUST be maintained across pages, layout containers, forms,
+cards, badges, buttons, and similar primitives. Accessibility MUST be designed
+in from the start through sufficient contrast, visible focus states, semantic
+HTML, keyboard navigation, and readable typography. Rationale: the frontend is
+part of the interview deliverable and must demonstrate deliberate design-system
+discipline without obscuring the small-project scope.
+
 ## Delivery Constraints
 
 The implementation MUST use .NET 10 LTS for the backend, ASP.NET Core Web API
 controllers for HTTP endpoints, PostgreSQL for persistence, JWT bearer
-authentication, xUnit for backend testing, and React + Vite + TypeScript for the
-frontend. The intended backend shape is a lightweight Clean Architecture split
-across Domain, Application, Infrastructure/Data, API, and Tests. Any proposal to
-change the stack or introduce a new core library MUST show a concrete reduction
-in risk or complexity and MUST NOT violate the core principles above.
+authentication, xUnit for backend testing, and React + Vite + TypeScript for
+the frontend. Frontend styling MUST be driven through TailwindCSS theme
+configuration and reusable component patterns derived from `DESIGN.md`. The
+intended backend shape is a lightweight Clean Architecture split across Domain,
+Application, Infrastructure/Data, API, and Tests. Any proposal to change the
+stack or introduce a new core library MUST show a concrete reduction in risk or
+complexity and MUST NOT violate the core principles above.
 
 ## Spec and Task Enforcement
 
@@ -124,12 +134,18 @@ explicitly.
   and the backend tests that will prove them before implementation begins.
 - Plans MUST include a constitution check that verifies failing-test sequencing,
   backend-first delivery, architecture boundary compliance, security coverage,
-  and scope control.
+  scope control, and when frontend work is in scope, alignment with
+  `DESIGN.md`, centralized Tailwind theme usage, component reuse, and
+  accessibility expectations.
 - Tasks MUST place backend test tasks before the related implementation tasks and
   MUST schedule frontend tasks only after the supporting backend flow is stable
-  and test-covered.
+  and test-covered. Frontend tasks MUST identify any required Tailwind theme
+  updates, reusable component work, and accessibility verification.
 - Any task that bypasses tests, weakens backend authorization, or expands scope
   beyond the approved MVP MUST be treated as non-compliant until corrected.
+  Frontend work that ignores `DESIGN.md`, spreads styling through arbitrary
+  one-off values, or introduces branding outside the approved direction MUST
+  also be treated as non-compliant until corrected.
 
 ## Governance
 
@@ -149,4 +165,4 @@ code review. A feature or change that conflicts with this constitution MUST be
 revised or explicitly justified through a constitution amendment before work
 continues.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-20 | **Last Amended**: 2026-05-20
+**Version**: 1.1.0 | **Ratified**: 2026-05-20 | **Last Amended**: 2026-05-21
