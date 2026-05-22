@@ -15,15 +15,15 @@ public sealed class AdminCategoryListApiTests : IClassFixture<BlogPlatformApiFac
     public async Task ListAllCategories_ReturnsAvailableAndUnavailableCategoriesForAdministrator()
     {
         await _factory.Database.ResetToSeedStateAsync();
-        await _factory.Database.InsertCategoryAsync("Hidden Category", isAvailable: false);
+        await _factory.Database.InsertCategoryAsync("Hidden Category", isAvailable: false, description: "Internal only");
         using var client = await _factory.CreateAuthenticatedClientAsync("admin@blogplatform.local", "Admin123!");
 
-        var response = await client.GetAsync("/api/categories");
+        var response = await client.GetAsync("/api/categories?page=1&pageSize=10");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var categories = await response.Content.ReadFromJsonAsync<List<AdminCategoryListItemResponse>>();
-        Assert.NotNull(categories);
-        Assert.Contains(categories!, category => category.Title == "Hidden Category" && category.IsAvailable == false);
+        var categories = await response.Content.ReadFromJsonAsync<PaginatedCategoryResponse<AdminCategoryListItemResponse>>();
+        CategoryPaginationTestData.AssertValidPage(categories, 1, 10);
+        Assert.Contains(categories!.Items, category => category.Title == "Hidden Category" && category.IsAvailable == false && category.Description == "Internal only");
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public sealed class AdminCategoryListApiTests : IClassFixture<BlogPlatformApiFac
         await _factory.Database.ResetToSeedStateAsync();
         using var client = await _factory.CreateAuthenticatedClientAsync("user@blogplatform.local", "User123!");
 
-        var response = await client.GetAsync("/api/categories");
+        var response = await client.GetAsync("/api/categories?page=1&pageSize=10");
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }

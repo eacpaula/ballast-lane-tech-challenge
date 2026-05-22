@@ -9,66 +9,51 @@ public class ListAvailablePostCategoriesHandlerTests
     [Fact]
     public async Task HandleAsync_ReturnsOnlyAvailableCategories()
     {
-        var repository = new TrackingCategoryRepository([
-            PostCategory.Rehydrate(1, "Architecture", isAvailable: true),
-            PostCategory.Rehydrate(2, "Hidden", isAvailable: false),
-            PostCategory.Rehydrate(3, "Testing", isAvailable: true),
-        ]);
+        var repository = new CategoryRepositoryStub
+        {
+            ListAvailableHandler = request => new PaginatedCategoryResult<PostCategory>(
+                [
+                    PostCategory.Rehydrate(1, "Architecture", "System design posts", isAvailable: true),
+                    PostCategory.Rehydrate(3, "Testing", "Verification posts", isAvailable: true),
+                ],
+                request.Page,
+                request.PageSize,
+                totalCount: 2),
+        };
         var handler = new ListAvailablePostCategoriesHandler(repository);
 
-        var result = await handler.HandleAsync();
+        var result = await handler.HandleAsync(page: 2, pageSize: 5);
 
-        Assert.Equal(2, result.Count);
+        Assert.Equal(2, result.Items.Count);
+        Assert.Equal(2, result.Page);
+        Assert.Equal(5, result.PageSize);
+        Assert.Equal(2, result.TotalCount);
+        Assert.False(result.HasNextPage);
         Assert.Collection(
-            result,
+            result.Items,
             item =>
             {
                 Assert.Equal(1, item.CategoryId);
                 Assert.Equal("Architecture", item.Title);
+                Assert.Equal("System design posts", item.Description);
+                Assert.True(item.IsAvailable);
             },
             item =>
             {
                 Assert.Equal(3, item.CategoryId);
                 Assert.Equal("Testing", item.Title);
+                Assert.Equal("Verification posts", item.Description);
             });
     }
 
     [Fact]
     public async Task HandleAsync_UsesRepositoryAbstraction()
     {
-        var repository = new TrackingCategoryRepository([]);
+        var repository = new CategoryRepositoryStub();
         var handler = new ListAvailablePostCategoriesHandler(repository);
 
         await handler.HandleAsync();
 
         Assert.True(repository.ListAvailableWasCalled);
-    }
-
-    private sealed class TrackingCategoryRepository(IReadOnlyList<PostCategory> categories) : ICategoryRepository
-    {
-        public bool ListAvailableWasCalled { get; private set; }
-
-        public Task<IReadOnlyList<PostCategory>> ListAllAsync(CancellationToken cancellationToken = default)
-        {
-            throw new NotSupportedException();
-        }
-
-        public Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default)
-        {
-            ListAvailableWasCalled = true;
-            return Task.FromResult(categories);
-        }
-
-        public Task<PostCategory> CreateAsync(PostCategory category, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<PostCategory> DeactivateAsync(PostCategory category, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<bool> ExistsAndAvailableAsync(int categoryId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<PostCategory?> GetByIdAsync(int categoryId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<bool> TitleExistsAsync(string title, int? excludingCategoryId = null, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<PostCategory> UpdateAsync(PostCategory category, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

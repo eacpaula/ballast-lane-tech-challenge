@@ -36,7 +36,7 @@ public sealed class UpdatePostCategoryHandler
 
         try
         {
-            updatedCategory = existingCategory.UpdateTitle(command.Title);
+            updatedCategory = existingCategory.UpdateDetails(command.Title, command.Description);
         }
         catch (ArgumentException exception)
         {

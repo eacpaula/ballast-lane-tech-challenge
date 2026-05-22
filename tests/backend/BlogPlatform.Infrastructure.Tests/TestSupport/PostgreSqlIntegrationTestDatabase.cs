@@ -79,16 +79,22 @@ public sealed class PostgreSqlIntegrationTestDatabase : IAsyncLifetime
         }
     }
 
-    public async Task<int> InsertCategoryAsync(string title, bool isAvailable, CancellationToken cancellationToken = default)
+    public async Task<int> InsertCategoryAsync(
+        string title,
+        bool isAvailable,
+        string? description = null,
+        CancellationToken cancellationToken = default)
     {
         const string sql = """
             INSERT INTO post_categories (
                 title,
+                description,
                 available,
                 creation_user_id,
                 update_user_id)
             VALUES (
                 @title,
+                @description,
                 @available,
                 (SELECT id FROM users WHERE username = 'admin'),
                 (SELECT id FROM users WHERE username = 'admin'))
@@ -99,6 +105,7 @@ public sealed class PostgreSqlIntegrationTestDatabase : IAsyncLifetime
         await connection.OpenAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
         command.Parameters.AddWithValue("title", title);
+        command.Parameters.AddWithValue("description", (object?)description ?? DBNull.Value);
         command.Parameters.AddWithValue("available", isAvailable);
         var result = await command.ExecuteScalarAsync(cancellationToken);
         return Convert.ToInt32(result);

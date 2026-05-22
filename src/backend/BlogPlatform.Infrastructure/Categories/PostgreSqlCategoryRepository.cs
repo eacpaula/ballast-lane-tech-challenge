@@ -1,4 +1,5 @@
 using BlogPlatform.Application.Abstractions;
+using BlogPlatform.Application.Posts;
 using BlogPlatform.Domain.Categories;
 using BlogPlatform.Infrastructure.Data;
 using Npgsql;
@@ -30,47 +31,37 @@ public sealed class PostgreSqlCategoryRepository : ICategoryRepository
         return result is true;
     }
 
-    public async Task<IReadOnlyList<PostCategory>> ListAllAsync(CancellationToken cancellationToken = default)
+    public async Task<PaginatedCategoryResult<PostCategory>> ListAllAsync(
+        CategoryPageRequest request,
+        CancellationToken cancellationToken = default)
     {
-        const string sql = """
-            SELECT id, title, available
+        return await ListPageAsync(
+            """
+            SELECT id, title, description, available
             FROM post_categories
-            ORDER BY id;
-            """;
-
-        var categories = new List<PostCategory>();
-        await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-
-        while (await reader.ReadAsync(cancellationToken))
-        {
-            categories.Add(MapCategory(reader));
-        }
-
-        return categories;
+            ORDER BY id
+            LIMIT @limit OFFSET @offset;
+            """,
+            "SELECT COUNT(*) FROM post_categories;",
+            request,
+            cancellationToken);
     }
 
-    public async Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default)
+    public async Task<PaginatedCategoryResult<PostCategory>> ListAvailableAsync(
+        CategoryPageRequest request,
+        CancellationToken cancellationToken = default)
     {
-        const string sql = """
-            SELECT id, title, available
+        return await ListPageAsync(
+            """
+            SELECT id, title, description, available
             FROM post_categories
             WHERE available = TRUE
-            ORDER BY id;
-            """;
-
-        var categories = new List<PostCategory>();
-        await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-
-        while (await reader.ReadAsync(cancellationToken))
-        {
-            categories.Add(MapCategory(reader));
-        }
-
-        return categories;
+            ORDER BY id
+            LIMIT @limit OFFSET @offset;
+            """,
+            "SELECT COUNT(*) FROM post_categories WHERE available = TRUE;",
+            request,
+            cancellationToken);
     }
 
     public async Task<bool> TitleExistsAsync(string title, int? excludingCategoryId = null, CancellationToken cancellationToken = default)
@@ -106,9 +97,9 @@ public sealed class PostgreSqlCategoryRepository : ICategoryRepository
     {
         ArgumentNullException.ThrowIfNull(category);
         const string sql = """
-            INSERT INTO post_categories (title, available)
-            VALUES (@title, @available)
-            RETURNING id, title, available;
+            INSERT INTO post_categories (title, description, available)
+            VALUES (@title, @description, @available)
+            RETURNING id, title, description, available;
             """;
 
         await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
@@ -121,7 +112,7 @@ public sealed class PostgreSqlCategoryRepository : ICategoryRepository
     public async Task<PostCategory?> GetByIdAsync(int categoryId, CancellationToken cancellationToken = default)
     {
         const string sql = """
-            SELECT id, title, available
+            SELECT id, title, description, available
             FROM post_categories
             WHERE id = @id
             LIMIT 1;
@@ -145,10 +136,11 @@ public sealed class PostgreSqlCategoryRepository : ICategoryRepository
         const string sql = """
             UPDATE post_categories
             SET title = @title,
+                description = @description,
                 available = @available,
                 update_date = NOW()
             WHERE id = @id
-            RETURNING id, title, available;
+            RETURNING id, title, description, available;
             """;
 
         await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
@@ -167,7 +159,7 @@ public sealed class PostgreSqlCategoryRepository : ICategoryRepository
             SET available = FALSE,
                 update_date = NOW()
             WHERE id = @id
-            RETURNING id, title, available;
+            RETURNING id, title, description, available;
             """;
 
         await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
@@ -182,12 +174,47 @@ public sealed class PostgreSqlCategoryRepository : ICategoryRepository
     {
         var command = new NpgsqlCommand(sql, connection);
         command.Parameters.AddWithValue("title", category.Title);
+        command.Parameters.AddWithValue("description", (object?)category.Description ?? DBNull.Value);
         command.Parameters.AddWithValue("available", category.IsAvailable);
         return command;
     }
 
     private static PostCategory MapCategory(NpgsqlDataReader reader)
     {
-        return PostCategory.Rehydrate(reader.GetInt32(0), reader.GetString(1), reader.GetBoolean(2));
+        return PostCategory.Rehydrate(
+            reader.GetInt32(0),
+            reader.GetString(1),
+            reader.IsDBNull(2) ? null : reader.GetString(2),
+            reader.GetBoolean(3));
+    }
+
+    private async Task<PaginatedCategoryResult<PostCategory>> ListPageAsync(
+        string itemsSql,
+        string countSql,
+        CategoryPageRequest request,
+        CancellationToken cancellationToken)
+    {
+        var categories = new List<PostCategory>();
+
+        await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
+        await using (var countCommand = new NpgsqlCommand(countSql, connection))
+        await using (var countReader = await countCommand.ExecuteReaderAsync(cancellationToken))
+        {
+            await countReader.ReadAsync(cancellationToken);
+            var totalCount = countReader.GetInt32(0);
+            await countReader.CloseAsync();
+
+            await using var itemsCommand = new NpgsqlCommand(itemsSql, connection);
+            itemsCommand.Parameters.AddWithValue("limit", request.PageSize);
+            itemsCommand.Parameters.AddWithValue("offset", request.Offset);
+            await using var itemsReader = await itemsCommand.ExecuteReaderAsync(cancellationToken);
+
+            while (await itemsReader.ReadAsync(cancellationToken))
+            {
+                categories.Add(MapCategory(itemsReader));
+            }
+
+            return new PaginatedCategoryResult<PostCategory>(categories, request.Page, request.PageSize, totalCount);
+        }
     }
 }

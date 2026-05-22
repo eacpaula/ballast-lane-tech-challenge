@@ -1,5 +1,6 @@
 import { requestJson } from '../../lib/api'
 import type { AvailableCategory, PublicPostDetail, PublicPostSummary } from './post.types'
+import type { PaginatedCategoryResponse } from '../categories/category.types'
 
 type ListPublicPostsOptions = {
   query?: string | null
@@ -24,5 +25,6 @@ export function getPublicPost(postId: number) {
 }
 
 export function listAvailableCategories() {
-  return requestJson<AvailableCategory[]>('/api/categories/available')
+  return requestJson<PaginatedCategoryResponse<AvailableCategory>>('/api/categories/available?page=1&pageSize=100')
+    .then((response) => response.items)
 }

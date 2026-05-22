@@ -9,16 +9,38 @@ namespace BlogPlatform.Api.Controllers;
 public sealed class PublicCategoriesController : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<AvailableCategoryResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<PaginatedCategoryResponse<AvailableCategoryResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> ListAvailable(
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize,
         [FromServices] ListAvailablePostCategoriesHandler handler,
         CancellationToken cancellationToken)
     {
-        var categories = await handler.HandleAsync(cancellationToken);
-        var response = categories
-            .Select(category => new AvailableCategoryResponse(category.CategoryId, category.Title))
-            .ToArray();
+        try
+        {
+            var categories = await handler.HandleAsync(page, pageSize, cancellationToken);
+            var response = new PaginatedCategoryResponse<AvailableCategoryResponse>(
+                categories.Items
+                    .Select(category => new AvailableCategoryResponse(
+                        category.CategoryId,
+                        category.Title,
+                        category.Description,
+                        category.IsAvailable))
+                    .ToArray(),
+                categories.Page,
+                categories.PageSize,
+                categories.TotalCount,
+                categories.TotalPages,
+                categories.HasNextPage);
 
-        return Ok(response);
+            return Ok(response);
+        }
+        catch (ArgumentOutOfRangeException exception)
+        {
+            return ValidationProblem(new ValidationProblemDetails(new Dictionary<string, string[]>
+            {
+                [exception.ParamName ?? "page"] = [exception.Message],
+            }));
+        }
     }
 }

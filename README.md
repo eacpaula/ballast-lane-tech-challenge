@@ -184,9 +184,13 @@ the configured local frontend origins for browser-based development:
 
 - Frontend post forms can load available categories from
   `GET /api/categories/available`.
+- Category list endpoints now support `page` and `pageSize` query parameters
+  and return a paginated envelope with `items`, `page`, `pageSize`,
+  `totalCount`, `totalPages`, and `hasNextPage`.
 - The available-categories endpoint is public because category names are not
   sensitive and the form needs them before any admin workflow.
-- Category create, update, and deactivate endpoints remain administrator-only.
+- Category create and update requests now accept an optional `description`
+  field, and category write endpoints remain administrator-only.
 - Tag listing is intentionally deferred in this slice; the frontend should not
   assume a tag-selection endpoint exists yet.
 
@@ -238,7 +242,8 @@ npm run build
    - `user@blogplatform.local` / `User123!`
    - `admin@blogplatform.local` / `Admin123!`
 6. As a regular user, open `My Posts`, create a post, edit it, and remove it.
-7. As the administrator, open `Categories` and create, update, or deactivate a category.
+7. As the administrator, open `Categories`, page through the category list,
+   and create, update, or deactivate a category with an optional description.
 
 ### Frontend Notes
 

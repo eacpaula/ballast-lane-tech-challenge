@@ -9,28 +9,38 @@ public class CreatePostCategoryHandlerTests
     [Fact]
     public async Task HandleAsync_WithAdminAndValidInput_PersistsCategoryAndReturnsSuccess()
     {
-        var categoryRepository = new TrackingCategoryRepository();
+        var categoryRepository = new CategoryRepositoryStub
+        {
+            CreateHandler = category => PostCategory.Rehydrate(
+                id: 401,
+                title: category.Title,
+                description: category.Description,
+                isAvailable: category.IsAvailable),
+        };
         var handler = new CreatePostCategoryHandler(categoryRepository);
 
         var command = new CreatePostCategoryCommand(
             AuthenticatedUserId: 17,
             IsAdministrator: true,
-            Title: "  Architecture  ");
+            Title: "  Architecture  ",
+            Description: "  Foundational platform topics  ");
 
         var result = await handler.HandleAsync(command);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(401, result.CategoryId);
         Assert.Equal("Architecture", result.Title);
+        Assert.Equal("Foundational platform topics", result.Description);
         Assert.True(result.IsAvailable);
-        Assert.NotNull(categoryRepository.CreatedCategory);
-        Assert.Equal("Architecture", categoryRepository.CreatedCategory!.Title);
+        Assert.NotNull(categoryRepository.LastCreatedCategory);
+        Assert.Equal("Architecture", categoryRepository.LastCreatedCategory!.Title);
+        Assert.Equal("Foundational platform topics", categoryRepository.LastCreatedCategory.Description);
     }
 
     [Fact]
     public async Task HandleAsync_WithNonAdminActor_ReturnsAuthorizationFailure()
     {
-        var categoryRepository = new TrackingCategoryRepository();
+        var categoryRepository = new CategoryRepositoryStub();
         var handler = new CreatePostCategoryHandler(categoryRepository);
 
         var command = new CreatePostCategoryCommand(
@@ -50,7 +60,7 @@ public class CreatePostCategoryHandlerTests
     [InlineData("   ")]
     public async Task HandleAsync_WithInvalidTitle_ReturnsValidationFailure(string title)
     {
-        var categoryRepository = new TrackingCategoryRepository();
+        var categoryRepository = new CategoryRepositoryStub();
         var handler = new CreatePostCategoryHandler(categoryRepository);
 
         var command = new CreatePostCategoryCommand(
@@ -68,7 +78,10 @@ public class CreatePostCategoryHandlerTests
     [Fact]
     public async Task HandleAsync_WithDuplicateTitle_ReturnsDuplicateFailure()
     {
-        var categoryRepository = new TrackingCategoryRepository(titleExists: true);
+        var categoryRepository = new CategoryRepositoryStub
+        {
+            TitleExistsHandler = (_, _) => true,
+        };
         var handler = new CreatePostCategoryHandler(categoryRepository);
 
         var command = new CreatePostCategoryCommand(
@@ -81,58 +94,5 @@ public class CreatePostCategoryHandlerTests
         Assert.False(result.IsSuccess);
         Assert.Equal("DuplicateCategoryTitle", result.ErrorCode);
         Assert.False(categoryRepository.CreateWasCalled);
-    }
-
-    private sealed class TrackingCategoryRepository(bool titleExists = false) : ICategoryRepository
-    {
-        public PostCategory? CreatedCategory { get; private set; }
-
-        public bool CreateWasCalled { get; private set; }
-
-        public Task<IReadOnlyList<PostCategory>> ListAllAsync(CancellationToken cancellationToken = default)
-        {
-            throw new NotSupportedException();
-        }
-
-        public Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default)
-        {
-            throw new NotSupportedException();
-        }
-
-        public Task<PostCategory> CreateAsync(PostCategory category, CancellationToken cancellationToken = default)
-        {
-            CreateWasCalled = true;
-            CreatedCategory = PostCategory.Rehydrate(
-                id: 401,
-                title: category.Title,
-                isAvailable: category.IsAvailable);
-
-            return Task.FromResult(CreatedCategory);
-        }
-
-        public Task<PostCategory> DeactivateAsync(PostCategory category, CancellationToken cancellationToken = default)
-        {
-            throw new NotSupportedException();
-        }
-
-        public Task<bool> ExistsAndAvailableAsync(int categoryId, CancellationToken cancellationToken = default)
-        {
-            throw new NotSupportedException();
-        }
-
-        public Task<PostCategory?> GetByIdAsync(int categoryId, CancellationToken cancellationToken = default)
-        {
-            throw new NotSupportedException();
-        }
-
-        public Task<bool> TitleExistsAsync(string title, int? excludingCategoryId = null, CancellationToken cancellationToken = default)
-        {
-            return Task.FromResult(titleExists);
-        }
-
-        public Task<PostCategory> UpdateAsync(PostCategory category, CancellationToken cancellationToken = default)
-        {
-            throw new NotSupportedException();
-        }
     }
 }

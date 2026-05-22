@@ -33,12 +33,16 @@ public class CreateBlogPostHandlerAuthenticationTests
     {
         public bool WasCalled { get; private set; }
 
-        public Task<IReadOnlyList<PostCategory>> ListAllAsync(CancellationToken cancellationToken = default)
+        public Task<PaginatedCategoryResult<PostCategory>> ListAllAsync(
+            CategoryPageRequest request,
+            CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
 
-        public Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default)
+        public Task<PaginatedCategoryResult<PostCategory>> ListAvailableAsync(
+            CategoryPageRequest request,
+            CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }

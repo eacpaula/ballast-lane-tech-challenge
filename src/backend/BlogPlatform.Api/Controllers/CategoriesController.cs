@@ -13,22 +13,41 @@ namespace BlogPlatform.Api.Controllers;
 public sealed class CategoriesController : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<AdminCategoryListItemResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<PaginatedCategoryResponse<AdminCategoryListItemResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> List(
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize,
         [FromServices] ListAllPostCategoriesHandler handler,
         CancellationToken cancellationToken)
     {
-        var categories = await handler.HandleAsync(IsAdministrator(), cancellationToken);
-        var response = categories
-            .Select(category => new AdminCategoryListItemResponse(
-                category.CategoryId,
-                category.Title,
-                category.IsAvailable))
-            .ToArray();
+        try
+        {
+            var categories = await handler.HandleAsync(IsAdministrator(), page, pageSize, cancellationToken);
+            var response = new PaginatedCategoryResponse<AdminCategoryListItemResponse>(
+                categories.Items
+                    .Select(category => new AdminCategoryListItemResponse(
+                        category.CategoryId,
+                        category.Title,
+                        category.Description,
+                        category.IsAvailable))
+                    .ToArray(),
+                categories.Page,
+                categories.PageSize,
+                categories.TotalCount,
+                categories.TotalPages,
+                categories.HasNextPage);
 
-        return Ok(response);
+            return Ok(response);
+        }
+        catch (ArgumentOutOfRangeException exception)
+        {
+            return ValidationProblem(new ValidationProblemDetails(new Dictionary<string, string[]>
+            {
+                [exception.ParamName ?? "page"] = [exception.Message],
+            }));
+        }
     }
 
     [HttpPost]
@@ -41,7 +60,7 @@ public sealed class CategoriesController : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await handler.HandleAsync(
-            new CreatePostCategoryCommand(GetRequiredAuthenticatedUserId(), IsAdministrator(), request.Title),
+            new CreatePostCategoryCommand(GetRequiredAuthenticatedUserId(), IsAdministrator(), request.Title, request.Description),
             cancellationToken);
 
         if (!result.IsSuccess)
@@ -52,6 +71,7 @@ public sealed class CategoriesController : ControllerBase
         return Created($"/api/categories/{result.CategoryId}", new CategoryResponse(
             result.CategoryId!.Value,
             result.Title!,
+            result.Description,
             result.IsAvailable!.Value));
     }
 
@@ -67,7 +87,7 @@ public sealed class CategoriesController : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await handler.HandleAsync(
-            new UpdatePostCategoryCommand(GetRequiredAuthenticatedUserId(), IsAdministrator(), categoryId, request.Title),
+            new UpdatePostCategoryCommand(GetRequiredAuthenticatedUserId(), IsAdministrator(), categoryId, request.Title, request.Description),
             cancellationToken);
 
         if (!result.IsSuccess)
@@ -78,6 +98,7 @@ public sealed class CategoriesController : ControllerBase
         return Ok(new CategoryResponse(
             result.CategoryId!.Value,
             result.Title!,
+            result.Description,
             result.IsAvailable!.Value));
     }
 
@@ -101,6 +122,7 @@ public sealed class CategoriesController : ControllerBase
         return Ok(new CategoryResponse(
             result.CategoryId!.Value,
             result.Title!,
+            result.Description,
             result.IsAvailable!.Value));
     }
 
