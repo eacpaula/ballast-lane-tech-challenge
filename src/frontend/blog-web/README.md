@@ -42,6 +42,13 @@ npm run build
 - `/my-posts/:postId/edit` edit owned post
 - `/admin/categories` administrator category management
 
+## Search Behavior
+
+- The header search field keeps using the `?q=` route query string.
+- Search results now come from the backend instead of client-side filtering.
+- Logged-in users can receive their own matching private posts in search
+  results; anonymous users only receive public and available matches.
+
 ## Styling Notes
 
 - TailwindCSS with the Vite integration plugin is the styling foundation.

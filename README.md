@@ -153,6 +153,7 @@ Default local API URLs:
    - `DELETE /api/categories/{categoryId}`
 5. Verify public endpoints anonymously:
    - `GET /api/posts`
+   - `GET /api/posts?q=architecture`
    - `GET /api/posts/{postId}`
    - `POST /api/posts/{postId}/reactions`
 
@@ -216,6 +217,16 @@ npm run build
 - `/my-posts/new` authenticated post creation
 - `/my-posts/:postId/edit` authenticated post editing
 - `/admin/categories` administrator-only category management
+
+### Search Notes
+
+- The public listing route now supports backend-powered search through
+  `GET /api/posts?q=...`.
+- Anonymous searches return only public and available posts.
+- Authenticated searches can also return the authenticated user’s own matching
+  private posts, while still excluding private posts owned by other users.
+- Clearing the search field returns the same default listing behavior as the
+  original public feed.
 
 ### Frontend Demo Flow
 

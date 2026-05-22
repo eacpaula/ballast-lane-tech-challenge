@@ -1,6 +1,7 @@
 using BlogPlatform.Api.Contracts.Posts;
 using BlogPlatform.Api.Errors;
 using BlogPlatform.Application.Posts;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogPlatform.Api.Controllers;
@@ -12,10 +13,11 @@ public sealed class PublicPostsController : ControllerBase
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<PublicPostSummaryResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> List(
+        [FromQuery(Name = "q")] string? query,
         [FromServices] ListPublicPostsHandler handler,
         CancellationToken cancellationToken)
     {
-        var posts = await handler.HandleAsync(cancellationToken);
+        var posts = await handler.HandleAsync(query, TryGetAuthenticatedUserId(), cancellationToken);
         var response = posts
             .Select(post => new PublicPostSummaryResponse(post.PostId, post.Title, post.Summary))
             .ToArray();
@@ -43,5 +45,18 @@ public sealed class PublicPostsController : ControllerBase
             result.Title!,
             result.Summary,
             result.Content!));
+    }
+
+    private int? TryGetAuthenticatedUserId()
+    {
+        if (!(User.Identity?.IsAuthenticated ?? false))
+        {
+            return null;
+        }
+
+        var rawValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return int.TryParse(rawValue, out var userId) && userId > 0
+            ? userId
+            : null;
     }
 }

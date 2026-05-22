@@ -104,6 +104,74 @@ public sealed class PostgreSqlIntegrationTestDatabase : IAsyncLifetime
         return Convert.ToInt32(result);
     }
 
+    public async Task<int> GetUserIdByUsernameAsync(string username, CancellationToken cancellationToken = default)
+        => await QueryIntAsync("SELECT id FROM users WHERE username = @value LIMIT 1;", username, cancellationToken);
+
+    public async Task<int> GetCategoryIdByTitleAsync(string title, CancellationToken cancellationToken = default)
+        => await QueryIntAsync("SELECT id FROM post_categories WHERE title = @value LIMIT 1;", title, cancellationToken);
+
+    public async Task<int> InsertPostAsync(
+        int authorUserId,
+        int categoryId,
+        string title,
+        string? summary,
+        string content,
+        bool isPublic = true,
+        bool isAvailable = true,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            INSERT INTO posts (
+                user_id,
+                post_category_id,
+                title,
+                description,
+                content,
+                available,
+                public_post,
+                publish_date,
+                creation_user_id,
+                update_user_id)
+            VALUES (
+                @user_id,
+                @post_category_id,
+                @title,
+                @description,
+                @content,
+                @available,
+                @public_post,
+                CASE WHEN @public_post THEN NOW() ELSE NULL END,
+                @creation_user_id,
+                @update_user_id)
+            RETURNING id;
+            """;
+
+        await using var connection = new NpgsqlConnection(_connectionString);
+        await connection.OpenAsync(cancellationToken);
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("user_id", authorUserId);
+        command.Parameters.AddWithValue("post_category_id", categoryId);
+        command.Parameters.AddWithValue("title", title);
+        command.Parameters.AddWithValue("description", (object?)summary ?? DBNull.Value);
+        command.Parameters.AddWithValue("content", content);
+        command.Parameters.AddWithValue("available", isAvailable);
+        command.Parameters.AddWithValue("public_post", isPublic);
+        command.Parameters.AddWithValue("creation_user_id", authorUserId);
+        command.Parameters.AddWithValue("update_user_id", authorUserId);
+        var result = await command.ExecuteScalarAsync(cancellationToken);
+        return Convert.ToInt32(result);
+    }
+
+    private async Task<int> QueryIntAsync(string sql, string value, CancellationToken cancellationToken)
+    {
+        await using var connection = new NpgsqlConnection(_connectionString);
+        await connection.OpenAsync(cancellationToken);
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("value", value);
+        var result = await command.ExecuteScalarAsync(cancellationToken);
+        return Convert.ToInt32(result);
+    }
+
     private static string ResolveRepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
