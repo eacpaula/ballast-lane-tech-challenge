@@ -6,4 +6,6 @@ public sealed record EditBlogPostCommand(
     string Title,
     string? Summary,
     string Content,
-    IReadOnlyList<string>? Tags = null);
+    IReadOnlyList<string>? Tags = null,
+    DateTimeOffset? PublishDate = null,
+    DateTimeOffset? ExpirationDate = null);

@@ -11,7 +11,9 @@ public sealed class BlogPost
         string content,
         bool isPublic,
         bool isAvailable,
-        IReadOnlyList<string> tags)
+        IReadOnlyList<string> tags,
+        DateTimeOffset? publishDate,
+        DateTimeOffset? expirationDate)
     {
         Id = id;
         AuthorUserId = authorUserId;
@@ -22,6 +24,8 @@ public sealed class BlogPost
         IsPublic = isPublic;
         IsAvailable = isAvailable;
         Tags = tags;
+        PublishDate = publishDate;
+        ExpirationDate = expirationDate;
     }
 
     public int Id { get; }
@@ -40,7 +44,15 @@ public sealed class BlogPost
 
     public bool IsAvailable { get; }
 
-    public bool IsPubliclyReadable => IsPublic && IsAvailable;
+    public DateTimeOffset? PublishDate { get; }
+
+    public DateTimeOffset? ExpirationDate { get; }
+
+    public bool IsPubliclyReadable =>
+        IsPublic &&
+        IsAvailable &&
+        (PublishDate is null || PublishDate <= DateTimeOffset.UtcNow) &&
+        (ExpirationDate is null || ExpirationDate > DateTimeOffset.UtcNow);
 
     public IReadOnlyList<string> Tags { get; }
 
@@ -52,7 +64,9 @@ public sealed class BlogPost
         string content,
         bool isPublic = true,
         bool isAvailable = true,
-        IEnumerable<string>? tags = null)
+        IEnumerable<string>? tags = null,
+        DateTimeOffset? publishDate = null,
+        DateTimeOffset? expirationDate = null)
     {
         if (authorUserId <= 0)
         {
@@ -77,7 +91,9 @@ public sealed class BlogPost
             content: normalizedContent,
             isPublic: isPublic,
             isAvailable: isAvailable,
-            tags: tags?.ToList() ?? (IReadOnlyList<string>)Array.Empty<string>());
+            tags: tags?.ToList() ?? (IReadOnlyList<string>)Array.Empty<string>(),
+            publishDate: publishDate,
+            expirationDate: expirationDate);
     }
 
     public static BlogPost Rehydrate(
@@ -89,7 +105,9 @@ public sealed class BlogPost
         string content,
         bool isPublic = true,
         bool isAvailable = true,
-        IEnumerable<string>? tags = null)
+        IEnumerable<string>? tags = null,
+        DateTimeOffset? publishDate = null,
+        DateTimeOffset? expirationDate = null)
     {
         if (id <= 0)
         {
@@ -109,14 +127,18 @@ public sealed class BlogPost
             content: normalizedContent,
             isPublic: isPublic,
             isAvailable: isAvailable,
-            tags: tags?.ToList() ?? (IReadOnlyList<string>)Array.Empty<string>());
+            tags: tags?.ToList() ?? (IReadOnlyList<string>)Array.Empty<string>(),
+            publishDate: publishDate,
+            expirationDate: expirationDate);
     }
 
     public BlogPost Update(
         string title,
         string? summary,
         string content,
-        IEnumerable<string>? tags = null)
+        IEnumerable<string>? tags = null,
+        DateTimeOffset? publishDate = null,
+        DateTimeOffset? expirationDate = null)
     {
         if (Id <= 0)
         {
@@ -136,7 +158,9 @@ public sealed class BlogPost
             content: normalizedContent,
             isPublic: IsPublic,
             isAvailable: IsAvailable,
-            tags: tags?.ToList() ?? (IReadOnlyList<string>)Array.Empty<string>());
+            tags: tags?.ToList() ?? (IReadOnlyList<string>)Array.Empty<string>(),
+            publishDate: publishDate,
+            expirationDate: expirationDate);
     }
 
     private static string NormalizeRequired(string value, string paramName)

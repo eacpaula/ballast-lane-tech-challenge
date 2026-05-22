@@ -37,6 +37,8 @@ export type OwnedPostSummary = {
   isPublic: boolean
   isAvailable: boolean
   tags: string[]
+  publishDate: string | null
+  expirationDate: string | null
 }
 
 export type OwnedPostDetail = {
@@ -48,6 +50,8 @@ export type OwnedPostDetail = {
   isPublic: boolean
   isAvailable: boolean
   tags: string[]
+  publishDate: string | null
+  expirationDate: string | null
 }
 
 export type PostMutationRequest = {
@@ -56,12 +60,14 @@ export type PostMutationRequest = {
   summary: string
   content: string
   tags: string[]
+  publishDate?: string | null
+  expirationDate?: string | null
 }
 
 export type PostEditorDraft = Omit<PostMutationRequest, 'tags'> & {
   tags: string
   publishDate: string
-  expireDate: string
+  expirationDate: string
   isPublic: boolean
   isAvailable: boolean
 }
@@ -73,4 +79,6 @@ export type PostMutationResponse = {
   summary: string | null
   content: string | null
   tags: string[]
+  publishDate: string | null
+  expirationDate: string | null
 }

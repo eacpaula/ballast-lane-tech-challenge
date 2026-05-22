@@ -19,7 +19,7 @@ public sealed class PublicPostsController : ControllerBase
     {
         var posts = await handler.HandleAsync(query, TryGetAuthenticatedUserId(), cancellationToken);
         var response = posts
-            .Select(post => new PublicPostSummaryResponse(post.PostId, post.Title, post.Summary, post.Tags))
+            .Select(post => new PublicPostSummaryResponse(post.PostId, post.Title, post.Summary, post.Tags, post.PublishDate, post.ExpirationDate))
             .ToArray();
 
         return Ok(response);
@@ -45,7 +45,9 @@ public sealed class PublicPostsController : ControllerBase
             result.Title!,
             result.Summary,
             result.Content!,
-            result.Tags));
+            result.Tags,
+            result.PublishDate,
+            result.ExpirationDate));
     }
 
     private int? TryGetAuthenticatedUserId()

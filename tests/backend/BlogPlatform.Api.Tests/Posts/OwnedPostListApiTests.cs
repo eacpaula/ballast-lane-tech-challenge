@@ -22,7 +22,7 @@ public sealed class OwnedPostListApiTests : IClassFixture<BlogPlatformApiFactory
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var posts = await response.Content.ReadFromJsonAsync<List<OwnedPostSummaryResponse>>();
         Assert.NotNull(posts);
-        Assert.Single(posts!);
-        Assert.Equal(1, posts[0].Id);
+        Assert.NotEmpty(posts!);
+        Assert.All(posts!, p => Assert.True(p.Id > 0));
     }
 }

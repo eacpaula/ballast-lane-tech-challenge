@@ -25,6 +25,53 @@ public sealed class SearchPostsAuthenticatedTests
     }
 
     [Fact]
+    public async Task HandleAsync_ForAuthenticatedSearch_IncludesOwnScheduledPost()
+    {
+        var searchResults = new[]
+        {
+            BlogPost.Rehydrate(1, 2, 3, "Own scheduled blueprint", null, "content", isPublic: true, isAvailable: true,
+                publishDate: DateTimeOffset.UtcNow.AddDays(7)),
+        };
+
+        var result = await new ListPublicPostsHandler(new SearchPostRepositoryStub(searchPosts: searchResults))
+            .HandleAsync("blueprint", 2);
+
+        Assert.Contains(result, p => p.PostId == 1);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ForAuthenticatedSearch_IncludesOwnExpiredPost()
+    {
+        var searchResults = new[]
+        {
+            BlogPost.Rehydrate(1, 2, 3, "Own expired blueprint", null, "content", isPublic: true, isAvailable: true,
+                expirationDate: DateTimeOffset.UtcNow.AddDays(-1)),
+        };
+
+        var result = await new ListPublicPostsHandler(new SearchPostRepositoryStub(searchPosts: searchResults))
+            .HandleAsync("blueprint", 2);
+
+        Assert.Contains(result, p => p.PostId == 1);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ForAuthenticatedSearch_ExcludesOtherUsersScheduledPost()
+    {
+        var searchResults = new[]
+        {
+            BlogPost.Rehydrate(1, 2, 3, "Own post blueprint", null, "content", isPublic: true, isAvailable: true),
+            BlogPost.Rehydrate(2, 5, 3, "Other scheduled blueprint", null, "content", isPublic: true, isAvailable: true,
+                publishDate: DateTimeOffset.UtcNow.AddDays(7)),
+        };
+
+        var result = await new ListPublicPostsHandler(new SearchPostRepositoryStub(searchPosts: searchResults))
+            .HandleAsync("blueprint", 2);
+
+        Assert.Contains(result, p => p.PostId == 1);
+        Assert.DoesNotContain(result, p => p.PostId == 2);
+    }
+
+    [Fact]
     public async Task HandleAsync_ForAuthenticatedSearch_ExcludesPrivatePostsOwnedByOtherUsers()
     {
         var searchResults = new[]

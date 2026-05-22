@@ -39,4 +39,41 @@ public sealed class UpdatePostApiTests : IClassFixture<BlogPlatformApiFactory>
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         Assert.NotNull(await response.Content.ReadFromJsonAsync<ProblemDetails>());
     }
+
+    [Fact]
+    public async Task UpdatePost_WithPublishAndExpirationDates_ReturnsOkWithDates()
+    {
+        await _factory.Database.ResetToSeedStateAsync();
+        var postId = await _factory.Database.GetPostIdByTitleAsync("Building a Lightweight Clean Architecture");
+        using var client = await ApiAuthenticationTestHelper.CreateUserClientAsync(_factory);
+        var publishDate = DateTimeOffset.UtcNow.AddDays(1);
+        var expirationDate = DateTimeOffset.UtcNow.AddDays(30);
+
+        var response = await client.PutAsJsonAsync($"/api/posts/{postId}", new UpdatePostRequest(
+            "Updated With Dates", "summary", "content",
+            PublishDate: publishDate, ExpirationDate: expirationDate));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<PostMutationResponse>();
+        Assert.NotNull(body);
+        Assert.NotNull(body!.PublishDate);
+        Assert.NotNull(body.ExpirationDate);
+    }
+
+    [Fact]
+    public async Task UpdatePost_WithExpirationBeforePublish_ReturnsBadRequest()
+    {
+        await _factory.Database.ResetToSeedStateAsync();
+        var postId = await _factory.Database.GetPostIdByTitleAsync("Building a Lightweight Clean Architecture");
+        using var client = await ApiAuthenticationTestHelper.CreateUserClientAsync(_factory);
+        var publishDate = DateTimeOffset.UtcNow.AddDays(10);
+        var expirationDate = DateTimeOffset.UtcNow.AddDays(5);
+
+        var response = await client.PutAsJsonAsync($"/api/posts/{postId}", new UpdatePostRequest(
+            "Bad Date Update", "summary", "content",
+            PublishDate: publishDate, ExpirationDate: expirationDate));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(await response.Content.ReadFromJsonAsync<ProblemDetails>());
+    }
 }

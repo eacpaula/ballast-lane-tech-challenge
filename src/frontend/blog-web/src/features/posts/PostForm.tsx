@@ -24,16 +24,13 @@ export default function PostForm({
   isSubmitting,
   submitLabel,
   error,
-  mode,
+  mode: _mode,
   disableCategorySelection = false,
   onChange,
   onSubmit,
 }: Props) {
   const categoryOptions = useMemo(() => categories, [categories])
-  const metadataMessage =
-    mode === 'edit'
-      ? 'Visibility, availability, tags, and schedule dates are shown for planning, but the current backend edit flow still persists only title, summary, and content.'
-      : 'Tags, visibility, availability, and schedule dates are shown in the approved editor design. The current backend create flow still persists category, title, summary, and content only.'
+  const metadataMessage = null
 
   return (
     <form
@@ -129,14 +126,14 @@ export default function PostForm({
               />
             </label>
 
-            <label className="form-field" htmlFor="expireDate">
-              <span className="field-label">Expire Date</span>
+            <label className="form-field" htmlFor="expirationDate">
+              <span className="field-label">Expiration Date</span>
               <input
-                id="expireDate"
-                name="expireDate"
+                id="expirationDate"
+                name="expirationDate"
                 type="date"
-                value={value.expireDate}
-                onChange={(event) => onChange({ ...value, expireDate: event.target.value })}
+                value={value.expirationDate}
+                onChange={(event) => onChange({ ...value, expirationDate: event.target.value })}
                 className="input-control post-editor-input"
               />
             </label>
@@ -169,11 +166,10 @@ export default function PostForm({
                   fill="currentColor"
                 />
               </svg>
-              <span>Metadata fields are ready in the UI and awaiting backend support.</span>
+              <span>Publish and expiration dates are optional. Leave blank to publish immediately with no expiration.</span>
             </div>
           </div>
 
-          <FieldMessage message={disableCategorySelection ? 'Category is fixed during edit because the current API only updates title, summary, and content.' : null} />
           <FieldMessage message={metadataMessage} />
           <FieldMessage message={error} tone={error ? 'error' : 'neutral'} />
 

@@ -42,6 +42,7 @@ public static class ProblemDetailsFactoryExtensions
         var (statusCode, title) = errorCode switch
         {
             "ValidationError" => (StatusCodes.Status400BadRequest, "Validation Error"),
+            "expirationDate" => (StatusCodes.Status400BadRequest, "Validation Error"),
             "InvalidReactionType" => (StatusCodes.Status400BadRequest, "Validation Error"),
             "InvalidReactionActor" => (StatusCodes.Status400BadRequest, "Validation Error"),
             "DuplicateEmail" => (StatusCodes.Status409Conflict, "Conflict"),

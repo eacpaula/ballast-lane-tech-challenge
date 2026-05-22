@@ -9,4 +9,6 @@ public sealed record OwnedPostDetailResponse(
     string Content,
     bool IsPublic,
     bool IsAvailable,
-    IReadOnlyList<string> Tags);
+    IReadOnlyList<string> Tags,
+    DateTimeOffset? PublishDate = null,
+    DateTimeOffset? ExpirationDate = null);

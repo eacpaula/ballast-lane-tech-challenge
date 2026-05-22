@@ -6,4 +6,6 @@ public sealed record PostMutationResponse(
     string Title,
     string? Summary,
     string? Content,
-    IReadOnlyList<string> Tags);
+    IReadOnlyList<string> Tags,
+    DateTimeOffset? PublishDate = null,
+    DateTimeOffset? ExpirationDate = null);

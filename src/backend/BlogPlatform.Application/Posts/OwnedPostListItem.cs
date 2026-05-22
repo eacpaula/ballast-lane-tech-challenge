@@ -11,7 +11,9 @@ public sealed class OwnedPostListItem
         string? summary,
         bool isPublic,
         bool isAvailable,
-        IReadOnlyList<string> tags)
+        IReadOnlyList<string> tags,
+        DateTimeOffset? publishDate = null,
+        DateTimeOffset? expirationDate = null)
     {
         PostId = postId;
         CategoryId = categoryId;
@@ -20,6 +22,8 @@ public sealed class OwnedPostListItem
         IsPublic = isPublic;
         IsAvailable = isAvailable;
         Tags = tags;
+        PublishDate = publishDate;
+        ExpirationDate = expirationDate;
     }
 
     public int PostId { get; }
@@ -29,6 +33,8 @@ public sealed class OwnedPostListItem
     public bool IsPublic { get; }
     public bool IsAvailable { get; }
     public IReadOnlyList<string> Tags { get; }
+    public DateTimeOffset? PublishDate { get; }
+    public DateTimeOffset? ExpirationDate { get; }
 
     public static OwnedPostListItem From(BlogPost post)
     {
@@ -40,6 +46,8 @@ public sealed class OwnedPostListItem
             post.Summary,
             post.IsPublic,
             post.IsAvailable,
-            post.Tags);
+            post.Tags,
+            post.PublishDate,
+            post.ExpirationDate);
     }
 }

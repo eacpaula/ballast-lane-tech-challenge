@@ -22,7 +22,7 @@ export function createPost(input: PostMutationRequest, token: string) {
   })
 }
 
-export function updatePost(postId: number, input: Omit<PostMutationRequest, 'categoryId'>, token: string) {
+export function updatePost(postId: number, input: Omit<PostMutationRequest, 'categoryId'> & { publishDate?: string | null; expirationDate?: string | null }, token: string) {
   return requestJson<PostMutationResponse>(`/api/posts/${postId}`, {
     method: 'PUT',
     body: input,

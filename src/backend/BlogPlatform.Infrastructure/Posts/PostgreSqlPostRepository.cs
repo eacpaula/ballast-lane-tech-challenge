@@ -29,6 +29,7 @@ public sealed class PostgreSqlPostRepository : IPostRepository
                 available,
                 public_post,
                 publish_date,
+                expire_date,
                 creation_user_id,
                 update_user_id)
             VALUES (
@@ -39,10 +40,11 @@ public sealed class PostgreSqlPostRepository : IPostRepository
                 @content,
                 @available,
                 @public_post,
-                CASE WHEN @public_post THEN NOW() ELSE NULL END,
+                @publish_date,
+                @expire_date,
                 @creation_user_id,
                 @update_user_id)
-            RETURNING id, user_id, post_category_id, title, description, content, public_post, available;
+            RETURNING id, user_id, post_category_id, title, description, content, public_post, available, publish_date, expire_date;
             """;
 
         await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
@@ -83,6 +85,7 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         const string sql = """
             SELECT
                 p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                p.publish_date, p.expire_date,
                 COALESCE(
                     (SELECT array_agg(t.title ORDER BY pt.creation_date, t.id)
                      FROM post_tags pt
@@ -102,6 +105,7 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         const string sql = """
             SELECT
                 p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                p.publish_date, p.expire_date,
                 COALESCE(
                     (SELECT array_agg(t.title ORDER BY pt.creation_date, t.id)
                      FROM post_tags pt
@@ -133,6 +137,7 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         const string sql = """
             SELECT
                 p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                p.publish_date, p.expire_date,
                 COALESCE(
                     (SELECT array_agg(t.title ORDER BY pt.creation_date, t.id)
                      FROM post_tags pt
@@ -143,6 +148,8 @@ public sealed class PostgreSqlPostRepository : IPostRepository
             WHERE p.id = @id
               AND p.public_post = TRUE
               AND p.available = TRUE
+              AND (p.publish_date IS NULL OR p.publish_date <= NOW())
+              AND (p.expire_date IS NULL OR p.expire_date > NOW())
             LIMIT 1;
             """;
 
@@ -154,6 +161,7 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         const string sql = """
             SELECT
                 p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                p.publish_date, p.expire_date,
                 COALESCE(
                     (SELECT array_agg(t.title ORDER BY pt.creation_date, t.id)
                      FROM post_tags pt
@@ -163,6 +171,8 @@ public sealed class PostgreSqlPostRepository : IPostRepository
             FROM posts p
             WHERE p.public_post = TRUE
               AND p.available = TRUE
+              AND (p.publish_date IS NULL OR p.publish_date <= NOW())
+              AND (p.expire_date IS NULL OR p.expire_date > NOW())
             ORDER BY p.id;
             """;
 
@@ -195,6 +205,8 @@ public sealed class PostgreSqlPostRepository : IPostRepository
                 p.content,
                 p.public_post,
                 p.available,
+                p.publish_date,
+                p.expire_date,
                 COALESCE(
                     (SELECT array_agg(t2.title ORDER BY pt2.creation_date, t2.id)
                      FROM post_tags pt2
@@ -207,7 +219,11 @@ public sealed class PostgreSqlPostRepository : IPostRepository
             LEFT JOIN tags t ON t.id = pt.tag_id
             WHERE p.available = TRUE
               AND (
-                    p.public_post = TRUE
+                    (
+                        p.public_post = TRUE
+                        AND (p.publish_date IS NULL OR p.publish_date <= NOW())
+                        AND (p.expire_date IS NULL OR p.expire_date > NOW())
+                    )
                     OR (@requesting_user_id IS NOT NULL AND p.user_id = @requesting_user_id)
                   )
               AND (
@@ -245,6 +261,7 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         const string sql = """
             SELECT
                 p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                p.publish_date, p.expire_date,
                 COALESCE(
                     (SELECT array_agg(t.title ORDER BY pt.creation_date, t.id)
                      FROM post_tags pt
@@ -283,10 +300,12 @@ public sealed class PostgreSqlPostRepository : IPostRepository
                 content = @content,
                 public_post = @public_post,
                 available = @available,
+                publish_date = @publish_date,
+                expire_date = @expire_date,
                 update_date = NOW(),
                 update_user_id = @update_user_id
             WHERE id = @id
-            RETURNING id, user_id, post_category_id, title, description, content, public_post, available;
+            RETURNING id, user_id, post_category_id, title, description, content, public_post, available, publish_date, expire_date;
             """;
 
         await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
@@ -411,6 +430,8 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         command.Parameters.AddWithValue("content", post.Content);
         command.Parameters.AddWithValue("public_post", post.IsPublic);
         command.Parameters.AddWithValue("available", post.IsAvailable);
+        command.Parameters.Add(new NpgsqlParameter<DateTimeOffset?>("publish_date", NpgsqlDbType.TimestampTz) { TypedValue = post.PublishDate });
+        command.Parameters.Add(new NpgsqlParameter<DateTimeOffset?>("expire_date", NpgsqlDbType.TimestampTz) { TypedValue = post.ExpirationDate });
         command.Parameters.AddWithValue("creation_user_id", post.AuthorUserId);
         command.Parameters.AddWithValue("update_user_id", post.AuthorUserId);
         return command;
@@ -426,6 +447,8 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         command.Parameters.AddWithValue("content", post.Content);
         command.Parameters.AddWithValue("public_post", post.IsPublic);
         command.Parameters.AddWithValue("available", post.IsAvailable);
+        command.Parameters.Add(new NpgsqlParameter<DateTimeOffset?>("publish_date", NpgsqlDbType.TimestampTz) { TypedValue = post.PublishDate });
+        command.Parameters.Add(new NpgsqlParameter<DateTimeOffset?>("expire_date", NpgsqlDbType.TimestampTz) { TypedValue = post.ExpirationDate });
         command.Parameters.AddWithValue("update_user_id", post.AuthorUserId);
         command.Parameters.AddWithValue("id", post.Id);
         return command;
@@ -433,33 +456,44 @@ public sealed class PostgreSqlPostRepository : IPostRepository
 
     private static BlogPost MapPost(NpgsqlDataReader reader)
     {
-        var tags = reader.IsDBNull(8)
+        var idxPublishDate = reader.GetOrdinal("publish_date");
+        var idxExpireDate = reader.GetOrdinal("expire_date");
+        var idxTags = reader.GetOrdinal("tags");
+
+        var tags = reader.IsDBNull(idxTags)
             ? Array.Empty<string>()
-            : (IReadOnlyList<string>)(reader.GetFieldValue<string[]>(8));
+            : (IReadOnlyList<string>)(reader.GetFieldValue<string[]>(idxTags));
 
         return BlogPost.Rehydrate(
-            id: reader.GetInt32(0),
-            authorUserId: reader.GetInt32(1),
-            categoryId: reader.GetInt32(2),
-            title: reader.GetString(3),
-            summary: reader.IsDBNull(4) ? null : reader.GetString(4),
-            content: reader.GetString(5),
-            isPublic: reader.GetBoolean(6),
-            isAvailable: reader.GetBoolean(7),
-            tags: tags);
+            id: reader.GetInt32(reader.GetOrdinal("id")),
+            authorUserId: reader.GetInt32(reader.GetOrdinal("user_id")),
+            categoryId: reader.GetInt32(reader.GetOrdinal("post_category_id")),
+            title: reader.GetString(reader.GetOrdinal("title")),
+            summary: reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString(reader.GetOrdinal("description")),
+            content: reader.GetString(reader.GetOrdinal("content")),
+            isPublic: reader.GetBoolean(reader.GetOrdinal("public_post")),
+            isAvailable: reader.GetBoolean(reader.GetOrdinal("available")),
+            tags: tags,
+            publishDate: reader.IsDBNull(idxPublishDate) ? null : reader.GetFieldValue<DateTimeOffset>(idxPublishDate),
+            expirationDate: reader.IsDBNull(idxExpireDate) ? null : reader.GetFieldValue<DateTimeOffset>(idxExpireDate));
     }
 
     private static BlogPost MapPostFromReader(NpgsqlDataReader reader, IReadOnlyList<string> tags)
     {
+        var idxPublishDate = reader.GetOrdinal("publish_date");
+        var idxExpireDate = reader.GetOrdinal("expire_date");
+
         return BlogPost.Rehydrate(
-            id: reader.GetInt32(0),
-            authorUserId: reader.GetInt32(1),
-            categoryId: reader.GetInt32(2),
-            title: reader.GetString(3),
-            summary: reader.IsDBNull(4) ? null : reader.GetString(4),
-            content: reader.GetString(5),
-            isPublic: reader.GetBoolean(6),
-            isAvailable: reader.GetBoolean(7),
-            tags: tags);
+            id: reader.GetInt32(reader.GetOrdinal("id")),
+            authorUserId: reader.GetInt32(reader.GetOrdinal("user_id")),
+            categoryId: reader.GetInt32(reader.GetOrdinal("post_category_id")),
+            title: reader.GetString(reader.GetOrdinal("title")),
+            summary: reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString(reader.GetOrdinal("description")),
+            content: reader.GetString(reader.GetOrdinal("content")),
+            isPublic: reader.GetBoolean(reader.GetOrdinal("public_post")),
+            isAvailable: reader.GetBoolean(reader.GetOrdinal("available")),
+            tags: tags,
+            publishDate: reader.IsDBNull(idxPublishDate) ? null : reader.GetFieldValue<DateTimeOffset>(idxPublishDate),
+            expirationDate: reader.IsDBNull(idxExpireDate) ? null : reader.GetFieldValue<DateTimeOffset>(idxExpireDate));
     }
 }
