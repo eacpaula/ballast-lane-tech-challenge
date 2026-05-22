@@ -12,6 +12,25 @@ namespace BlogPlatform.Api.Controllers;
 [Route("api/categories")]
 public sealed class CategoriesController : ControllerBase
 {
+    [HttpGet]
+    [ProducesResponseType<IReadOnlyList<AdminCategoryListItemResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> List(
+        [FromServices] ListAllPostCategoriesHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var categories = await handler.HandleAsync(IsAdministrator(), cancellationToken);
+        var response = categories
+            .Select(category => new AdminCategoryListItemResponse(
+                category.CategoryId,
+                category.Title,
+                category.IsAvailable))
+            .ToArray();
+
+        return Ok(response);
+    }
+
     [HttpPost]
     [ProducesResponseType<CategoryResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]

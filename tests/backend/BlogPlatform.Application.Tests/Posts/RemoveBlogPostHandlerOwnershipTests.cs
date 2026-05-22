@@ -56,7 +56,17 @@ public class RemoveBlogPostHandlerOwnershipTests
             return Task.FromResult<BlogPost?>(existingPost);
         }
 
+        public Task<BlogPost?> GetByIdForAuthorAsync(int postId, int authorUserId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<BlogPost?> GetPublicReadByIdAsync(int postId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<IReadOnlyList<BlogPost>> ListByAuthorAsync(int authorUserId, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }

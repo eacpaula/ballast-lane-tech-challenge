@@ -79,6 +79,11 @@ public class DeactivatePostCategoryHandlerTests
 
         public bool DeactivateWasCalled { get; private set; }
 
+        public Task<IReadOnlyList<PostCategory>> ListAllAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();

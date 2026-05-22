@@ -3,8 +3,9 @@
 ## Purpose
 
 This app is the React + Vite frontend for the blog platform technical challenge.
-The current slice establishes the TailwindCSS styling foundation that future UI
-features will build on.
+The current slice provides the frontend MVP on top of the existing ASP.NET Core
+API: public post browsing and reactions, user registration and login, author
+post management, and administrator category management.
 
 ## Run Locally
 
@@ -17,6 +18,12 @@ npm run dev
 
 Open the local URL printed by Vite, typically `http://localhost:5173`.
 
+To run the full stack through Docker Compose from the repository root:
+
+```bash
+docker compose up -d postgres api frontend
+```
+
 ## Validation Commands
 
 ```bash
@@ -24,22 +31,33 @@ npm run lint
 npm run build
 ```
 
-## Tailwind Foundation Notes
+## Main Routes
 
-- The frontend uses TailwindCSS with the Vite integration plugin.
-- Shared design tokens are centralized in
-  [tailwind.config.ts](./tailwind.config.ts).
+- `/` public post listing
+- `/posts/:postId` public post detail
+- `/register` account registration
+- `/login` account login
+- `/my-posts` authenticated author workspace
+- `/my-posts/new` create post
+- `/my-posts/:postId/edit` edit owned post
+- `/admin/categories` administrator category management
+
+## Styling Notes
+
+- TailwindCSS with the Vite integration plugin is the styling foundation.
+- Shared design tokens are centralized in [tailwind.config.ts](./tailwind.config.ts).
 - Global base styles are defined in [src/index.css](./src/index.css).
-- Reusable shell primitives for the first UI layer are defined in
-  [src/styles/components.css](./src/styles/components.css).
+- Reusable primitives are defined in [src/styles/components.css](./src/styles/components.css).
 - Visual direction comes from the repository-level `DESIGN.md`.
 
-## Current Scope
+## Demo Credentials
 
-- Tailwind configuration
-- Shared design tokens
-- Accessible base styles
-- Minimal validation shell
+- Administrator: `admin@blogplatform.local` / `Admin123!`
+- Regular user: `user@blogplatform.local` / `User123!`
 
-The app intentionally does not include full pages, backend API integration,
-authentication UI, or admin workflows yet.
+## Known Limitations
+
+- Post editing does not change category because the current backend update
+  contract only updates title, summary, and content.
+- Tags are not yet exposed in the frontend because a frontend tag workflow is
+  out of scope for this MVP.

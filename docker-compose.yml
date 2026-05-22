@@ -45,3 +45,21 @@ services:
       BLOG_PLATFORM_JWT_EXPIRATION_MINUTES: ${BLOG_PLATFORM_JWT_EXPIRATION_MINUTES:-60}
     ports:
       - "${BLOG_PLATFORM_API_PORT:-5034}:8080"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: src/frontend/blog-web/Dockerfile
+    container_name: blog-platform-frontend
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_started
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:5034}
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "${BLOG_PLATFORM_FRONTEND_PORT:-5173}:5173"
+    volumes:
+      - ./src/frontend/blog-web:/app
+      - /app/node_modules

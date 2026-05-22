@@ -16,11 +16,14 @@ public static class ServiceCollectionExtensions
         services.AddTransient<LoginUserHandler>();
         services.AddTransient<ListPublicPostsHandler>();
         services.AddTransient<ListAvailablePostCategoriesHandler>();
+        services.AddTransient<ListOwnedPostsHandler>();
+        services.AddTransient<GetOwnedPostByIdHandler>();
         services.AddTransient<GetPublicPostByIdHandler>();
         services.AddTransient<ReactToPostHandler>();
         services.AddTransient<CreateBlogPostHandler>();
         services.AddTransient<EditBlogPostHandler>();
         services.AddTransient<RemoveBlogPostHandler>();
+        services.AddTransient<ListAllPostCategoriesHandler>();
         services.AddTransient<CreatePostCategoryHandler>();
         services.AddTransient<UpdatePostCategoryHandler>();
         services.AddTransient<DeactivatePostCategoryHandler>();

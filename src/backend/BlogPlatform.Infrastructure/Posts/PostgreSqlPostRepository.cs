@@ -76,6 +76,30 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         return await QuerySingleAsync(sql, postId, cancellationToken);
     }
 
+    public async Task<BlogPost?> GetByIdForAuthorAsync(int postId, int authorUserId, CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            SELECT id, user_id, post_category_id, title, description, content, public_post, available
+            FROM posts
+            WHERE id = @id
+              AND user_id = @author_user_id
+            LIMIT 1;
+            """;
+
+        await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("id", postId);
+        command.Parameters.AddWithValue("author_user_id", authorUserId);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+        if (!await reader.ReadAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        return MapPost(reader);
+    }
+
     public async Task<BlogPost?> GetPublicReadByIdAsync(int postId, CancellationToken cancellationToken = default)
     {
         const string sql = """
@@ -104,6 +128,30 @@ public sealed class PostgreSqlPostRepository : IPostRepository
 
         await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+        while (await reader.ReadAsync(cancellationToken))
+        {
+            posts.Add(MapPost(reader));
+        }
+
+        return posts;
+    }
+
+    public async Task<IReadOnlyList<BlogPost>> ListByAuthorAsync(int authorUserId, CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            SELECT id, user_id, post_category_id, title, description, content, public_post, available
+            FROM posts
+            WHERE user_id = @author_user_id
+            ORDER BY id;
+            """;
+
+        var posts = new List<BlogPost>();
+
+        await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("author_user_id", authorUserId);
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 
         while (await reader.ReadAsync(cancellationToken))

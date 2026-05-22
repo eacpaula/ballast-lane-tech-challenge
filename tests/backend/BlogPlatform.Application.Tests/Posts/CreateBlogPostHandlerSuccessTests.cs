@@ -36,6 +36,11 @@ public class CreateBlogPostHandlerSuccessTests
 
     private sealed class FakeCategoryRepository(bool isAvailable) : ICategoryRepository
     {
+        public Task<IReadOnlyList<PostCategory>> ListAllAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
@@ -101,7 +106,17 @@ public class CreateBlogPostHandlerSuccessTests
             return Task.FromResult<BlogPost?>(null);
         }
 
+        public Task<BlogPost?> GetByIdForAuthorAsync(int postId, int authorUserId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<BlogPost?> GetPublicReadByIdAsync(int postId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<IReadOnlyList<BlogPost>> ListByAuthorAsync(int authorUserId, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }

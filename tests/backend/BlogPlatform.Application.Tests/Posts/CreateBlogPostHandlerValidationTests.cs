@@ -58,6 +58,11 @@ public class CreateBlogPostHandlerValidationTests
 
     private sealed class TrackingCategoryRepository(bool isAvailable) : ICategoryRepository
     {
+        public Task<IReadOnlyList<PostCategory>> ListAllAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
@@ -114,7 +119,17 @@ public class CreateBlogPostHandlerValidationTests
             return Task.FromResult<BlogPost?>(null);
         }
 
+        public Task<BlogPost?> GetByIdForAuthorAsync(int postId, int authorUserId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<BlogPost?> GetPublicReadByIdAsync(int postId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<IReadOnlyList<BlogPost>> ListByAuthorAsync(int authorUserId, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }

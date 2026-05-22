@@ -4,6 +4,7 @@ using BlogPlatform.Infrastructure.Data;
 
 namespace BlogPlatform.Infrastructure.Tests.Categories;
 
+[Collection("PostgreSqlIntegration")]
 public sealed class CategoryRepositoryListAvailableTests : IClassFixture<PostgreSqlIntegrationTestDatabase>
 {
     private readonly PostgreSqlIntegrationTestDatabase _database;

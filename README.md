@@ -206,13 +206,37 @@ npm run lint
 npm run build
 ```
 
-### Frontend Foundation Notes
+### Frontend MVP Routes
 
-- TailwindCSS is configured as the frontend styling foundation.
-- Shared visual tokens live in
+- `/` public post listing
+- `/posts/:postId` public post detail with like and dislike reactions
+- `/register` user registration
+- `/login` user login
+- `/my-posts` authenticated author post list
+- `/my-posts/new` authenticated post creation
+- `/my-posts/:postId/edit` authenticated post editing
+- `/admin/categories` administrator-only category management
+
+### Frontend Demo Flow
+
+1. Start the full stack with `docker compose up -d postgres api frontend`.
+2. Open `http://localhost:5173`.
+3. Browse public posts and open a post detail page.
+4. Submit a public reaction.
+5. Register a new account or log in with a seeded user:
+   - `user@blogplatform.local` / `User123!`
+   - `admin@blogplatform.local` / `Admin123!`
+6. As a regular user, open `My Posts`, create a post, edit it, and remove it.
+7. As the administrator, open `Categories` and create, update, or deactivate a category.
+
+### Frontend Notes
+
+- TailwindCSS remains the styling foundation, with shared tokens in
   `src/frontend/blog-web/tailwind.config.ts`.
 - Global base styles live in `src/frontend/blog-web/src/index.css`.
-- The minimal shell is intentionally narrow and exists only to prove the
-  styling foundation before full screens are implemented.
+- Reusable component styles live in
+  `src/frontend/blog-web/src/styles/components.css`.
 - Frontend design direction follows `DESIGN.md` and does not copy Ballast Lane
   branding directly.
+- The current MVP intentionally avoids rich text editing, advanced client-side
+  caching, and broader CMS-style workflows.
