@@ -55,4 +55,38 @@ public sealed class SearchPostsAnonymousTests
 
         Assert.Empty(result);
     }
+
+    [Fact]
+    public async Task HandleAsync_AnonymousSearch_ExcludesScheduledPost()
+    {
+        var searchResults = new[]
+        {
+            BlogPost.Rehydrate(1, 2, 3, "Visible post", null, "content", isPublic: true, isAvailable: true),
+            BlogPost.Rehydrate(2, 2, 3, "Scheduled post", null, "content", isPublic: true, isAvailable: true,
+                publishDate: DateTimeOffset.UtcNow.AddDays(7)),
+        };
+
+        var result = await new ListPublicPostsHandler(new SearchPostRepositoryStub(searchPosts: searchResults))
+            .HandleAsync("post", null);
+
+        Assert.DoesNotContain(result, p => p.PostId == 2);
+        Assert.Contains(result, p => p.PostId == 1);
+    }
+
+    [Fact]
+    public async Task HandleAsync_AnonymousSearch_ExcludesExpiredPost()
+    {
+        var searchResults = new[]
+        {
+            BlogPost.Rehydrate(1, 2, 3, "Visible post", null, "content", isPublic: true, isAvailable: true),
+            BlogPost.Rehydrate(3, 2, 3, "Expired post", null, "content", isPublic: true, isAvailable: true,
+                expirationDate: DateTimeOffset.UtcNow.AddDays(-1)),
+        };
+
+        var result = await new ListPublicPostsHandler(new SearchPostRepositoryStub(searchPosts: searchResults))
+            .HandleAsync("post", null);
+
+        Assert.DoesNotContain(result, p => p.PostId == 3);
+        Assert.Contains(result, p => p.PostId == 1);
+    }
 }

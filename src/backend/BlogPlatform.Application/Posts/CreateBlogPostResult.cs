@@ -13,6 +13,8 @@ public sealed class CreateBlogPostResult
         string? summary,
         string? content,
         IReadOnlyList<string> tags,
+        DateTimeOffset? publishDate,
+        DateTimeOffset? expirationDate,
         string? errorCode,
         string? errorMessage)
     {
@@ -24,6 +26,8 @@ public sealed class CreateBlogPostResult
         Summary = summary;
         Content = content;
         Tags = tags;
+        PublishDate = publishDate;
+        ExpirationDate = expirationDate;
         ErrorCode = errorCode;
         ErrorMessage = errorMessage;
     }
@@ -44,6 +48,10 @@ public sealed class CreateBlogPostResult
 
     public IReadOnlyList<string> Tags { get; }
 
+    public DateTimeOffset? PublishDate { get; }
+
+    public DateTimeOffset? ExpirationDate { get; }
+
     public string? ErrorCode { get; }
 
     public string? ErrorMessage { get; }
@@ -59,6 +67,8 @@ public sealed class CreateBlogPostResult
             summary: post.Summary,
             content: post.Content,
             tags: post.Tags,
+            publishDate: post.PublishDate,
+            expirationDate: post.ExpirationDate,
             errorCode: null,
             errorMessage: null);
     }
@@ -74,6 +84,8 @@ public sealed class CreateBlogPostResult
             summary: null,
             content: null,
             tags: Array.Empty<string>(),
+            publishDate: null,
+            expirationDate: null,
             errorCode: errorCode,
             errorMessage: errorMessage);
     }

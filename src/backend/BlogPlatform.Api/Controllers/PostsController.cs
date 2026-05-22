@@ -28,7 +28,9 @@ public sealed class PostsController : ControllerBase
                 post.Summary,
                 post.IsPublic,
                 post.IsAvailable,
-                post.Tags))
+                post.Tags,
+                post.PublishDate,
+                post.ExpirationDate))
             .ToArray();
 
         return Ok(response);
@@ -59,7 +61,9 @@ public sealed class PostsController : ControllerBase
             result.Content!,
             result.IsPublic!.Value,
             result.IsAvailable!.Value,
-            result.Tags));
+            result.Tags,
+            result.PublishDate,
+            result.ExpirationDate));
     }
 
     [HttpPost]
@@ -79,7 +83,9 @@ public sealed class PostsController : ControllerBase
                 request.Title,
                 request.Summary,
                 request.Content,
-                request.Tags),
+                request.Tags,
+                request.PublishDate,
+                request.ExpirationDate),
             cancellationToken);
 
         if (!result.IsSuccess)
@@ -93,7 +99,9 @@ public sealed class PostsController : ControllerBase
             result.Title!,
             result.Summary,
             result.Content,
-            result.Tags));
+            result.Tags,
+            result.PublishDate,
+            result.ExpirationDate));
     }
 
     [HttpPut("{postId:int}")]
@@ -114,7 +122,9 @@ public sealed class PostsController : ControllerBase
                 request.Title,
                 request.Summary,
                 request.Content,
-                request.Tags),
+                request.Tags,
+                request.PublishDate,
+                request.ExpirationDate),
             cancellationToken);
 
         if (!result.IsSuccess)
@@ -128,7 +138,9 @@ public sealed class PostsController : ControllerBase
             result.Title!,
             result.Summary,
             result.Content,
-            result.Tags));
+            result.Tags,
+            result.PublishDate,
+            result.ExpirationDate));
     }
 
     [HttpDelete("{postId:int}")]

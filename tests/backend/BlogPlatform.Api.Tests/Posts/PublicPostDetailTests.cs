@@ -28,6 +28,39 @@ public sealed class PublicPostDetailTests : IClassFixture<BlogPlatformApiFactory
     }
 
     [Fact]
+    public async Task GetPublicPost_ReturnsNotFoundForScheduledPost()
+    {
+        await _factory.Database.ResetToSeedStateAsync();
+        var authorId = await _factory.Database.GetUserIdByUsernameAsync("user");
+        var categoryId = await _factory.Database.GetCategoryIdByTitleAsync("Architecture");
+        var scheduledPostId = await _factory.Database.InsertPostWithDatesAsync(
+            authorId, categoryId, "Scheduled Visibility Test", null, "content",
+            publishDate: DateTimeOffset.UtcNow.AddDays(7));
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync($"/api/posts/{scheduledPostId}");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetPublicPost_ReturnsNotFoundForExpiredPost()
+    {
+        await _factory.Database.ResetToSeedStateAsync();
+        var authorId = await _factory.Database.GetUserIdByUsernameAsync("user");
+        var categoryId = await _factory.Database.GetCategoryIdByTitleAsync("Architecture");
+        var expiredPostId = await _factory.Database.InsertPostWithDatesAsync(
+            authorId, categoryId, "Expired Visibility Test", null, "content",
+            publishDate: DateTimeOffset.UtcNow.AddDays(-30),
+            expirationDate: DateTimeOffset.UtcNow.AddDays(-1));
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync($"/api/posts/{expiredPostId}");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
     public async Task GetPublicPost_ReturnsNotFoundForUnavailableOrMissingRecord()
     {
         await _factory.Database.ResetToSeedStateAsync();

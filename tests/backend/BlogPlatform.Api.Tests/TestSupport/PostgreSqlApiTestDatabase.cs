@@ -120,6 +120,64 @@ public sealed class PostgreSqlApiTestDatabase
         return Convert.ToInt32(result);
     }
 
+    public async Task<int> InsertPostWithDatesAsync(
+        int authorUserId,
+        int categoryId,
+        string title,
+        string? summary,
+        string content,
+        DateTimeOffset? publishDate = null,
+        DateTimeOffset? expirationDate = null,
+        bool isPublic = true,
+        bool isAvailable = true,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            INSERT INTO posts (
+                user_id,
+                post_category_id,
+                title,
+                description,
+                content,
+                available,
+                public_post,
+                publish_date,
+                expire_date,
+                creation_user_id,
+                update_user_id)
+            VALUES (
+                @user_id,
+                @post_category_id,
+                @title,
+                @description,
+                @content,
+                @available,
+                @public_post,
+                @publish_date,
+                @expire_date,
+                @creation_user_id,
+                @update_user_id)
+            RETURNING id;
+            """;
+
+        await using var connection = new NpgsqlConnection(_connectionString);
+        await connection.OpenAsync(cancellationToken);
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("user_id", authorUserId);
+        command.Parameters.AddWithValue("post_category_id", categoryId);
+        command.Parameters.AddWithValue("title", title);
+        command.Parameters.AddWithValue("description", (object?)summary ?? DBNull.Value);
+        command.Parameters.AddWithValue("content", content);
+        command.Parameters.AddWithValue("available", isAvailable);
+        command.Parameters.AddWithValue("public_post", isPublic);
+        command.Parameters.AddWithValue("publish_date", (object?)publishDate ?? DBNull.Value);
+        command.Parameters.AddWithValue("expire_date", (object?)expirationDate ?? DBNull.Value);
+        command.Parameters.AddWithValue("creation_user_id", authorUserId);
+        command.Parameters.AddWithValue("update_user_id", authorUserId);
+        var result = await command.ExecuteScalarAsync(cancellationToken);
+        return Convert.ToInt32(result);
+    }
+
     public async Task<int> InsertCategoryAsync(
         string title,
         bool isAvailable = true,

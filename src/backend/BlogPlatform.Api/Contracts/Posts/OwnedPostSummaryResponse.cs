@@ -7,4 +7,6 @@ public sealed record OwnedPostSummaryResponse(
     string? Summary,
     bool IsPublic,
     bool IsAvailable,
-    IReadOnlyList<string> Tags);
+    IReadOnlyList<string> Tags,
+    DateTimeOffset? PublishDate = null,
+    DateTimeOffset? ExpirationDate = null);

@@ -16,7 +16,7 @@ const initialDraft: PostEditorDraft = {
   content: '',
   tags: '',
   publishDate: '',
-  expireDate: '',
+  expirationDate: '',
   isPublic: true,
   isAvailable: true,
 }
@@ -47,7 +47,12 @@ export default function CreatePostPage() {
     setIsSubmitting(true)
 
     try {
-      await createPost({ ...draft, tags: parseTags(draft.tags) }, user.token)
+      await createPost({
+        ...draft,
+        tags: parseTags(draft.tags),
+        publishDate: draft.publishDate ? new Date(draft.publishDate).toISOString() : null,
+        expirationDate: draft.expirationDate ? new Date(draft.expirationDate).toISOString() : null,
+      }, user.token)
       navigate('/my-posts')
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Unable to create post.')

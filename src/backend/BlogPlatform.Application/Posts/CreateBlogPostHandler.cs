@@ -36,6 +36,14 @@ public sealed class CreateBlogPostHandler
                 errorMessage: "The selected category does not exist or cannot be used.");
         }
 
+        if (command.PublishDate.HasValue && command.ExpirationDate.HasValue
+            && command.ExpirationDate.Value <= command.PublishDate.Value)
+        {
+            return CreateBlogPostResult.Failure(
+                errorCode: "expirationDate",
+                errorMessage: "Expiration date must be after publish date.");
+        }
+
         var normalizedTags = TagNormalizer.Normalize(command.Tags);
 
         BlogPost post;
@@ -48,7 +56,9 @@ public sealed class CreateBlogPostHandler
                 title: command.Title,
                 summary: command.Summary,
                 content: command.Content,
-                tags: normalizedTags);
+                tags: normalizedTags,
+                publishDate: command.PublishDate,
+                expirationDate: command.ExpirationDate);
         }
         catch (ArgumentException exception)
         {

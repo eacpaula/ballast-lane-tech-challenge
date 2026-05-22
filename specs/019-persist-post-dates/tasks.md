@@ -45,10 +45,10 @@ implementation and testing.
 **Purpose**: Confirm the database baseline, update seed data, and verify that
 all existing tests pass before any changes are made.
 
-- [ ] T001 Confirm `database/scripts/005-create-posts.sql` already declares
+- [X] T001 Confirm `database/scripts/005-create-posts.sql` already declares
       `publish_date TIMESTAMPTZ NULL` and `expire_date TIMESTAMPTZ NULL` on the
       `posts` table — no DDL change is needed; document the confirmation
-- [ ] T002 Update seed data script(s) under `database/scripts/` to include
+- [X] T002 Update seed data script(s) under `database/scripts/` to include
       representative posts: one with no dates (always visible), one with a past
       `publish_date` and null `expire_date` (active), one with a future
       `publish_date` (scheduled), and one with a past `expire_date` (expired);
@@ -67,7 +67,7 @@ Application handlers all depend on these changes.
 
 **CRITICAL**: No story-level implementation begins until this phase is complete.
 
-- [ ] T003 Add private `DateTimeOffset? _publishDate` and
+- [X] T003 Add private `DateTimeOffset? _publishDate` and
       `DateTimeOffset? _expirationDate` fields and corresponding public
       `PublishDate` and `ExpirationDate` properties to the private constructor in
       `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs`; update `Create()` and
@@ -75,7 +75,7 @@ Application handlers all depend on these changes.
       and `DateTimeOffset? expirationDate = null` optional parameters and assign
       them; leave `IsPubliclyReadable` unchanged for now (date awareness is added
       in US2)
-- [ ] T004 Update `BlogPost.Update()` in
+- [X] T004 Update `BlogPost.Update()` in
       `src/backend/BlogPlatform.Domain/Posts/BlogPost.cs` to accept
       `DateTimeOffset? publishDate = null` and `DateTimeOffset? expirationDate =
       null` optional parameters; return a new `BlogPost` instance carrying the
@@ -100,7 +100,7 @@ returns 400 ProblemDetails.
 
 ### Tests for US1 (write first — verify they fail before implementing) ⚠️
 
-- [ ] T005 [P] [US1] Create
+- [X] T005 [P] [US1] Create
       `src/backend/BlogPlatform.Application.Tests/Posts/CreateBlogPostHandlerDateTests.cs`
       with test cases: (a) create with only `PublishDate` set — result carries
       correct `PublishDate`, (b) create with only `ExpirationDate` set — result
@@ -108,13 +108,13 @@ returns 400 ProblemDetails.
       `ExpirationDate > PublishDate` — success, (d) create with both dates where
       `ExpirationDate <= PublishDate` — returns validation error, (e) create with
       neither date — both null in result
-- [ ] T006 [P] [US1] Create
+- [X] T006 [P] [US1] Create
       `src/backend/BlogPlatform.Application.Tests/Posts/EditBlogPostHandlerDateTests.cs`
       with test cases: (a) edit updating both dates to valid values — result
       carries new dates, (b) edit with `expirationDate <= publishDate` — returns
       validation error, (c) edit clearing both dates to null — result has null
       dates
-- [ ] T007 [P] [US1] Create
+- [X] T007 [P] [US1] Create
       `src/backend/BlogPlatform.Infrastructure.Tests/Posts/PostRepositoryDatePersistenceTests.cs`
       with test cases: (a) `CreateAsync` with `PublishDate` and `ExpirationDate`
       set — `SELECT` returns matching values, (b) `CreateAsync` with null dates —
@@ -124,13 +124,13 @@ returns 400 ProblemDetails.
 
 ### Application Implementation for US1
 
-- [ ] T008 [P] [US1] Add `DateTimeOffset? PublishDate = null` and
+- [X] T008 [P] [US1] Add `DateTimeOffset? PublishDate = null` and
       `DateTimeOffset? ExpirationDate = null` optional record parameters to
       `src/backend/BlogPlatform.Application/Posts/CreateBlogPostCommand.cs`
-- [ ] T009 [P] [US1] Add `DateTimeOffset? PublishDate = null` and
+- [X] T009 [P] [US1] Add `DateTimeOffset? PublishDate = null` and
       `DateTimeOffset? ExpirationDate = null` optional record parameters to
       `src/backend/BlogPlatform.Application/Posts/EditBlogPostCommand.cs`
-- [ ] T010 [US1] In
+- [X] T010 [US1] In
       `src/backend/BlogPlatform.Application/Posts/CreateBlogPostHandler.cs`, add
       date consistency validation before calling `BlogPost.Create()`: if both
       `command.PublishDate` and `command.ExpirationDate` are non-null and
@@ -138,18 +138,18 @@ returns 400 ProblemDetails.
       error key `"expirationDate"` and message `"Expiration date must be after
       publish date."`; pass `publishDate: command.PublishDate` and
       `expirationDate: command.ExpirationDate` to `BlogPost.Create()`
-- [ ] T011 [US1] In
+- [X] T011 [US1] In
       `src/backend/BlogPlatform.Application/Posts/EditBlogPostHandler.cs`, add
       the same date consistency validation before calling `post.Update()`; pass
       `publishDate: command.PublishDate` and `expirationDate:
       command.ExpirationDate` to `post.Update()`
-- [ ] T012 [P] [US1] Add `DateTimeOffset? PublishDate` and
+- [X] T012 [P] [US1] Add `DateTimeOffset? PublishDate` and
       `DateTimeOffset? ExpirationDate` properties to
       `src/backend/BlogPlatform.Application/Posts/CreateBlogPostResult.cs` and
       `src/backend/BlogPlatform.Application/Posts/EditBlogPostResult.cs`; update
       the construction/mapping in each handler to populate these from the returned
       `BlogPost.PublishDate` and `BlogPost.ExpirationDate`
-- [ ] T013 [P] [US1] Add `DateTimeOffset? PublishDate` and
+- [X] T013 [P] [US1] Add `DateTimeOffset? PublishDate` and
       `DateTimeOffset? ExpirationDate` properties to
       `src/backend/BlogPlatform.Application/Posts/GetOwnedPostByIdResult.cs` and
       `src/backend/BlogPlatform.Application/Posts/OwnedPostListItem.cs`; update
@@ -158,7 +158,7 @@ returns 400 ProblemDetails.
 
 ### Infrastructure (Raw SQL) Implementation for US1
 
-- [ ] T014 [US1] In `PostgreSqlPostRepository.CreateAsync()` in
+- [X] T014 [US1] In `PostgreSqlPostRepository.CreateAsync()` in
       `src/backend/BlogPlatform.Infrastructure/Posts/PostgreSqlPostRepository.cs`,
       replace the hardcoded expression `CASE WHEN @public_post THEN NOW() ELSE
       NULL END` for `publish_date` with a `@publish_date` parameter; add
@@ -166,13 +166,13 @@ returns 400 ProblemDetails.
       update the `RETURNING` clause to add `publish_date, expire_date`; update
       `BuildPostInsertCommand` to add `NpgsqlParameter<DateTimeOffset?>` entries
       for `@publish_date` and `@expire_date` using `NpgsqlDbType.TimestampTz`
-- [ ] T015 [US1] In `PostgreSqlPostRepository.UpdateAsync()` in
+- [X] T015 [US1] In `PostgreSqlPostRepository.UpdateAsync()` in
       `src/backend/BlogPlatform.Infrastructure/Posts/PostgreSqlPostRepository.cs`,
       add `publish_date = @publish_date, expire_date = @expire_date` to the SET
       clause; update the `RETURNING` clause to add `publish_date, expire_date`;
       update `BuildPostUpdateCommand` to add the two `NpgsqlParameter<DateTimeOffset?>`
       entries
-- [ ] T016 [US1] Update all `SELECT` statements in
+- [X] T016 [US1] Update all `SELECT` statements in
       `src/backend/BlogPlatform.Infrastructure/Posts/PostgreSqlPostRepository.cs`
       (`GetByIdAsync`, `GetByIdForAuthorAsync`, `GetPublicReadByIdAsync`,
       `ListByAuthorAsync`, `ListPublicReadAsync`, `SearchPublicReadAsync`) to

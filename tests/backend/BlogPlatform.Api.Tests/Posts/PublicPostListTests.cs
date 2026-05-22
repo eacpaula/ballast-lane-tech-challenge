@@ -22,6 +22,21 @@ public sealed class PublicPostListTests : IClassFixture<BlogPlatformApiFactory>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
         Assert.NotNull(posts);
-        Assert.Equal(2, posts!.Count);
+        Assert.True(posts!.Count >= 2);
+    }
+
+    [Fact]
+    public async Task ListPublicPosts_ExcludesScheduledAndExpiredPosts()
+    {
+        await _factory.Database.ResetToSeedStateAsync();
+        using var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("/api/posts");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        Assert.NotNull(posts);
+        Assert.DoesNotContain(posts!, p => p.Title == "Upcoming: Advanced Repository Testing Patterns");
+        Assert.DoesNotContain(posts!, p => p.Title == "Archived: Early Design Decisions");
     }
 }

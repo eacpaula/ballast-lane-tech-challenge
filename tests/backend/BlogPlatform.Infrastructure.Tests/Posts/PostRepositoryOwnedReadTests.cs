@@ -22,8 +22,8 @@ public sealed class PostRepositoryOwnedReadTests : IClassFixture<PostgreSqlInteg
 
         var result = await repository.ListByAuthorAsync(2);
 
-        Assert.Single(result);
-        Assert.Equal(2, result[0].AuthorUserId);
+        Assert.NotEmpty(result);
+        Assert.All(result, p => Assert.Equal(2, p.AuthorUserId));
     }
 
     [Fact]

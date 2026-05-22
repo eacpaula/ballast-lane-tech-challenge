@@ -39,6 +39,14 @@ public sealed class EditBlogPostHandler
                 errorMessage: "Users can edit only posts they own.");
         }
 
+        if (command.PublishDate.HasValue && command.ExpirationDate.HasValue
+            && command.ExpirationDate.Value <= command.PublishDate.Value)
+        {
+            return EditBlogPostResult.Failure(
+                errorCode: "expirationDate",
+                errorMessage: "Expiration date must be after publish date.");
+        }
+
         var normalizedTags = TagNormalizer.Normalize(command.Tags);
 
         BlogPost updatedPost;
@@ -49,7 +57,9 @@ public sealed class EditBlogPostHandler
                 title: command.Title,
                 summary: command.Summary,
                 content: command.Content,
-                tags: normalizedTags);
+                tags: normalizedTags,
+                publishDate: command.PublishDate,
+                expirationDate: command.ExpirationDate);
         }
         catch (ArgumentException exception)
         {

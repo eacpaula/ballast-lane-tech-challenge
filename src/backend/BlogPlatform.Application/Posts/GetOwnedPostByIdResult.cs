@@ -15,6 +15,8 @@ public sealed class GetOwnedPostByIdResult
         bool? isPublic,
         bool? isAvailable,
         IReadOnlyList<string> tags,
+        DateTimeOffset? publishDate,
+        DateTimeOffset? expirationDate,
         string? errorCode,
         string? errorMessage)
     {
@@ -28,6 +30,8 @@ public sealed class GetOwnedPostByIdResult
         IsPublic = isPublic;
         IsAvailable = isAvailable;
         Tags = tags;
+        PublishDate = publishDate;
+        ExpirationDate = expirationDate;
         ErrorCode = errorCode;
         ErrorMessage = errorMessage;
     }
@@ -42,6 +46,8 @@ public sealed class GetOwnedPostByIdResult
     public bool? IsPublic { get; }
     public bool? IsAvailable { get; }
     public IReadOnlyList<string> Tags { get; }
+    public DateTimeOffset? PublishDate { get; }
+    public DateTimeOffset? ExpirationDate { get; }
     public string? ErrorCode { get; }
     public string? ErrorMessage { get; }
 
@@ -59,10 +65,12 @@ public sealed class GetOwnedPostByIdResult
             post.IsPublic,
             post.IsAvailable,
             post.Tags,
+            post.PublishDate,
+            post.ExpirationDate,
             null,
             null);
     }
 
     public static GetOwnedPostByIdResult Failure(string errorCode, string errorMessage)
-        => new(false, null, null, null, null, null, null, null, null, Array.Empty<string>(), errorCode, errorMessage);
+        => new(false, null, null, null, null, null, null, null, null, Array.Empty<string>(), null, null, errorCode, errorMessage);
 }

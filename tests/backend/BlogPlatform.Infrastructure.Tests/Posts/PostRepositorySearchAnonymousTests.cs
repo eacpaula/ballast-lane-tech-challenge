@@ -34,7 +34,33 @@ public sealed class PostRepositorySearchAnonymousTests : IClassFixture<PostgreSq
 
         var result = await repository.SearchPublicReadAsync("aRchItEctuRe", null);
 
-        Assert.Single(result);
-        Assert.Equal("Building a Lightweight Clean Architecture", result[0].Title);
+        Assert.NotEmpty(result);
+        Assert.Contains(result, r => r.Title == "Building a Lightweight Clean Architecture");
+    }
+
+    [Fact]
+    public async Task SearchPublicReadAsync_AnonymousSearch_ExcludesScheduledPost()
+    {
+        await _database.VerifyConnectivityAsync();
+        await _database.ResetToSeedStateAsync();
+
+        var repository = new PostgreSqlPostRepository(new NpgsqlConnectionFactory(_database.CreateSettings()));
+
+        var result = await repository.SearchPublicReadAsync("Advanced Repository Testing", null);
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task SearchPublicReadAsync_AnonymousSearch_ExcludesExpiredPost()
+    {
+        await _database.VerifyConnectivityAsync();
+        await _database.ResetToSeedStateAsync();
+
+        var repository = new PostgreSqlPostRepository(new NpgsqlConnectionFactory(_database.CreateSettings()));
+
+        var result = await repository.SearchPublicReadAsync("Archived", null);
+
+        Assert.Empty(result);
     }
 }

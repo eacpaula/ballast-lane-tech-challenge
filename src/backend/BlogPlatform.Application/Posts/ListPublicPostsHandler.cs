@@ -23,7 +23,7 @@ public sealed class ListPublicPostsHandler
 
         var visiblePosts = normalizedQuery is null || !requestingUserId.HasValue
             ? posts.Where(post => post.IsPubliclyReadable)
-            : posts.Where(post => post.IsAvailable && (post.IsPublic || post.AuthorUserId == requestingUserId.Value));
+            : posts.Where(post => post.IsPubliclyReadable || (post.IsAvailable && post.AuthorUserId == requestingUserId.Value));
 
         return visiblePosts
             .Select(PublicPostListItem.From)

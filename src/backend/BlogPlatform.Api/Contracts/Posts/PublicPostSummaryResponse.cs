@@ -4,4 +4,6 @@ public sealed record PublicPostSummaryResponse(
     int Id,
     string Title,
     string? Summary,
-    IReadOnlyList<string> Tags);
+    IReadOnlyList<string> Tags,
+    DateTimeOffset? PublishDate = null,
+    DateTimeOffset? ExpirationDate = null);
