@@ -42,10 +42,10 @@ implementation and testing of each deliverable path.
 **Purpose**: Create the frontend file structure and minimum runtime dependencies
 for all subsequent work.
 
-- [ ] T001 Create the feature-based frontend folder structure under `src/frontend/blog-web/src/app`, `src/frontend/blog-web/src/components`, `src/frontend/blog-web/src/features/auth`, `src/frontend/blog-web/src/features/posts`, `src/frontend/blog-web/src/features/categories`, `src/frontend/blog-web/src/lib/api`, and `src/frontend/blog-web/src/lib/session`
-- [ ] T002 Add the routing dependency and any required type-safe frontend package updates in `src/frontend/blog-web/package.json`
-- [ ] T003 [P] Create frontend barrel or entry files for the new folders in `src/frontend/blog-web/src/app`, `src/frontend/blog-web/src/components`, `src/frontend/blog-web/src/features/auth`, `src/frontend/blog-web/src/features/posts`, `src/frontend/blog-web/src/features/categories`, `src/frontend/blog-web/src/lib/api`, and `src/frontend/blog-web/src/lib/session`
-- [ ] T004 [P] Review and trim the current starter `src/frontend/blog-web/src/App.tsx` usage so it can become a router host instead of a static validation shell
+- [X] T001 Create the feature-based frontend folder structure under `src/frontend/blog-web/src/app`, `src/frontend/blog-web/src/components`, `src/frontend/blog-web/src/features/auth`, `src/frontend/blog-web/src/features/posts`, `src/frontend/blog-web/src/features/categories`, `src/frontend/blog-web/src/lib/api`, and `src/frontend/blog-web/src/lib/session`
+- [X] T002 Add the routing dependency and any required type-safe frontend package updates in `src/frontend/blog-web/package.json`
+- [X] T003 [P] Create frontend barrel or entry files for the new folders in `src/frontend/blog-web/src/app`, `src/frontend/blog-web/src/components`, `src/frontend/blog-web/src/features/auth`, `src/frontend/blog-web/src/features/posts`, `src/frontend/blog-web/src/features/categories`, `src/frontend/blog-web/src/lib/api`, and `src/frontend/blog-web/src/lib/session`
+- [X] T004 [P] Review and trim the current starter `src/frontend/blog-web/src/App.tsx` usage so it can become a router host instead of a static validation shell
 
 ---
 
@@ -57,16 +57,16 @@ that all user stories depend on.
 **CRITICAL**: User story implementation should not begin until this phase is
 complete.
 
-- [ ] T005 Configure the application bootstrap and router provider in `src/frontend/blog-web/src/main.tsx` and `src/frontend/blog-web/src/app/router.tsx`
-- [ ] T006 Create the top-level application shell, layout container, and session-aware navigation in `src/frontend/blog-web/src/app/AppShell.tsx` and `src/frontend/blog-web/src/App.tsx`
-- [ ] T007 Create the shared API base URL configuration and typed request helper in `src/frontend/blog-web/src/lib/api/config.ts`, `src/frontend/blog-web/src/lib/api/http.ts`, and `src/frontend/blog-web/src/lib/api/problem-details.ts`
-- [ ] T008 Create frontend session storage, JWT decoding, and visitor identifier helpers in `src/frontend/blog-web/src/lib/session/session-storage.ts`, `src/frontend/blog-web/src/lib/session/jwt.ts`, and `src/frontend/blog-web/src/lib/session/visitor-id.ts`
-- [ ] T009 Create the auth context and session restoration provider in `src/frontend/blog-web/src/features/auth/AuthProvider.tsx` and `src/frontend/blog-web/src/features/auth/useAuth.ts`
-- [ ] T010 Create authenticated and administrator route guards in `src/frontend/blog-web/src/app/AuthenticatedRoute.tsx` and `src/frontend/blog-web/src/app/AdministratorRoute.tsx`
-- [ ] T011 [P] Create shared button, card, badge, and form-action primitives in `src/frontend/blog-web/src/components/Button.tsx`, `src/frontend/blog-web/src/components/Card.tsx`, `src/frontend/blog-web/src/components/Badge.tsx`, and `src/frontend/blog-web/src/components/FormActions.tsx`
-- [ ] T012 [P] Create shared text input, textarea, select, and field-feedback primitives in `src/frontend/blog-web/src/components/TextInput.tsx`, `src/frontend/blog-web/src/components/Textarea.tsx`, `src/frontend/blog-web/src/components/Select.tsx`, and `src/frontend/blog-web/src/components/FieldMessage.tsx`
-- [ ] T013 [P] Create shared loading, empty, error, and confirmation-action primitives in `src/frontend/blog-web/src/components/LoadingState.tsx`, `src/frontend/blog-web/src/components/EmptyState.tsx`, `src/frontend/blog-web/src/components/ErrorMessage.tsx`, and `src/frontend/blog-web/src/components/ConfirmAction.tsx`
-- [ ] T014 Update centralized Tailwind-backed shared styling for the application shell and reusable primitives in `src/frontend/blog-web/src/index.css` and `src/frontend/blog-web/src/styles/components.css`
+- [X] T005 Configure the application bootstrap and router provider in `src/frontend/blog-web/src/main.tsx` and `src/frontend/blog-web/src/app/router.tsx`
+- [X] T006 Create the top-level application shell, layout container, and session-aware navigation in `src/frontend/blog-web/src/app/AppShell.tsx` and `src/frontend/blog-web/src/App.tsx`
+- [X] T007 Create the shared API base URL configuration and typed request helper in `src/frontend/blog-web/src/lib/api/config.ts`, `src/frontend/blog-web/src/lib/api/http.ts`, and `src/frontend/blog-web/src/lib/api/problem-details.ts`
+- [X] T008 Create frontend session storage, JWT decoding, and visitor identifier helpers in `src/frontend/blog-web/src/lib/session/session-storage.ts`, `src/frontend/blog-web/src/lib/session/jwt.ts`, and `src/frontend/blog-web/src/lib/session/visitor-id.ts`
+- [X] T009 Create the auth context and session restoration provider in `src/frontend/blog-web/src/features/auth/AuthProvider.tsx` and `src/frontend/blog-web/src/features/auth/useAuth.ts`
+- [X] T010 Create authenticated and administrator route guards in `src/frontend/blog-web/src/app/AuthenticatedRoute.tsx` and `src/frontend/blog-web/src/app/AdministratorRoute.tsx`
+- [X] T011 [P] Create shared button, card, badge, and form-action primitives in `src/frontend/blog-web/src/components/Button.tsx`, `src/frontend/blog-web/src/components/Card.tsx`, `src/frontend/blog-web/src/components/Badge.tsx`, and `src/frontend/blog-web/src/components/FormActions.tsx`
+- [X] T012 [P] Create shared text input, textarea, select, and field-feedback primitives in `src/frontend/blog-web/src/components/TextInput.tsx`, `src/frontend/blog-web/src/components/Textarea.tsx`, `src/frontend/blog-web/src/components/Select.tsx`, and `src/frontend/blog-web/src/components/FieldMessage.tsx`
+- [X] T013 [P] Create shared loading, empty, error, and confirmation-action primitives in `src/frontend/blog-web/src/components/LoadingState.tsx`, `src/frontend/blog-web/src/components/EmptyState.tsx`, `src/frontend/blog-web/src/components/ErrorMessage.tsx`, and `src/frontend/blog-web/src/components/ConfirmAction.tsx`
+- [X] T014 Update centralized Tailwind-backed shared styling for the application shell and reusable primitives in `src/frontend/blog-web/src/index.css` and `src/frontend/blog-web/src/styles/components.css`
 
 **Checkpoint**: Routing, API access, session handling, and shared UI primitives
 are ready for story-level work.
@@ -84,15 +84,15 @@ user, log in, and confirm the navigation updates to the authenticated state.
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Create auth API modules and typed contracts in `src/frontend/blog-web/src/features/auth/auth.api.ts` and `src/frontend/blog-web/src/features/auth/auth.types.ts`
-- [ ] T016 [P] [US1] Create public post and reaction API modules plus typed contracts in `src/frontend/blog-web/src/features/posts/public-posts.api.ts`, `src/frontend/blog-web/src/features/posts/reactions.api.ts`, and `src/frontend/blog-web/src/features/posts/post.types.ts`
-- [ ] T017 [P] [US1] Create the reusable post card and reaction controls in `src/frontend/blog-web/src/features/posts/PostCard.tsx` and `src/frontend/blog-web/src/features/posts/ReactionControls.tsx`
-- [ ] T018 [US1] Implement the public post listing route and empty/loading/error states in `src/frontend/blog-web/src/features/posts/PublicPostListPage.tsx`
-- [ ] T019 [US1] Implement the public post detail route and reaction mutation feedback in `src/frontend/blog-web/src/features/posts/PublicPostDetailPage.tsx`
-- [ ] T020 [US1] Implement the registration page and API validation/conflict feedback in `src/frontend/blog-web/src/features/auth/RegisterPage.tsx`
-- [ ] T021 [US1] Implement the login page, token persistence, session restoration, and logout action in `src/frontend/blog-web/src/features/auth/LoginPage.tsx`, `src/frontend/blog-web/src/features/auth/AuthProvider.tsx`, and `src/frontend/blog-web/src/app/AppShell.tsx`
-- [ ] T022 [US1] Register the public, login, registration, and not-found routes in `src/frontend/blog-web/src/app/router.tsx`
-- [ ] T023 [US1] Verify keyboard focus, semantic HTML, and responsive behavior for the public and auth pages in `src/frontend/blog-web/src/features/posts/` and `src/frontend/blog-web/src/features/auth/`
+- [X] T015 [P] [US1] Create auth API modules and typed contracts in `src/frontend/blog-web/src/features/auth/auth.api.ts` and `src/frontend/blog-web/src/features/auth/auth.types.ts`
+- [X] T016 [P] [US1] Create public post and reaction API modules plus typed contracts in `src/frontend/blog-web/src/features/posts/public-posts.api.ts`, `src/frontend/blog-web/src/features/posts/reactions.api.ts`, and `src/frontend/blog-web/src/features/posts/post.types.ts`
+- [X] T017 [P] [US1] Create the reusable post card and reaction controls in `src/frontend/blog-web/src/features/posts/PostCard.tsx` and `src/frontend/blog-web/src/features/posts/ReactionControls.tsx`
+- [X] T018 [US1] Implement the public post listing route and empty/loading/error states in `src/frontend/blog-web/src/features/posts/PublicPostListPage.tsx`
+- [X] T019 [US1] Implement the public post detail route and reaction mutation feedback in `src/frontend/blog-web/src/features/posts/PublicPostDetailPage.tsx`
+- [X] T020 [US1] Implement the registration page and API validation/conflict feedback in `src/frontend/blog-web/src/features/auth/RegisterPage.tsx`
+- [X] T021 [US1] Implement the login page, token persistence, session restoration, and logout action in `src/frontend/blog-web/src/features/auth/LoginPage.tsx`, `src/frontend/blog-web/src/features/auth/AuthProvider.tsx`, and `src/frontend/blog-web/src/app/AppShell.tsx`
+- [X] T022 [US1] Register the public, login, registration, and not-found routes in `src/frontend/blog-web/src/app/router.tsx`
+- [X] T023 [US1] Verify keyboard focus, semantic HTML, and responsive behavior for the public and auth pages in `src/frontend/blog-web/src/features/posts/` and `src/frontend/blog-web/src/features/auth/`
 
 **Checkpoint**: Anonymous and entry authentication flows are independently
 functional.
@@ -112,27 +112,27 @@ that post, and confirm anonymous users cannot access the protected routes.
 
 > Write these tests first and verify they fail before backend production code.
 
-- [ ] T024 [P] [US2] Add Application tests for owned-post listing and owned-post detail handlers in `tests/backend/BlogPlatform.Application.Tests/Posts/ListOwnedPostsHandlerTests.cs` and `tests/backend/BlogPlatform.Application.Tests/Posts/GetOwnedPostByIdHandlerTests.cs`
-- [ ] T025 [P] [US2] Add API integration tests for protected owned-post reads in `tests/backend/BlogPlatform.Api.Tests/Posts/OwnedPostListApiTests.cs` and `tests/backend/BlogPlatform.Api.Tests/Posts/OwnedPostDetailApiTests.cs`
-- [ ] T026 [P] [US2] Add repository tests for author-scoped post reads in `tests/backend/BlogPlatform.Infrastructure.Tests/Posts/PostRepositoryOwnedReadTests.cs`
+- [X] T024 [P] [US2] Add Application tests for owned-post listing and owned-post detail handlers in `tests/backend/BlogPlatform.Application.Tests/Posts/ListOwnedPostsHandlerTests.cs` and `tests/backend/BlogPlatform.Application.Tests/Posts/GetOwnedPostByIdHandlerTests.cs`
+- [X] T025 [P] [US2] Add API integration tests for protected owned-post reads in `tests/backend/BlogPlatform.Api.Tests/Posts/OwnedPostListApiTests.cs` and `tests/backend/BlogPlatform.Api.Tests/Posts/OwnedPostDetailApiTests.cs`
+- [X] T026 [P] [US2] Add repository tests for author-scoped post reads in `tests/backend/BlogPlatform.Infrastructure.Tests/Posts/PostRepositoryOwnedReadTests.cs`
 
 ### Backend Prerequisite Implementation for User Story 2
 
-- [ ] T027 [US2] Extend the post repository contract for author-scoped reads in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
-- [ ] T028 [US2] Implement owned-post list and owned-post detail handlers plus result models in `src/backend/BlogPlatform.Application/Posts/ListOwnedPostsHandler.cs`, `src/backend/BlogPlatform.Application/Posts/OwnedPostListItem.cs`, `src/backend/BlogPlatform.Application/Posts/GetOwnedPostByIdHandler.cs`, and `src/backend/BlogPlatform.Application/Posts/GetOwnedPostByIdResult.cs`
-- [ ] T029 [US2] Implement parameterized SQL for author-scoped post reads in `src/backend/BlogPlatform.Infrastructure/Posts/PostgreSqlPostRepository.cs`
-- [ ] T030 [US2] Add protected owned-post read DTOs and endpoints in `src/backend/BlogPlatform.Api/Contracts/Posts/OwnedPostSummaryResponse.cs`, `src/backend/BlogPlatform.Api/Contracts/Posts/OwnedPostDetailResponse.cs`, and `src/backend/BlogPlatform.Api/Controllers/PostsController.cs`
-- [ ] T031 [US2] Re-run backend tests covering owned-post authorization, not-found, and ownership behavior in `tests/backend/BlogPlatform.Application.Tests/Posts/`, `tests/backend/BlogPlatform.Api.Tests/Posts/`, and `tests/backend/BlogPlatform.Infrastructure.Tests/Posts/`
+- [X] T027 [US2] Extend the post repository contract for author-scoped reads in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T028 [US2] Implement owned-post list and owned-post detail handlers plus result models in `src/backend/BlogPlatform.Application/Posts/ListOwnedPostsHandler.cs`, `src/backend/BlogPlatform.Application/Posts/OwnedPostListItem.cs`, `src/backend/BlogPlatform.Application/Posts/GetOwnedPostByIdHandler.cs`, and `src/backend/BlogPlatform.Application/Posts/GetOwnedPostByIdResult.cs`
+- [X] T029 [US2] Implement parameterized SQL for author-scoped post reads in `src/backend/BlogPlatform.Infrastructure/Posts/PostgreSqlPostRepository.cs`
+- [X] T030 [US2] Add protected owned-post read DTOs and endpoints in `src/backend/BlogPlatform.Api/Contracts/Posts/OwnedPostSummaryResponse.cs`, `src/backend/BlogPlatform.Api/Contracts/Posts/OwnedPostDetailResponse.cs`, and `src/backend/BlogPlatform.Api/Controllers/PostsController.cs`
+- [X] T031 [US2] Re-run backend tests covering owned-post authorization, not-found, and ownership behavior in `tests/backend/BlogPlatform.Application.Tests/Posts/`, `tests/backend/BlogPlatform.Api.Tests/Posts/`, and `tests/backend/BlogPlatform.Infrastructure.Tests/Posts/`
 
 ### Frontend Implementation for User Story 2
 
-- [ ] T032 [P] [US2] Create authenticated post API modules and typed contracts in `src/frontend/blog-web/src/features/posts/owned-posts.api.ts` and `src/frontend/blog-web/src/features/posts/post.types.ts`
-- [ ] T033 [P] [US2] Create the reusable post form and delete/remove confirmation flow in `src/frontend/blog-web/src/features/posts/PostForm.tsx` and `src/frontend/blog-web/src/features/posts/RemovePostAction.tsx`
-- [ ] T034 [US2] Implement the My Posts page with loading, empty, error, and remove-action states in `src/frontend/blog-web/src/features/posts/MyPostsPage.tsx`
-- [ ] T035 [US2] Implement the create post page and category loading flow in `src/frontend/blog-web/src/features/posts/CreatePostPage.tsx`
-- [ ] T036 [US2] Implement the edit post page with owned-post loading and API validation handling in `src/frontend/blog-web/src/features/posts/EditPostPage.tsx`
-- [ ] T037 [US2] Register authenticated author routes and route-guard redirects in `src/frontend/blog-web/src/app/router.tsx`
-- [ ] T038 [US2] Verify protected-route access, form error handling, responsive layout, and keyboard accessibility for author pages in `src/frontend/blog-web/src/features/posts/` and `src/frontend/blog-web/src/app/`
+- [X] T032 [P] [US2] Create authenticated post API modules and typed contracts in `src/frontend/blog-web/src/features/posts/owned-posts.api.ts` and `src/frontend/blog-web/src/features/posts/post.types.ts`
+- [X] T033 [P] [US2] Create the reusable post form and delete/remove confirmation flow in `src/frontend/blog-web/src/features/posts/PostForm.tsx` and `src/frontend/blog-web/src/features/posts/RemovePostAction.tsx`
+- [X] T034 [US2] Implement the My Posts page with loading, empty, error, and remove-action states in `src/frontend/blog-web/src/features/posts/MyPostsPage.tsx`
+- [X] T035 [US2] Implement the create post page and category loading flow in `src/frontend/blog-web/src/features/posts/CreatePostPage.tsx`
+- [X] T036 [US2] Implement the edit post page with owned-post loading and API validation handling in `src/frontend/blog-web/src/features/posts/EditPostPage.tsx`
+- [X] T037 [US2] Register authenticated author routes and route-guard redirects in `src/frontend/blog-web/src/app/router.tsx`
+- [X] T038 [US2] Verify protected-route access, form error handling, responsive layout, and keyboard accessibility for author pages in `src/frontend/blog-web/src/features/posts/` and `src/frontend/blog-web/src/app/`
 
 **Checkpoint**: Authenticated author post management is independently
 functional.
@@ -150,25 +150,25 @@ category, update it, deactivate it, and confirm non-admin users are denied.
 
 ### Backend Prerequisite Tests for User Story 3 (MANDATORY) ⚠️
 
-- [ ] T039 [P] [US3] Add Application tests for administrator category listing in `tests/backend/BlogPlatform.Application.Tests/Categories/ListAllCategoriesHandlerTests.cs`
-- [ ] T040 [P] [US3] Add API integration tests for administrator category listing and access control in `tests/backend/BlogPlatform.Api.Tests/Categories/AdminCategoryListApiTests.cs`
-- [ ] T041 [P] [US3] Add repository tests for full category listing in `tests/backend/BlogPlatform.Infrastructure.Tests/Categories/CategoryRepositoryAdminListTests.cs`
+- [X] T039 [P] [US3] Add Application tests for administrator category listing in `tests/backend/BlogPlatform.Application.Tests/Categories/ListAllCategoriesHandlerTests.cs`
+- [X] T040 [P] [US3] Add API integration tests for administrator category listing and access control in `tests/backend/BlogPlatform.Api.Tests/Categories/AdminCategoryListApiTests.cs`
+- [X] T041 [P] [US3] Add repository tests for full category listing in `tests/backend/BlogPlatform.Infrastructure.Tests/Categories/CategoryRepositoryAdminListTests.cs`
 
 ### Backend Prerequisite Implementation for User Story 3
 
-- [ ] T042 [US3] Extend the category repository contract for administrator listing in `src/backend/BlogPlatform.Application/Abstractions/ICategoryRepository.cs`
-- [ ] T043 [US3] Implement the administrator category list handler and result model in `src/backend/BlogPlatform.Application/Posts/ListAllPostCategoriesHandler.cs` and `src/backend/BlogPlatform.Application/Posts/ManagedPostCategoryListItem.cs`
-- [ ] T044 [US3] Implement parameterized SQL for full category listing in `src/backend/BlogPlatform.Infrastructure/Categories/PostgreSqlCategoryRepository.cs`
-- [ ] T045 [US3] Add the administrator category list endpoint and DTO in `src/backend/BlogPlatform.Api/Contracts/Categories/AdminCategoryListItemResponse.cs` and `src/backend/BlogPlatform.Api/Controllers/CategoriesController.cs`
-- [ ] T046 [US3] Re-run backend tests covering administrator category read authorization and unavailable-category visibility in `tests/backend/BlogPlatform.Application.Tests/Categories/`, `tests/backend/BlogPlatform.Api.Tests/Categories/`, and `tests/backend/BlogPlatform.Infrastructure.Tests/Categories/`
+- [X] T042 [US3] Extend the category repository contract for administrator listing in `src/backend/BlogPlatform.Application/Abstractions/ICategoryRepository.cs`
+- [X] T043 [US3] Implement the administrator category list handler and result model in `src/backend/BlogPlatform.Application/Posts/ListAllPostCategoriesHandler.cs` and `src/backend/BlogPlatform.Application/Posts/ManagedPostCategoryListItem.cs`
+- [X] T044 [US3] Implement parameterized SQL for full category listing in `src/backend/BlogPlatform.Infrastructure/Categories/PostgreSqlCategoryRepository.cs`
+- [X] T045 [US3] Add the administrator category list endpoint and DTO in `src/backend/BlogPlatform.Api/Contracts/Categories/AdminCategoryListItemResponse.cs` and `src/backend/BlogPlatform.Api/Controllers/CategoriesController.cs`
+- [X] T046 [US3] Re-run backend tests covering administrator category read authorization and unavailable-category visibility in `tests/backend/BlogPlatform.Application.Tests/Categories/`, `tests/backend/BlogPlatform.Api.Tests/Categories/`, and `tests/backend/BlogPlatform.Infrastructure.Tests/Categories/`
 
 ### Frontend Implementation for User Story 3
 
-- [ ] T047 [P] [US3] Create administrator category API modules and typed contracts in `src/frontend/blog-web/src/features/categories/categories.api.ts` and `src/frontend/blog-web/src/features/categories/category.types.ts`
-- [ ] T048 [P] [US3] Create the reusable category form and category row or card components in `src/frontend/blog-web/src/features/categories/CategoryForm.tsx` and `src/frontend/blog-web/src/features/categories/CategoryListItem.tsx`
-- [ ] T049 [US3] Implement the administrator category management page with list, create, update, and deactivate flows in `src/frontend/blog-web/src/features/categories/AdminCategoriesPage.tsx`
-- [ ] T050 [US3] Register the administrator-only category route and navigation state in `src/frontend/blog-web/src/app/router.tsx` and `src/frontend/blog-web/src/app/AppShell.tsx`
-- [ ] T051 [US3] Verify administrator route protection, forbidden-state messaging, responsive layout, and keyboard accessibility for category management in `src/frontend/blog-web/src/features/categories/` and `src/frontend/blog-web/src/app/`
+- [X] T047 [P] [US3] Create administrator category API modules and typed contracts in `src/frontend/blog-web/src/features/categories/categories.api.ts` and `src/frontend/blog-web/src/features/categories/category.types.ts`
+- [X] T048 [P] [US3] Create the reusable category form and category row or card components in `src/frontend/blog-web/src/features/categories/CategoryForm.tsx` and `src/frontend/blog-web/src/features/categories/CategoryListItem.tsx`
+- [X] T049 [US3] Implement the administrator category management page with list, create, update, and deactivate flows in `src/frontend/blog-web/src/features/categories/AdminCategoriesPage.tsx`
+- [X] T050 [US3] Register the administrator-only category route and navigation state in `src/frontend/blog-web/src/app/router.tsx` and `src/frontend/blog-web/src/app/AppShell.tsx`
+- [X] T051 [US3] Verify administrator route protection, forbidden-state messaging, responsive layout, and keyboard accessibility for category management in `src/frontend/blog-web/src/features/categories/` and `src/frontend/blog-web/src/app/`
 
 **Checkpoint**: Administrator category management is independently functional.
 
@@ -179,14 +179,14 @@ category, update it, deactivate it, and confirm non-admin users are denied.
 **Purpose**: Validate the full stack, document the demo flow, and confirm the
 slice stayed within scope.
 
-- [ ] T052 [P] Run frontend quality checks with `npm run lint` and `npm run build` from `src/frontend/blog-web/`
-- [ ] T053 [P] Validate the frontend against the running local stack with `docker compose up -d postgres api frontend` and browser/API checks from `specs/014-frontend-mvp/quickstart.md`
-- [ ] T054 Validate public, auth, author, reaction, and admin flows end to end and record follow-up notes in `specs/014-frontend-mvp/quickstart.md`
-- [ ] T055 Check the browser console for errors or warnings while exercising the MVP routes in `src/frontend/blog-web/src/`
-- [ ] T056 Verify desktop and mobile-width layout behavior across the main routes in `src/frontend/blog-web/src/`
-- [ ] T057 Update the frontend and root run-flow documentation, routes, demo credentials, and known limitations in `README.md` and `src/frontend/blog-web/README.md`
-- [ ] T058 Review the frontend structure, shared components, and API helpers in `src/frontend/blog-web/src/` and simplify any unnecessary abstractions
-- [ ] T059 Confirm no out-of-scope behavior was introduced beyond required backend API gap closure in `specs/014-frontend-mvp/spec.md`, `specs/014-frontend-mvp/plan.md`, and `src/frontend/blog-web/src/`
+- [X] T052 [P] Run frontend quality checks with `npm run lint` and `npm run build` from `src/frontend/blog-web/`
+- [X] T053 [P] Validate the frontend against the running local stack with `docker compose up -d postgres api frontend` and browser/API checks from `specs/014-frontend-mvp/quickstart.md`
+- [X] T054 Validate public, auth, author, reaction, and admin flows end to end and record follow-up notes in `specs/014-frontend-mvp/quickstart.md`
+- [X] T055 Check the browser console for errors or warnings while exercising the MVP routes in `src/frontend/blog-web/src/`
+- [X] T056 Verify desktop and mobile-width layout behavior across the main routes in `src/frontend/blog-web/src/`
+- [X] T057 Update the frontend and root run-flow documentation, routes, demo credentials, and known limitations in `README.md` and `src/frontend/blog-web/README.md`
+- [X] T058 Review the frontend structure, shared components, and API helpers in `src/frontend/blog-web/src/` and simplify any unnecessary abstractions
+- [X] T059 Confirm no out-of-scope behavior was introduced beyond required backend API gap closure in `specs/014-frontend-mvp/spec.md`, `specs/014-frontend-mvp/plan.md`, and `src/frontend/blog-web/src/`
 
 ---
 

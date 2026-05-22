@@ -12,6 +12,54 @@ namespace BlogPlatform.Api.Controllers;
 [Route("api/posts")]
 public sealed class PostsController : ControllerBase
 {
+    [HttpGet("mine")]
+    [ProducesResponseType<IReadOnlyList<OwnedPostSummaryResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> ListMine(
+        [FromServices] ListOwnedPostsHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var posts = await handler.HandleAsync(GetRequiredAuthenticatedUserId(), cancellationToken);
+        var response = posts
+            .Select(post => new OwnedPostSummaryResponse(
+                post.PostId,
+                post.CategoryId,
+                post.Title,
+                post.Summary,
+                post.IsPublic,
+                post.IsAvailable))
+            .ToArray();
+
+        return Ok(response);
+    }
+
+    [HttpGet("mine/{postId:int}")]
+    [ProducesResponseType<OwnedPostDetailResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetMineById(
+        int postId,
+        [FromServices] GetOwnedPostByIdHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var result = await handler.HandleAsync(GetRequiredAuthenticatedUserId(), postId, cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return this.ProblemFromApplicationError(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return Ok(new OwnedPostDetailResponse(
+            result.PostId!.Value,
+            result.AuthorUserId!.Value,
+            result.CategoryId!.Value,
+            result.Title!,
+            result.Summary,
+            result.Content!,
+            result.IsPublic!.Value,
+            result.IsAvailable!.Value));
+    }
+
     [HttpPost]
     [ProducesResponseType<PostMutationResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]

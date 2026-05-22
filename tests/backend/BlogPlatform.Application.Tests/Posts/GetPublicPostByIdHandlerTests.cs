@@ -133,11 +133,21 @@ public class GetPublicPostByIdHandlerTests
             throw new NotSupportedException();
         }
 
+        public Task<BlogPost?> GetByIdForAuthorAsync(int postId, int authorUserId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
         public Task<BlogPost?> GetPublicReadByIdAsync(int postId, CancellationToken cancellationToken = default)
         {
             GetByIdWasCalled = true;
             RequestedPostId = postId;
             return Task.FromResult(post?.Id == postId ? post : null);
+        }
+
+        public Task<IReadOnlyList<BlogPost>> ListByAuthorAsync(int authorUserId, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
         }
 
         public Task<IReadOnlyList<BlogPost>> ListPublicReadAsync(CancellationToken cancellationToken = default)

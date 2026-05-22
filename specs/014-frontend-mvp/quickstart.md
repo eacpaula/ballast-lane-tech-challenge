@@ -10,8 +10,8 @@ while keeping the flow small enough for an interview demo.
 - Docker and Docker Compose are available locally
 - The PostgreSQL, API, and frontend runtime from the previous infrastructure
   slices can start successfully
-- Any prerequisite backend read endpoints identified in this plan are
-  implemented before the dependent frontend routes are attempted
+- The prerequisite backend read endpoints for owned-post and admin-category
+  screens are implemented
 
 ## Validation Steps
 
@@ -32,35 +32,44 @@ npm run dev
 ```
 
 3. Validate the public flow:
-   - open the landing page
+   - open `http://localhost:5173`
+   - confirm the landing page loads
    - confirm public posts load
    - open a public post detail page
    - submit a like or dislike reaction
 
 4. Validate the auth flow:
-   - register a new user
-   - log in with the new or seeded user
+   - register a new user or log in with a seeded user
    - confirm protected navigation appears
+   - confirm logout returns the shell to the anonymous state
 
-5. Validate the author flow after the prerequisite backend read endpoints exist:
-   - open My Posts
+5. Validate the author flow:
+   - log in as `user@blogplatform.local` / `User123!`
+   - open `My Posts`
    - create a post
    - edit an owned post
    - remove an owned post
 
-6. Validate the administrator flow after the prerequisite admin category list
-   endpoint exists:
-   - log in as the seeded administrator
+6. Validate the administrator flow:
+   - log in as `admin@blogplatform.local` / `Admin123!`
    - open category management
    - create a category
    - update a category
    - deactivate a category
 
-7. Run the lightweight frontend validation commands:
+7. Run the lightweight frontend validation commands from `src/frontend/blog-web`:
 
 ```bash
 npm run lint
 npm run build
+```
+
+8. Optional API spot checks for the demo runtime:
+
+```bash
+curl http://localhost:5034/swagger/v1/swagger.json
+curl http://localhost:5034/api/posts
+curl http://localhost:5034/api/categories/available
 ```
 
 ## Expected Outcome
