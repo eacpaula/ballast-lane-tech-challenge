@@ -1,202 +1,219 @@
 # Ballast Lane Technical Challenge - Blog Platform
 
-## Overview
+Full-stack technical interview project for Ballast Lane Applications. This repository is a blog platform monorepo with an ASP.NET Core Web API backend, a React frontend, PostgreSQL, Docker Compose, and a spec-driven delivery workflow.
 
-This repository contains a full-stack technical interview project for the Ballast Lane .NET Engineer challenge.
+The goal of this README is to help a reviewer understand the solution quickly, run it with minimal setup, and verify the main implementation decisions.
 
-The application is a simple blog platform designed to demonstrate a clean and testable full-stack implementation using .NET, ASP.NET Core Web API, custom data access, authentication, authorization, CRUD operations, React, and responsible GenAI usage.
+## Quick Review Path
 
-The goal is not to build a full CMS, but to provide a small, realistic application that can be presented and reviewed during a technical interview.
+For the fastest review:
+
+```bash
+cp .env.example .env
+docker compose up -d postgres api frontend
+docker compose ps
+```
+
+Then open:
+
+- Frontend: `http://localhost:5173`
+- Swagger UI: `http://localhost:5034/swagger`
+- OpenAPI JSON: `http://localhost:5034/swagger/v1/swagger.json`
+
+Demo accounts:
+
+- Administrator: `admin@blogplatform.local` / `Admin123!`
+- Regular user: `user@blogplatform.local` / `User123!`
+
+## Project Overview
+
+This project implements a small blog platform intended for technical review rather than production completeness.
+
+- Anonymous users can browse public posts, search posts, open post details, and submit like/dislike reactions.
+- Authenticated users can register, log in, and manage their own posts.
+- Administrators can manage post categories.
 
 ## Challenge Alignment
 
-This project is based on the provided technical exercise, which asks for:
+This implementation is intentionally aligned to the challenge constraints:
 
-- A .NET C# web application with API and data layer
-- ASP.NET MVC / Web API
-- Clean Architecture principles
-- TDD or strong test coverage
-- CRUD operations through API endpoints
-- User creation and login
-- Stored user data
-- Authorized and non-authorized endpoints
-- Custom data access without Entity Framework, Dapper, or Mediator
-- Business logic separated from API and data access layers
-- Unit tests for data access, business logic, and API endpoints
-- Frontend integration using a framework such as React
-- Seeded data and demo credentials
-- GenAI usage documentation
+- ASP.NET Core Web API backend with thin controllers
+- Clean Architecture separation between Domain, Application, Infrastructure, and API
+- Raw SQL data access with `Npgsql`
+- No Entity Framework
+- No Dapper
+- No Mediator or MediatR
+- Business logic kept outside controllers
+- Application layer independent from Infrastructure/data access details
+- Automated backend test projects across Domain, Application, Infrastructure, and API layers
+- React frontend for end-to-end demonstration
+- Seeded demo data and documented GenAI usage
 
-## Product Scope
+## Architecture Summary
 
-The selected product is a simple blog platform.
+### Backend
 
-Anonymous visitors can read public posts and react with likes or dislikes. Authenticated users can create posts, edit or remove only their own posts, and create tags. Administrators can manage post categories.
+- `BlogPlatform.Domain`: core entities and invariants
+- `BlogPlatform.Application`: use cases, validation, authorization decisions, and abstractions
+- `BlogPlatform.Infrastructure`: PostgreSQL repositories, authentication helpers, and runtime wiring
+- `BlogPlatform.Api`: HTTP controllers, DTOs, auth setup, Swagger, and composition root
+
+### Frontend
+
+- React + Vite + TypeScript SPA
+- TailwindCSS-based styling guided by [DESIGN.md](./DESIGN.md)
+- Consumes the API for authentication, posts, reactions, and category management
+
+### Data Access
+
+- PostgreSQL schema and seed data are managed with explicit SQL scripts under `database/`
+- No ORM or micro-ORM is used
 
 ## Technology Stack
 
 ### Backend
 
-- .NET 10
+- .NET SDK `10.0.107`
 - ASP.NET Core Web API
-- Clean Architecture
-- Raw SQL data access
-- PostgreSQL or SQL Server
-- JWT authentication
-- Swagger/OpenAPI
+- JWT Bearer authentication
+- Swagger / OpenAPI
 - xUnit
 
 ### Frontend
 
 - React
-- TypeScript
 - Vite
+- TypeScript
 - TailwindCSS
 
-### Tooling
+### Data and Runtime
 
+- PostgreSQL 17
 - Docker Compose
-- Commitlint
-- Husky
-- Spec Kit
-- GenAI-assisted research and planning
 
 ## Repository Structure
 
 ```txt
 .
-├── .agents/
-├── .husky/
-├── .specify/
-├── database/
-│   ├── migrations/
-│   ├── scripts/
-│   └── seeds/
-├── docs/
+├── database/                  # SQL bootstrap and seed scripts
+├── docs/                      # challenge docs, architecture notes, GenAI notes
+├── specs/                     # spec-driven feature artifacts
 ├── src/
 │   ├── backend/
+│   │   ├── BlogPlatform.Domain/
+│   │   ├── BlogPlatform.Application/
+│   │   ├── BlogPlatform.Infrastructure/
+│   │   └── BlogPlatform.Api/
 │   └── frontend/
+│       └── blog-web/
 ├── tests/
 │   ├── backend/
 │   └── frontend/
-├── tools/
-├── AGENTS.md
-├── commitlint.config.cjs
-├── package.json
+├── docker-compose.yml
+├── DESIGN.md
 └── README.md
 ```
 
-## Local Database Setup
+## Requirements
 
-The repository includes a Docker Compose-based PostgreSQL environment for local
-development and interview demos.
+### Recommended
 
-### Quick Start
+- Docker and Docker Compose
 
-1. Copy `.env.example` to `.env` if you want to override the defaults.
-   Set `BLOG_PLATFORM_DB_PORT` if local port `5432` is already in use.
-2. Start PostgreSQL:
+### Optional for non-Docker app execution
+
+- .NET SDK `10.0.107`
+- Node.js and npm
+
+### Default local ports
+
+- PostgreSQL: `5432`
+- API: `5034`
+- Frontend: `5173`
+
+You can override these values through [`.env.example`](./.env.example).
+
+## Running the Stack with Docker Compose
+
+### 1. Configure environment variables
+
+The defaults are usually sufficient:
 
 ```bash
-docker compose up -d postgres
+cp .env.example .env
 ```
 
-3. Check container health:
+Only change `.env` if you need different ports or credentials.
+
+### 2. Start the stack
 
 ```bash
+docker compose up -d postgres api frontend
 docker compose ps
 ```
 
-The container initializes the current-use-case schema and demo seed data on the
-first startup.
+Current Compose services:
 
-### Demo Credentials
+- `postgres`: PostgreSQL database initialized from `database/scripts/` and `database/seeds/`
+- `api`: ASP.NET Core Web API
+- `frontend`: React development server
 
-- Administrator: `admin@blogplatform.local` / `Admin123!`
-- Regular user: `user@blogplatform.local` / `User123!`
+### 3. Open the app
 
-These credentials are for local/demo usage only.
+- Frontend: `http://localhost:5173`
+- Swagger UI: `http://localhost:5034/swagger`
+- OpenAPI JSON: `http://localhost:5034/swagger/v1/swagger.json`
 
-### Reset the Database
+## Service Notes
+
+### Database
+
+- PostgreSQL is initialized from ordered SQL scripts on first startup.
+- Seed data includes users, roles, categories, posts, tags, post-tag links, and reactions.
+- The database data directory is mounted to `database/data/pgdata`.
+
+### API
+
+- The API exposes public, authenticated, and administrator-only endpoints.
+- Swagger is enabled for interactive review.
+- A sample HTTP file is available at `src/backend/BlogPlatform.Api/BlogPlatform.Api.http`.
+
+### Frontend
+
+- The frontend is a Vite-based SPA.
+- Main routes include:
+  - `/`
+  - `/posts/:postId`
+  - `/register`
+  - `/login`
+  - `/my-posts`
+  - `/my-posts/new`
+  - `/my-posts/:postId/edit`
+  - `/admin/categories`
+
+### Redis
+
+- Redis is not part of the current `docker-compose.yml` runtime.
+- There is feature/spec documentation for planned Redis-backed post-list caching under [`specs/016-search-pagination-cache/`](./specs/016-search-pagination-cache/), but that wiring is not currently present in this branch.
+
+## Optional Local Execution Without Full Compose
+
+If you prefer to run the app processes locally but still use Docker for PostgreSQL:
+
+### Start PostgreSQL
 
 ```bash
-docker compose down -v
 docker compose up -d postgres
+docker compose ps
 ```
 
-## Local API Setup
-
-Run the backend API from the repository root after PostgreSQL is healthy:
+### Run the API
 
 ```bash
 dotnet run --project src/backend/BlogPlatform.Api/BlogPlatform.Api.csproj
 ```
 
-Default local API URLs:
-
-- Swagger UI: `http://localhost:5034/swagger`
-- OpenAPI JSON: `http://localhost:5034/swagger/v1/swagger.json`
-
-### API Demo Flow
-
-1. Start PostgreSQL with `docker compose up -d postgres`.
-2. Start the API with `dotnet run --project src/backend/BlogPlatform.Api/BlogPlatform.Api.csproj`.
-3. Open Swagger and call `POST /api/auth/login` with:
-   - `admin@blogplatform.local` / `Admin123!`
-   - `user@blogplatform.local` / `User123!`
-4. Use the returned bearer token in Swagger for protected endpoints:
-   - `POST /api/posts`
-   - `PUT /api/posts/{postId}`
-   - `DELETE /api/posts/{postId}`
-   - `POST /api/categories`
-   - `PUT /api/categories/{categoryId}`
-   - `DELETE /api/categories/{categoryId}`
-5. Verify public endpoints anonymously:
-   - `GET /api/posts`
-   - `GET /api/posts?q=architecture`
-   - `GET /api/posts/{postId}`
-   - `POST /api/posts/{postId}/reactions`
-
-The sample request flow is also documented in
-`src/backend/BlogPlatform.Api/BlogPlatform.Api.http`.
-
-## Local API Setup With Docker Compose
-
-Run the database and API together from the repository root:
-
-```bash
-docker compose up -d postgres api
-docker compose ps
-```
-
-Default local Docker-based API URLs:
-
-- Swagger UI: `http://localhost:5034/swagger`
-- OpenAPI JSON: `http://localhost:5034/swagger/v1/swagger.json`
-
-The API container connects to PostgreSQL through the Compose network and uses
-the configured local frontend origins for browser-based development:
-
-- `http://localhost:5173`
-- `http://127.0.0.1:5173`
-
-### Frontend Integration Notes
-
-- Frontend post forms can load available categories from
-  `GET /api/categories/available`.
-- Category list endpoints now support `page` and `pageSize` query parameters
-  and return a paginated envelope with `items`, `page`, `pageSize`,
-  `totalCount`, `totalPages`, and `hasNextPage`.
-- The available-categories endpoint is public because category names are not
-  sensitive and the form needs them before any admin workflow.
-- Category create and update requests now accept an optional `description`
-  field, and category write endpoints remain administrator-only.
-- Tag listing is intentionally deferred in this slice; the frontend should not
-  assume a tag-selection endpoint exists yet.
-
-## Local Frontend Setup
-
-Run the frontend app from `src/frontend/blog-web`:
+### Run the frontend
 
 ```bash
 cd src/frontend/blog-web
@@ -204,55 +221,152 @@ npm install
 npm run dev
 ```
 
-Validation commands:
+## Testing
+
+### Backend tests
+
+Run the backend unit and integration test projects from the repository root:
 
 ```bash
+dotnet test tests/backend/BlogPlatform.Domain.Tests/BlogPlatform.Domain.Tests.csproj
+dotnet test tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj
+dotnet test tests/backend/BlogPlatform.Infrastructure.Tests/BlogPlatform.Infrastructure.Tests.csproj
+dotnet test tests/backend/BlogPlatform.Api.Tests/BlogPlatform.Api.Tests.csproj
+```
+
+Notes:
+
+- `BlogPlatform.Infrastructure.Tests` requires PostgreSQL to be running and initialized.
+- `BlogPlatform.Api.Tests` also requires PostgreSQL to be running and initialized.
+- Starting `postgres` with Docker Compose is the expected local test prerequisite.
+
+### Frontend validation
+
+```bash
+cd src/frontend/blog-web
+npm install
 npm run lint
 npm run build
 ```
 
-### Frontend MVP Routes
+There are currently no automated frontend test suites in `tests/frontend`.
 
-- `/` public post listing
-- `/posts/:postId` public post detail with like and dislike reactions
-- `/register` user registration
-- `/login` user login
-- `/my-posts` authenticated author post list
-- `/my-posts/new` authenticated post creation
-- `/my-posts/:postId/edit` authenticated post editing
-- `/admin/categories` administrator-only category management
+## Swagger and API Review
 
-### Search Notes
+Use Swagger for the quickest API review:
 
-- The public listing route now supports backend-powered search through
-  `GET /api/posts?q=...`.
-- Anonymous searches return only public and available posts.
-- Authenticated searches can also return the authenticated user’s own matching
-  private posts, while still excluding private posts owned by other users.
-- Clearing the search field returns the same default listing behavior as the
-  original public feed.
+- Swagger UI: `http://localhost:5034/swagger`
+- OpenAPI JSON: `http://localhost:5034/swagger/v1/swagger.json`
 
-### Frontend Demo Flow
+Suggested API review flow:
 
-1. Start the full stack with `docker compose up -d postgres api frontend`.
-2. Open `http://localhost:5173`.
-3. Browse public posts and open a post detail page.
-4. Submit a public reaction.
-5. Register a new account or log in with a seeded user:
-   - `user@blogplatform.local` / `User123!`
-   - `admin@blogplatform.local` / `Admin123!`
-6. As a regular user, open `My Posts`, create a post, edit it, and remove it.
-7. As the administrator, open `Categories`, page through the category list,
-   and create, update, or deactivate a category with an optional description.
+1. `POST /api/auth/login`
+2. `GET /api/posts`
+3. `GET /api/posts/{postId}`
+4. `POST /api/posts/{postId}/reactions`
+5. Use the Swagger `Authorize` button with the returned bearer token
+6. Exercise protected post endpoints and admin category endpoints
 
-### Frontend Notes
+## Demo Credentials
 
-- TailwindCSS remains the styling foundation, with shared tokens in
-  `src/frontend/blog-web/tailwind.config.ts`.
-- Global base styles live in `src/frontend/blog-web/src/index.css`.
-- Reusable component styles live in
-  `src/frontend/blog-web/src/styles/components.css`.
-- Frontend design direction follows `DESIGN.md` and does not copy Ballast Lane
-  branding directly.
-- The current MVP intentionally avoids rich text editing, advanced client-side
-  caching, and broader CMS-style workflows.
+These accounts are seeded for local review only:
+
+- Administrator
+  - Email: `admin@blogplatform.local`
+  - Password: `Admin123!`
+- Regular user
+  - Email: `user@blogplatform.local`
+  - Password: `User123!`
+
+## Suggested Demo Flow
+
+### Frontend
+
+1. Open `http://localhost:5173`
+2. Browse public posts and open a post detail page
+3. Submit a reaction anonymously
+4. Log in as `user@blogplatform.local`
+5. Open `My Posts` and create, edit, or delete an owned post
+6. Log in as `admin@blogplatform.local`
+7. Open `Categories` and manage categories
+
+### Swagger
+
+1. Log in through `POST /api/auth/login`
+2. Review public post endpoints without authentication
+3. Add the JWT token through Swagger authorization
+4. Review post create/update/delete behavior
+5. Review admin-only category endpoints
+
+## Main Features Implemented
+
+- User registration and login with JWT authentication
+- Public post listing and post detail endpoints
+- Backend-powered post search through `GET /api/posts?q=...`
+- Like/dislike reactions for public posts
+- Authenticated “My Posts” workflow
+- Create, edit, and delete owned posts
+- Support for post tags in post create/update flows
+- Administrator-only category management
+- Category descriptions
+- Paginated category listing for admin and public available-category reads
+- Swagger/OpenAPI documentation
+- SQL-based database bootstrap and seed data
+
+## Documentation
+
+Use the root README for setup, then these files for deeper detail:
+
+- [Challenge brief](./docs/DotNET%20-%20Technical%20Test.md)
+- [Architectural decisions](./docs/DotNET%20-%20Technical%20Test%20-%20Architectural%20Decisions.md)
+- [Database implementation notes](./docs/Database-Implementation-Strategy.md)
+- [ERD notes](./docs/ERD-Diagram.md)
+- [UML notes](./docs/UML-Diagram.md)
+- [GenAI usage documentation](./docs/genai-usage.md)
+- [Frontend-specific notes](./src/frontend/blog-web/README.md)
+
+## Spec-Driven and GenAI Workflow
+
+This repository uses a spec-driven workflow to track feature work.
+
+- Feature artifacts live under `specs/<feature-id>-<feature-name>/`
+- Typical files include `spec.md`, `plan.md`, `tasks.md`, and `quickstart.md`
+- The repository also includes Spec Kit support files used to guide delivery and keep decisions consistent with the challenge constraints
+
+GenAI usage is documented separately in [docs/genai-usage.md](./docs/genai-usage.md), including the project constitution prompt and the role GenAI played in planning.
+
+## Known Limitations and Trade-offs
+
+- The project is intentionally MVP-scoped and does not aim to be a full CMS.
+- Public post listing and search are implemented, but they are not currently paginated.
+- Redis caching is documented in feature specs but is not wired into the current runtime or Compose stack.
+- Frontend tag management beyond post create/edit usage is out of scope.
+- `tests/frontend` does not currently contain automated frontend tests.
+- Category management is implemented, but broader admin tooling is intentionally limited.
+
+## Troubleshooting
+
+### Port already in use
+
+Update the relevant values in `.env`, then restart the stack.
+
+### PostgreSQL tests fail because schema is missing
+
+Start the database first:
+
+```bash
+docker compose up -d postgres
+docker compose ps
+```
+
+### Seed data does not reset after `docker compose down -v`
+
+The PostgreSQL service uses a bind mount at `database/data/pgdata`, so `down -v` alone does not remove existing database files.
+
+If you need a full reset:
+
+1. Stop the stack with `docker compose down`
+2. Remove `database/data/pgdata`
+3. Start PostgreSQL again with `docker compose up -d postgres`
+
+Depending on your Docker setup, deleting that directory may require elevated permissions because it is created by the container.
