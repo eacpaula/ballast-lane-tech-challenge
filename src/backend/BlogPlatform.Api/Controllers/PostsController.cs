@@ -27,7 +27,8 @@ public sealed class PostsController : ControllerBase
                 post.Title,
                 post.Summary,
                 post.IsPublic,
-                post.IsAvailable))
+                post.IsAvailable,
+                post.Tags))
             .ToArray();
 
         return Ok(response);
@@ -57,7 +58,8 @@ public sealed class PostsController : ControllerBase
             result.Summary,
             result.Content!,
             result.IsPublic!.Value,
-            result.IsAvailable!.Value));
+            result.IsAvailable!.Value,
+            result.Tags));
     }
 
     [HttpPost]
@@ -76,7 +78,8 @@ public sealed class PostsController : ControllerBase
                 request.CategoryId,
                 request.Title,
                 request.Summary,
-                request.Content),
+                request.Content,
+                request.Tags),
             cancellationToken);
 
         if (!result.IsSuccess)
@@ -89,7 +92,8 @@ public sealed class PostsController : ControllerBase
             result.AuthorUserId!.Value,
             result.Title!,
             result.Summary,
-            result.Content));
+            result.Content,
+            result.Tags));
     }
 
     [HttpPut("{postId:int}")]
@@ -109,7 +113,8 @@ public sealed class PostsController : ControllerBase
                 postId,
                 request.Title,
                 request.Summary,
-                request.Content),
+                request.Content,
+                request.Tags),
             cancellationToken);
 
         if (!result.IsSuccess)
@@ -122,7 +127,8 @@ public sealed class PostsController : ControllerBase
             result.AuthorUserId!.Value,
             result.Title!,
             result.Summary,
-            result.Content));
+            result.Content,
+            result.Tags));
     }
 
     [HttpDelete("{postId:int}")]
@@ -148,7 +154,8 @@ public sealed class PostsController : ControllerBase
             result.AuthorUserId!.Value,
             Title: string.Empty,
             Summary: null,
-            Content: null));
+            Content: null,
+            Tags: Array.Empty<string>()));
     }
 
     private int GetRequiredAuthenticatedUserId()

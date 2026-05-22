@@ -23,36 +23,6 @@ function deriveCategoryLabel(post: PublicPostDetail) {
   )
 }
 
-function deriveTags(post: PublicPostDetail) {
-  const keywordTags = [
-    'distributed-systems',
-    'architecture',
-    'cloud-native',
-    'scaling',
-    'frontend',
-    'backend',
-    'product-engineering',
-    'performance',
-  ]
-
-  const haystack = `${post.title} ${post.summary ?? ''} ${post.content}`.toLowerCase()
-  const matchedTags = keywordTags.filter((tag) =>
-    haystack.includes(tag.replace(/-/g, ' ')) || haystack.includes(tag.split('-')[0]),
-  )
-
-  if (matchedTags.length >= 3) {
-    return matchedTags.slice(0, 4)
-  }
-
-  const fallbackTitleTags = post.title
-    .toLowerCase()
-    .split(/[^a-z0-9]+/)
-    .filter((word) => word.length > 4)
-    .slice(0, 4)
-    .map((word) => word.replace(/\s+/g, '-'))
-
-  return [...new Set([...matchedTags, ...fallbackTitleTags, 'engineering'])].slice(0, 4)
-}
 
 export default function PublicPostDetailPage() {
   const { postId } = useParams()
@@ -98,7 +68,7 @@ export default function PublicPostDetailPage() {
   }
 
   const categoryLabel = deriveCategoryLabel(post)
-  const tags = deriveTags(post)
+  const tags = post.tags
 
   return (
     <section className="post-detail-layout">

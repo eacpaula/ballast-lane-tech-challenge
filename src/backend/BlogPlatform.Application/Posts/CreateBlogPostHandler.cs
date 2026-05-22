@@ -36,6 +36,8 @@ public sealed class CreateBlogPostHandler
                 errorMessage: "The selected category does not exist or cannot be used.");
         }
 
+        var normalizedTags = TagNormalizer.Normalize(command.Tags);
+
         BlogPost post;
 
         try
@@ -45,7 +47,8 @@ public sealed class CreateBlogPostHandler
                 categoryId: command.CategoryId,
                 title: command.Title,
                 summary: command.Summary,
-                content: command.Content);
+                content: command.Content,
+                tags: normalizedTags);
         }
         catch (ArgumentException exception)
         {

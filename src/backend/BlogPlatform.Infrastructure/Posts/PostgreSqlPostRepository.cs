@@ -19,7 +19,7 @@ public sealed class PostgreSqlPostRepository : IPostRepository
     {
         ArgumentNullException.ThrowIfNull(post);
 
-        const string sql = """
+        const string insertPostSql = """
             INSERT INTO posts (
                 user_id,
                 post_category_id,
@@ -46,10 +46,23 @@ public sealed class PostgreSqlPostRepository : IPostRepository
             """;
 
         await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
-        await using var command = BuildPostCommand(sql, connection, post);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        await reader.ReadAsync(cancellationToken);
-        return MapPost(reader);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+
+        int postId;
+        BlogPost createdPost;
+
+        await using (var command = BuildPostInsertCommand(insertPostSql, connection, transaction, post))
+        {
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            await reader.ReadAsync(cancellationToken);
+            postId = reader.GetInt32(0);
+            createdPost = MapPostFromReader(reader, post.Tags);
+        }
+
+        await PersistTagsAsync(connection, transaction, postId, post.AuthorUserId, post.Tags, cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return createdPost;
     }
 
     public async Task DeleteAsync(int postId, CancellationToken cancellationToken = default)
@@ -68,9 +81,16 @@ public sealed class PostgreSqlPostRepository : IPostRepository
     public async Task<BlogPost?> GetByIdAsync(int postId, CancellationToken cancellationToken = default)
     {
         const string sql = """
-            SELECT id, user_id, post_category_id, title, description, content, public_post, available
-            FROM posts
-            WHERE id = @id
+            SELECT
+                p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                COALESCE(
+                    (SELECT array_agg(t.title ORDER BY pt.creation_date, t.id)
+                     FROM post_tags pt
+                     JOIN tags t ON t.id = pt.tag_id
+                     WHERE pt.post_id = p.id),
+                    ARRAY[]::varchar[]) AS tags
+            FROM posts p
+            WHERE p.id = @id
             LIMIT 1;
             """;
 
@@ -80,10 +100,17 @@ public sealed class PostgreSqlPostRepository : IPostRepository
     public async Task<BlogPost?> GetByIdForAuthorAsync(int postId, int authorUserId, CancellationToken cancellationToken = default)
     {
         const string sql = """
-            SELECT id, user_id, post_category_id, title, description, content, public_post, available
-            FROM posts
-            WHERE id = @id
-              AND user_id = @author_user_id
+            SELECT
+                p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                COALESCE(
+                    (SELECT array_agg(t.title ORDER BY pt.creation_date, t.id)
+                     FROM post_tags pt
+                     JOIN tags t ON t.id = pt.tag_id
+                     WHERE pt.post_id = p.id),
+                    ARRAY[]::varchar[]) AS tags
+            FROM posts p
+            WHERE p.id = @id
+              AND p.user_id = @author_user_id
             LIMIT 1;
             """;
 
@@ -104,11 +131,18 @@ public sealed class PostgreSqlPostRepository : IPostRepository
     public async Task<BlogPost?> GetPublicReadByIdAsync(int postId, CancellationToken cancellationToken = default)
     {
         const string sql = """
-            SELECT id, user_id, post_category_id, title, description, content, public_post, available
-            FROM posts
-            WHERE id = @id
-              AND public_post = TRUE
-              AND available = TRUE
+            SELECT
+                p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                COALESCE(
+                    (SELECT array_agg(t.title ORDER BY pt.creation_date, t.id)
+                     FROM post_tags pt
+                     JOIN tags t ON t.id = pt.tag_id
+                     WHERE pt.post_id = p.id),
+                    ARRAY[]::varchar[]) AS tags
+            FROM posts p
+            WHERE p.id = @id
+              AND p.public_post = TRUE
+              AND p.available = TRUE
             LIMIT 1;
             """;
 
@@ -118,11 +152,18 @@ public sealed class PostgreSqlPostRepository : IPostRepository
     public async Task<IReadOnlyList<BlogPost>> ListPublicReadAsync(CancellationToken cancellationToken = default)
     {
         const string sql = """
-            SELECT id, user_id, post_category_id, title, description, content, public_post, available
-            FROM posts
-            WHERE public_post = TRUE
-              AND available = TRUE
-            ORDER BY id;
+            SELECT
+                p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                COALESCE(
+                    (SELECT array_agg(t.title ORDER BY pt.creation_date, t.id)
+                     FROM post_tags pt
+                     JOIN tags t ON t.id = pt.tag_id
+                     WHERE pt.post_id = p.id),
+                    ARRAY[]::varchar[]) AS tags
+            FROM posts p
+            WHERE p.public_post = TRUE
+              AND p.available = TRUE
+            ORDER BY p.id;
             """;
 
         var posts = new List<BlogPost>();
@@ -153,7 +194,13 @@ public sealed class PostgreSqlPostRepository : IPostRepository
                 p.description,
                 p.content,
                 p.public_post,
-                p.available
+                p.available,
+                COALESCE(
+                    (SELECT array_agg(t2.title ORDER BY pt2.creation_date, t2.id)
+                     FROM post_tags pt2
+                     JOIN tags t2 ON t2.id = pt2.tag_id
+                     WHERE pt2.post_id = p.id),
+                    ARRAY[]::varchar[]) AS tags
             FROM posts p
             INNER JOIN post_categories pc ON pc.id = p.post_category_id
             LEFT JOIN post_tags pt ON pt.post_id = p.id
@@ -196,10 +243,17 @@ public sealed class PostgreSqlPostRepository : IPostRepository
     public async Task<IReadOnlyList<BlogPost>> ListByAuthorAsync(int authorUserId, CancellationToken cancellationToken = default)
     {
         const string sql = """
-            SELECT id, user_id, post_category_id, title, description, content, public_post, available
-            FROM posts
-            WHERE user_id = @author_user_id
-            ORDER BY id;
+            SELECT
+                p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                COALESCE(
+                    (SELECT array_agg(t.title ORDER BY pt.creation_date, t.id)
+                     FROM post_tags pt
+                     JOIN tags t ON t.id = pt.tag_id
+                     WHERE pt.post_id = p.id),
+                    ARRAY[]::varchar[]) AS tags
+            FROM posts p
+            WHERE p.user_id = @author_user_id
+            ORDER BY p.id;
             """;
 
         var posts = new List<BlogPost>();
@@ -221,7 +275,7 @@ public sealed class PostgreSqlPostRepository : IPostRepository
     {
         ArgumentNullException.ThrowIfNull(post);
 
-        const string sql = """
+        const string updatePostSql = """
             UPDATE posts
             SET
                 title = @title,
@@ -236,16 +290,32 @@ public sealed class PostgreSqlPostRepository : IPostRepository
             """;
 
         await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
-        await using var command = BuildPostCommand(sql, connection, post);
-        command.Parameters.AddWithValue("id", post.Id);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
 
-        if (!await reader.ReadAsync(cancellationToken))
+        BlogPost updatedPost;
+
+        await using (var command = BuildPostUpdateCommand(updatePostSql, connection, transaction, post))
         {
-            throw new InvalidOperationException("The requested post was not found.");
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+            if (!await reader.ReadAsync(cancellationToken))
+            {
+                throw new InvalidOperationException("The requested post was not found.");
+            }
+
+            updatedPost = MapPostFromReader(reader, post.Tags);
         }
 
-        return MapPost(reader);
+        await using (var deleteTagsCommand = new NpgsqlCommand("DELETE FROM post_tags WHERE post_id = @post_id", connection, transaction))
+        {
+            deleteTagsCommand.Parameters.AddWithValue("post_id", post.Id);
+            await deleteTagsCommand.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        await PersistTagsAsync(connection, transaction, post.Id, post.AuthorUserId, post.Tags, cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return updatedPost;
     }
 
     private async Task<BlogPost?> QuerySingleAsync(string sql, int postId, CancellationToken cancellationToken)
@@ -263,9 +333,77 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         return MapPost(reader);
     }
 
-    private static NpgsqlCommand BuildPostCommand(string sql, NpgsqlConnection connection, BlogPost post)
+    private static async Task PersistTagsAsync(
+        NpgsqlConnection connection,
+        NpgsqlTransaction transaction,
+        int postId,
+        int authorUserId,
+        IReadOnlyList<string> tags,
+        CancellationToken cancellationToken)
     {
-        var command = new NpgsqlCommand(sql, connection);
+        if (tags.Count == 0)
+        {
+            return;
+        }
+
+        const string lookupTagSql = """
+            SELECT id FROM tags WHERE lower(title) = lower(@title) LIMIT 1;
+            """;
+
+        const string insertTagSql = """
+            INSERT INTO tags (title, created_by_user_id, creation_user_id, update_user_id)
+            VALUES (@title, @created_by_user_id, @creation_user_id, @update_user_id)
+            ON CONFLICT (title) DO NOTHING;
+            """;
+
+        const string insertPostTagSql = """
+            INSERT INTO post_tags (post_id, tag_id, creation_user_id, update_user_id)
+            VALUES (@post_id, @tag_id, @creation_user_id, @update_user_id)
+            ON CONFLICT (post_id, tag_id) DO NOTHING;
+            """;
+
+        foreach (var tagTitle in tags)
+        {
+            int tagId;
+
+            await using (var lookupCmd = new NpgsqlCommand(lookupTagSql, connection, transaction))
+            {
+                lookupCmd.Parameters.AddWithValue("title", tagTitle);
+                var existing = await lookupCmd.ExecuteScalarAsync(cancellationToken);
+
+                if (existing is not null)
+                {
+                    tagId = Convert.ToInt32(existing);
+                }
+                else
+                {
+                    await using (var insertTagCmd = new NpgsqlCommand(insertTagSql, connection, transaction))
+                    {
+                        insertTagCmd.Parameters.AddWithValue("title", tagTitle);
+                        insertTagCmd.Parameters.AddWithValue("created_by_user_id", authorUserId);
+                        insertTagCmd.Parameters.AddWithValue("creation_user_id", authorUserId);
+                        insertTagCmd.Parameters.AddWithValue("update_user_id", authorUserId);
+                        await insertTagCmd.ExecuteNonQueryAsync(cancellationToken);
+                    }
+
+                    await using var lookupAgainCmd = new NpgsqlCommand(lookupTagSql, connection, transaction);
+                    lookupAgainCmd.Parameters.AddWithValue("title", tagTitle);
+                    tagId = Convert.ToInt32(await lookupAgainCmd.ExecuteScalarAsync(cancellationToken));
+                }
+            }
+
+            await using var insertPostTagCmd = new NpgsqlCommand(insertPostTagSql, connection, transaction);
+            insertPostTagCmd.Parameters.AddWithValue("post_id", postId);
+            insertPostTagCmd.Parameters.AddWithValue("tag_id", tagId);
+            insertPostTagCmd.Parameters.AddWithValue("creation_user_id", authorUserId);
+            insertPostTagCmd.Parameters.AddWithValue("update_user_id", authorUserId);
+            await insertPostTagCmd.ExecuteNonQueryAsync(cancellationToken);
+        }
+    }
+
+    private static NpgsqlCommand BuildPostInsertCommand(string sql, NpgsqlConnection connection, NpgsqlTransaction transaction, BlogPost post)
+    {
+        var command = new NpgsqlCommand(sql, connection, transaction);
         command.Parameters.AddWithValue("user_id", post.AuthorUserId);
         command.Parameters.AddWithValue("post_category_id", post.CategoryId);
         command.Parameters.AddWithValue("title", post.Title);
@@ -278,7 +416,40 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         return command;
     }
 
+    private static NpgsqlCommand BuildPostUpdateCommand(string sql, NpgsqlConnection connection, NpgsqlTransaction transaction, BlogPost post)
+    {
+        var command = new NpgsqlCommand(sql, connection, transaction);
+        command.Parameters.AddWithValue("user_id", post.AuthorUserId);
+        command.Parameters.AddWithValue("post_category_id", post.CategoryId);
+        command.Parameters.AddWithValue("title", post.Title);
+        command.Parameters.AddWithValue("description", (object?)post.Summary ?? DBNull.Value);
+        command.Parameters.AddWithValue("content", post.Content);
+        command.Parameters.AddWithValue("public_post", post.IsPublic);
+        command.Parameters.AddWithValue("available", post.IsAvailable);
+        command.Parameters.AddWithValue("update_user_id", post.AuthorUserId);
+        command.Parameters.AddWithValue("id", post.Id);
+        return command;
+    }
+
     private static BlogPost MapPost(NpgsqlDataReader reader)
+    {
+        var tags = reader.IsDBNull(8)
+            ? Array.Empty<string>()
+            : (IReadOnlyList<string>)(reader.GetFieldValue<string[]>(8));
+
+        return BlogPost.Rehydrate(
+            id: reader.GetInt32(0),
+            authorUserId: reader.GetInt32(1),
+            categoryId: reader.GetInt32(2),
+            title: reader.GetString(3),
+            summary: reader.IsDBNull(4) ? null : reader.GetString(4),
+            content: reader.GetString(5),
+            isPublic: reader.GetBoolean(6),
+            isAvailable: reader.GetBoolean(7),
+            tags: tags);
+    }
+
+    private static BlogPost MapPostFromReader(NpgsqlDataReader reader, IReadOnlyList<string> tags)
     {
         return BlogPost.Rehydrate(
             id: reader.GetInt32(0),
@@ -288,6 +459,7 @@ public sealed class PostgreSqlPostRepository : IPostRepository
             summary: reader.IsDBNull(4) ? null : reader.GetString(4),
             content: reader.GetString(5),
             isPublic: reader.GetBoolean(6),
-            isAvailable: reader.GetBoolean(7));
+            isAvailable: reader.GetBoolean(7),
+            tags: tags);
     }
 }

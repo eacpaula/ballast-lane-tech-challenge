@@ -10,7 +10,8 @@ public sealed class OwnedPostListItem
         string title,
         string? summary,
         bool isPublic,
-        bool isAvailable)
+        bool isAvailable,
+        IReadOnlyList<string> tags)
     {
         PostId = postId;
         CategoryId = categoryId;
@@ -18,6 +19,7 @@ public sealed class OwnedPostListItem
         Summary = summary;
         IsPublic = isPublic;
         IsAvailable = isAvailable;
+        Tags = tags;
     }
 
     public int PostId { get; }
@@ -26,10 +28,18 @@ public sealed class OwnedPostListItem
     public string? Summary { get; }
     public bool IsPublic { get; }
     public bool IsAvailable { get; }
+    public IReadOnlyList<string> Tags { get; }
 
     public static OwnedPostListItem From(BlogPost post)
     {
         ArgumentNullException.ThrowIfNull(post);
-        return new OwnedPostListItem(post.Id, post.CategoryId, post.Title, post.Summary, post.IsPublic, post.IsAvailable);
+        return new OwnedPostListItem(
+            post.Id,
+            post.CategoryId,
+            post.Title,
+            post.Summary,
+            post.IsPublic,
+            post.IsAvailable,
+            post.Tags);
     }
 }

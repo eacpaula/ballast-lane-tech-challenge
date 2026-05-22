@@ -6,4 +6,5 @@ public sealed record OwnedPostSummaryResponse(
     string Title,
     string? Summary,
     bool IsPublic,
-    bool IsAvailable);
+    bool IsAvailable,
+    IReadOnlyList<string> Tags);

@@ -5,4 +5,5 @@ public sealed record PostMutationResponse(
     int AuthorUserId,
     string Title,
     string? Summary,
-    string? Content);
+    string? Content,
+    IReadOnlyList<string> Tags);

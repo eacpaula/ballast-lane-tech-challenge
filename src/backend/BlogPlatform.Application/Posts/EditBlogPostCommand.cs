@@ -5,4 +5,5 @@ public sealed record EditBlogPostCommand(
     int PostId,
     string Title,
     string? Summary,
-    string Content);
+    string Content,
+    IReadOnlyList<string>? Tags = null);

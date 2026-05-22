@@ -39,6 +39,8 @@ public sealed class EditBlogPostHandler
                 errorMessage: "Users can edit only posts they own.");
         }
 
+        var normalizedTags = TagNormalizer.Normalize(command.Tags);
+
         BlogPost updatedPost;
 
         try
@@ -46,7 +48,8 @@ public sealed class EditBlogPostHandler
             updatedPost = existingPost.Update(
                 title: command.Title,
                 summary: command.Summary,
-                content: command.Content);
+                content: command.Content,
+                tags: normalizedTags);
         }
         catch (ArgumentException exception)
         {

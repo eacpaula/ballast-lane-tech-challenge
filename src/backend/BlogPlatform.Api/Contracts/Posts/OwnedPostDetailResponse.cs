@@ -8,4 +8,5 @@ public sealed record OwnedPostDetailResponse(
     string? Summary,
     string Content,
     bool IsPublic,
-    bool IsAvailable);
+    bool IsAvailable,
+    IReadOnlyList<string> Tags);

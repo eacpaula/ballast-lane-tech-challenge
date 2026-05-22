@@ -6,6 +6,7 @@ import { useAuth } from '../auth/useAuth'
 import { createPost } from './owned-posts.api'
 import PostForm from './PostForm'
 import { listAvailableCategories } from './public-posts.api'
+import { parseTags } from './tags'
 import type { AvailableCategory, PostEditorDraft } from './post.types'
 
 const initialDraft: PostEditorDraft = {
@@ -46,7 +47,7 @@ export default function CreatePostPage() {
     setIsSubmitting(true)
 
     try {
-      await createPost(draft, user.token)
+      await createPost({ ...draft, tags: parseTags(draft.tags) }, user.token)
       navigate('/my-posts')
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Unable to create post.')
