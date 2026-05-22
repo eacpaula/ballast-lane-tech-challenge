@@ -9,39 +9,61 @@ import type { PublicPostSummary } from './post.types'
 import { useAuth } from '../auth/useAuth'
 
 export default function PublicPostListPage() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const [searchParams] = useSearchParams()
   const [posts, setPosts] = useState<PublicPostSummary[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const query = searchParams.get('q')?.trim() ?? ''
+  const requestKey = `${query}::${user?.token ?? ''}`
+  const [resolvedRequestKey, setResolvedRequestKey] = useState<string | null>(null)
 
   useEffect(() => {
     let active = true
-    void listPublicPosts()
+
+    void listPublicPosts({ query, token: user?.token })
       .then((response) => {
         if (active) {
           setPosts(response)
+          setError(null)
+          setResolvedRequestKey(requestKey)
         }
       })
       .catch((caught) => {
         if (active) {
+          setPosts(null)
           setError(caught instanceof Error ? caught.message : 'Unable to load posts.')
+          setResolvedRequestKey(requestKey)
         }
       })
 
     return () => {
       active = false
     }
-  }, [])
+  }, [query, requestKey, user?.token])
+
+  if (resolvedRequestKey !== requestKey) {
+    return <LoadingState message="Loading public posts…" />
+  }
 
   if (error) {
     return <ErrorMessage detail={error} />
   }
 
-  if (!posts) {
-    return <LoadingState message="Loading public posts…" />
-  }
+  if (!posts || posts.length === 0) {
+    if (query) {
+      return (
+        <section className="content-stack">
+          <section className="hero-panel hero-panel-centered">
+            <span className="eyebrow">No results found</span>
+            <h1 className="page-title">No posts matched “{searchParams.get('q')}”.</h1>
+            <p className="prose-lead">
+              Try a different keyword from the search field above to explore the latest writing.
+            </p>
+          </section>
+        </section>
+      )
+    }
 
-  if (posts.length === 0) {
     return (
       <EmptyState
         title="No public posts yet"
@@ -50,30 +72,8 @@ export default function PublicPostListPage() {
     )
   }
 
-  const query = searchParams.get('q')?.trim().toLowerCase() ?? ''
-  const filteredPosts = query
-    ? posts.filter((post) => {
-        const haystack = `${post.title} ${post.summary ?? ''}`.toLowerCase()
-        return haystack.includes(query)
-      })
-    : posts
-
-  if (filteredPosts.length === 0) {
-    return (
-      <section className="content-stack">
-        <section className="hero-panel hero-panel-centered">
-          <span className="eyebrow">No results found</span>
-          <h1 className="page-title">No posts matched “{searchParams.get('q')}”.</h1>
-          <p className="prose-lead">
-            Try a different keyword from the search field above to explore the latest writing.
-          </p>
-        </section>
-      </section>
-    )
-  }
-
-  const featuredPost = filteredPosts[0]
-  const latestPosts = filteredPosts.slice(1)
+  const featuredPost = posts[0]
+  const latestPosts = posts.slice(1)
 
   return (
     <section className="content-stack">

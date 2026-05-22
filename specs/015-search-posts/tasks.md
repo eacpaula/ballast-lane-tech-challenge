@@ -40,8 +40,8 @@ implementation and testing of the backend-powered search flow.
 **Purpose**: Prepare small reusable helpers so the search tests can be written
 cleanly without editing permanent seed data.
 
-- [ ] T001 Create shared API and repository search test data helpers in `tests/backend/BlogPlatform.Api.Tests/TestSupport/SearchPostTestData.cs` and `tests/backend/BlogPlatform.Infrastructure.Tests/TestSupport/SearchPostTestData.cs`
-- [ ] T002 [P] Create a reusable application post-repository search stub in `tests/backend/BlogPlatform.Application.Tests/Posts/SearchPostRepositoryStub.cs`
+- [X] T001 Create shared API and repository search test data helpers in `tests/backend/BlogPlatform.Api.Tests/TestSupport/SearchPostTestData.cs` and `tests/backend/BlogPlatform.Infrastructure.Tests/TestSupport/SearchPostTestData.cs`
+- [X] T002 [P] Create a reusable application post-repository search stub in `tests/backend/BlogPlatform.Application.Tests/Posts/SearchPostRepositoryStub.cs`
 
 ---
 
@@ -53,8 +53,8 @@ search story can be completed.
 **CRITICAL**: Frontend search wiring waits until the backend contracts and tests
 are stable.
 
-- [ ] T003 Add the search-oriented post repository contract in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
-- [ ] T004 [P] Update affected `IPostRepository` test doubles under `tests/backend/BlogPlatform.Application.Tests/Posts/`, `tests/backend/BlogPlatform.Application.Tests/Reactions/`, and `tests/backend/BlogPlatform.Application.Tests/Categories/` to compile with the new search contract
+- [X] T003 Add the search-oriented post repository contract in `src/backend/BlogPlatform.Application/Abstractions/IPostRepository.cs`
+- [X] T004 [P] Update affected `IPostRepository` test doubles under `tests/backend/BlogPlatform.Application.Tests/Posts/`, `tests/backend/BlogPlatform.Application.Tests/Reactions/`, and `tests/backend/BlogPlatform.Application.Tests/Categories/` to compile with the new search contract
 
 **Checkpoint**: The repository abstraction is ready for test-first search work.
 
@@ -75,30 +75,30 @@ user’s private post.
 
 > Write these tests first and verify they fail before implementation.
 
-- [ ] T005 [P] [US1] Add anonymous search Application tests in `tests/backend/BlogPlatform.Application.Tests/Posts/SearchPostsAnonymousTests.cs`
-- [ ] T006 [P] [US1] Add authenticated owner-inclusive search Application tests in `tests/backend/BlogPlatform.Application.Tests/Posts/SearchPostsAuthenticatedTests.cs`
-- [ ] T007 [P] [US1] Add anonymous repository search tests in `tests/backend/BlogPlatform.Infrastructure.Tests/Posts/PostRepositorySearchAnonymousTests.cs`
-- [ ] T008 [P] [US1] Add authenticated repository search tests in `tests/backend/BlogPlatform.Infrastructure.Tests/Posts/PostRepositorySearchAuthenticatedTests.cs`
-- [ ] T009 [P] [US1] Add anonymous API search tests in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostSearchAnonymousTests.cs`
-- [ ] T010 [P] [US1] Add authenticated API search tests in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostSearchAuthenticatedTests.cs`
+- [X] T005 [P] [US1] Add anonymous search Application tests in `tests/backend/BlogPlatform.Application.Tests/Posts/SearchPostsAnonymousTests.cs`
+- [X] T006 [P] [US1] Add authenticated owner-inclusive search Application tests in `tests/backend/BlogPlatform.Application.Tests/Posts/SearchPostsAuthenticatedTests.cs`
+- [X] T007 [P] [US1] Add anonymous repository search tests in `tests/backend/BlogPlatform.Infrastructure.Tests/Posts/PostRepositorySearchAnonymousTests.cs`
+- [X] T008 [P] [US1] Add authenticated repository search tests in `tests/backend/BlogPlatform.Infrastructure.Tests/Posts/PostRepositorySearchAuthenticatedTests.cs`
+- [X] T009 [P] [US1] Add anonymous API search tests in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostSearchAnonymousTests.cs`
+- [X] T010 [P] [US1] Add authenticated API search tests in `tests/backend/BlogPlatform.Api.Tests/Posts/PublicPostSearchAuthenticatedTests.cs`
 
 ### Backend Implementation for User Story 1
 
-- [ ] T011 [US1] Update `src/backend/BlogPlatform.Application/Posts/ListPublicPostsHandler.cs` to accept a search term plus optional authenticated user context and enforce search visibility rules
-- [ ] T012 [P] [US1] Update `src/backend/BlogPlatform.Application/Posts/PublicPostListItem.cs` and related Application search projections if needed to preserve the existing list response shape
-- [ ] T013 [US1] Implement parameterized anonymous and authenticated search SQL in `src/backend/BlogPlatform.Infrastructure/Posts/PostgreSqlPostRepository.cs`
-- [ ] T014 [US1] Extend the Infrastructure search query in `src/backend/BlogPlatform.Infrastructure/Posts/PostgreSqlPostRepository.cs` to cover title and description at minimum, plus content and category title, and tag matching only if it stays a small join-based extension
-- [ ] T015 [US1] Update the public listing endpoint to accept `q` and optional authenticated context in `src/backend/BlogPlatform.Api/Controllers/PublicPostsController.cs`
-- [ ] T016 [US1] Update handler wiring and OpenAPI-visible endpoint behavior in `src/backend/BlogPlatform.Api/Extensions/ServiceCollectionExtensions.cs` and `src/backend/BlogPlatform.Api/Contracts/Posts/PublicPostSummaryResponse.cs` only if the search-enabled list flow requires contract adjustments
-- [ ] T017 [US1] Re-run backend search tests and confirm empty-search, no-results, and private-visibility behaviors in `tests/backend/BlogPlatform.Application.Tests/Posts/`, `tests/backend/BlogPlatform.Infrastructure.Tests/Posts/`, and `tests/backend/BlogPlatform.Api.Tests/Posts/`
+- [X] T011 [US1] Update `src/backend/BlogPlatform.Application/Posts/ListPublicPostsHandler.cs` to accept a search term plus optional authenticated user context and enforce search visibility rules
+- [X] T012 [P] [US1] Update `src/backend/BlogPlatform.Application/Posts/PublicPostListItem.cs` and related Application search projections if needed to preserve the existing list response shape
+- [X] T013 [US1] Implement parameterized anonymous and authenticated search SQL in `src/backend/BlogPlatform.Infrastructure/Posts/PostgreSqlPostRepository.cs`
+- [X] T014 [US1] Extend the Infrastructure search query in `src/backend/BlogPlatform.Infrastructure/Posts/PostgreSqlPostRepository.cs` to cover title and description at minimum, plus content and category title, and tag matching only if it stays a small join-based extension
+- [X] T015 [US1] Update the public listing endpoint to accept `q` and optional authenticated context in `src/backend/BlogPlatform.Api/Controllers/PublicPostsController.cs`
+- [X] T016 [US1] Update handler wiring and OpenAPI-visible endpoint behavior in `src/backend/BlogPlatform.Api/Extensions/ServiceCollectionExtensions.cs` and `src/backend/BlogPlatform.Api/Contracts/Posts/PublicPostSummaryResponse.cs` only if the search-enabled list flow requires contract adjustments
+- [X] T017 [US1] Re-run backend search tests and confirm empty-search, no-results, and private-visibility behaviors in `tests/backend/BlogPlatform.Application.Tests/Posts/`, `tests/backend/BlogPlatform.Infrastructure.Tests/Posts/`, and `tests/backend/BlogPlatform.Api.Tests/Posts/`
 
 ### Frontend for User Story 1
 
-- [ ] T018 [US1] Update the public posts API helper to send `q` and an optional bearer token in `src/frontend/blog-web/src/features/posts/public-posts.api.ts`
-- [ ] T019 [US1] Replace client-side filtering with backend requests in `src/frontend/blog-web/src/features/posts/PublicPostListPage.tsx`
-- [ ] T020 [US1] Preserve the existing search-box route flow and authenticated token usage in `src/frontend/blog-web/src/app/AppShell.tsx` and `src/frontend/blog-web/src/features/posts/PublicPostListPage.tsx`
-- [ ] T021 [US1] Verify loading, no-results, and error rendering for backend search in `src/frontend/blog-web/src/features/posts/PublicPostListPage.tsx`
-- [ ] T022 [US1] Verify keyboard access, focus states, semantic HTML, and readable contrast for the search-driven public listing in `src/frontend/blog-web/src/app/AppShell.tsx` and `src/frontend/blog-web/src/features/posts/PublicPostListPage.tsx`
+- [X] T018 [US1] Update the public posts API helper to send `q` and an optional bearer token in `src/frontend/blog-web/src/features/posts/public-posts.api.ts`
+- [X] T019 [US1] Replace client-side filtering with backend requests in `src/frontend/blog-web/src/features/posts/PublicPostListPage.tsx`
+- [X] T020 [US1] Preserve the existing search-box route flow and authenticated token usage in `src/frontend/blog-web/src/app/AppShell.tsx` and `src/frontend/blog-web/src/features/posts/PublicPostListPage.tsx`
+- [X] T021 [US1] Verify loading, no-results, and error rendering for backend search in `src/frontend/blog-web/src/features/posts/PublicPostListPage.tsx`
+- [X] T022 [US1] Verify keyboard access, focus states, semantic HTML, and readable contrast for the search-driven public listing in `src/frontend/blog-web/src/app/AppShell.tsx` and `src/frontend/blog-web/src/features/posts/PublicPostListPage.tsx`
 
 **Checkpoint**: Backend-powered post search is functional and independently
 testable.
@@ -110,12 +110,12 @@ testable.
 **Purpose**: Validate the full stack and record the final run flow without
 expanding scope.
 
-- [ ] T023 [P] Run the backend automated checks for search in `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`, `tests/backend/BlogPlatform.Infrastructure.Tests/BlogPlatform.Infrastructure.Tests.csproj`, and `tests/backend/BlogPlatform.Api.Tests/BlogPlatform.Api.Tests.csproj`
-- [ ] T024 [P] Run frontend validation with `npm run lint` and `npm run build` from `src/frontend/blog-web/`
-- [ ] T025 Validate anonymous and authenticated search through `docker compose up -d postgres api frontend` using the steps in `specs/015-search-posts/quickstart.md`
-- [ ] T026 Update the search run-flow documentation in `specs/015-search-posts/quickstart.md`, `README.md`, and `src/frontend/blog-web/README.md` if implementation details or validation notes changed
-- [ ] T027 Verify Swagger/OpenAPI output and direct API search behavior for `GET /api/posts?q=...` from `src/backend/BlogPlatform.Api/Controllers/PublicPostsController.cs` and the running `/swagger` document
-- [ ] T028 Review the backend and frontend search changes in `src/backend/` and `src/frontend/blog-web/src/features/posts/` and remove any unnecessary abstractions or out-of-scope additions
+- [X] T023 [P] Run the backend automated checks for search in `tests/backend/BlogPlatform.Application.Tests/BlogPlatform.Application.Tests.csproj`, `tests/backend/BlogPlatform.Infrastructure.Tests/BlogPlatform.Infrastructure.Tests.csproj`, and `tests/backend/BlogPlatform.Api.Tests/BlogPlatform.Api.Tests.csproj`
+- [X] T024 [P] Run frontend validation with `npm run lint` and `npm run build` from `src/frontend/blog-web/`
+- [X] T025 Validate anonymous and authenticated search through `docker compose up -d postgres api frontend` using the steps in `specs/015-search-posts/quickstart.md`
+- [X] T026 Update the search run-flow documentation in `specs/015-search-posts/quickstart.md`, `README.md`, and `src/frontend/blog-web/README.md` if implementation details or validation notes changed
+- [X] T027 Verify Swagger/OpenAPI output and direct API search behavior for `GET /api/posts?q=...` from `src/backend/BlogPlatform.Api/Controllers/PublicPostsController.cs` and the running `/swagger` document
+- [X] T028 Review the backend and frontend search changes in `src/backend/` and `src/frontend/blog-web/src/features/posts/` and remove any unnecessary abstractions or out-of-scope additions
 
 ---
 

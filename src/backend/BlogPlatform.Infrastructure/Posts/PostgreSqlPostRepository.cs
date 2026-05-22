@@ -2,6 +2,7 @@ using BlogPlatform.Application.Abstractions;
 using BlogPlatform.Domain.Posts;
 using BlogPlatform.Infrastructure.Data;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace BlogPlatform.Infrastructure.Posts;
 
@@ -128,6 +129,60 @@ public sealed class PostgreSqlPostRepository : IPostRepository
 
         await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+        while (await reader.ReadAsync(cancellationToken))
+        {
+            posts.Add(MapPost(reader));
+        }
+
+        return posts;
+    }
+
+    public async Task<IReadOnlyList<BlogPost>> SearchPublicReadAsync(
+        string query,
+        int? requestingUserId,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            SELECT DISTINCT
+                p.id,
+                p.user_id,
+                p.post_category_id,
+                p.title,
+                p.description,
+                p.content,
+                p.public_post,
+                p.available
+            FROM posts p
+            INNER JOIN post_categories pc ON pc.id = p.post_category_id
+            LEFT JOIN post_tags pt ON pt.post_id = p.id
+            LEFT JOIN tags t ON t.id = pt.tag_id
+            WHERE p.available = TRUE
+              AND (
+                    p.public_post = TRUE
+                    OR (@requesting_user_id IS NOT NULL AND p.user_id = @requesting_user_id)
+                  )
+              AND (
+                    p.title ILIKE @pattern
+                    OR COALESCE(p.description, '') ILIKE @pattern
+                    OR p.content ILIKE @pattern
+                    OR pc.title ILIKE @pattern
+                    OR COALESCE(t.title, '') ILIKE @pattern
+                  )
+            ORDER BY p.id;
+            """;
+
+        var posts = new List<BlogPost>();
+
+        await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
+        await using var command = new NpgsqlCommand(sql, connection);
+        command.Parameters.AddWithValue("pattern", $"%{query}%");
+        var userParameter = new NpgsqlParameter<int?>("requesting_user_id", NpgsqlDbType.Integer)
+        {
+            TypedValue = requestingUserId,
+        };
+        command.Parameters.Add(userParameter);
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 
         while (await reader.ReadAsync(cancellationToken))

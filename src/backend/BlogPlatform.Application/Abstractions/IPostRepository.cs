@@ -18,5 +18,11 @@ public interface IPostRepository
 
     Task<IReadOnlyList<BlogPost>> ListPublicReadAsync(CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<BlogPost>> SearchPublicReadAsync(
+        string query,
+        int? requestingUserId,
+        CancellationToken cancellationToken = default)
+        => throw new NotSupportedException();
+
     Task<BlogPost> UpdateAsync(BlogPost post, CancellationToken cancellationToken = default);
 }

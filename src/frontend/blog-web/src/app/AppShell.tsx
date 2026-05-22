@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useState } from 'react'
+import { type FormEvent } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../features/auth/useAuth'
 import Button from '../components/Button'
@@ -13,14 +13,13 @@ export default function AppShell() {
   const [searchParams] = useSearchParams()
   const location = useLocation()
   const navigate = useNavigate()
-  const [searchInput, setSearchInput] = useState(searchParams.get('q') ?? '')
-
-  useEffect(() => {
-    setSearchInput(searchParams.get('q') ?? '')
-  }, [searchParams])
+  const currentQuery = searchParams.get('q') ?? ''
 
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const rawQuery = formData.get('q')
+    const searchInput = typeof rawQuery === 'string' ? rawQuery : ''
 
     const trimmedQuery = searchInput.trim()
     const nextSearchParams = new URLSearchParams()
@@ -104,10 +103,10 @@ export default function AppShell() {
                 </svg>
               </button>
               <input
+                key={currentQuery}
                 type="search"
                 name="q"
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
+                defaultValue={currentQuery}
                 placeholder="Search posts..."
                 className="app-search-input"
               />
