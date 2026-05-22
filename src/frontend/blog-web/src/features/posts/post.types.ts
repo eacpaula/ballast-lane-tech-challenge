@@ -2,6 +2,7 @@ export type PublicPostSummary = {
   id: number
   title: string
   summary: string | null
+  tags: string[]
 }
 
 export type PublicPostDetail = {
@@ -9,6 +10,7 @@ export type PublicPostDetail = {
   title: string
   summary: string | null
   content: string
+  tags: string[]
 }
 
 export type ReactionType = 'like' | 'dislike'
@@ -34,6 +36,7 @@ export type OwnedPostSummary = {
   categoryId: number
   isPublic: boolean
   isAvailable: boolean
+  tags: string[]
 }
 
 export type OwnedPostDetail = {
@@ -44,6 +47,7 @@ export type OwnedPostDetail = {
   categoryId: number
   isPublic: boolean
   isAvailable: boolean
+  tags: string[]
 }
 
 export type PostMutationRequest = {
@@ -51,9 +55,10 @@ export type PostMutationRequest = {
   title: string
   summary: string
   content: string
+  tags: string[]
 }
 
-export type PostEditorDraft = PostMutationRequest & {
+export type PostEditorDraft = Omit<PostMutationRequest, 'tags'> & {
   tags: string
   publishDate: string
   expireDate: string
@@ -67,4 +72,5 @@ export type PostMutationResponse = {
   title: string
   summary: string | null
   content: string | null
+  tags: string[]
 }

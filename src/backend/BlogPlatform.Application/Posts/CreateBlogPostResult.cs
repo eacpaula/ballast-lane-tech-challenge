@@ -12,6 +12,7 @@ public sealed class CreateBlogPostResult
         string? title,
         string? summary,
         string? content,
+        IReadOnlyList<string> tags,
         string? errorCode,
         string? errorMessage)
     {
@@ -22,6 +23,7 @@ public sealed class CreateBlogPostResult
         Title = title;
         Summary = summary;
         Content = content;
+        Tags = tags;
         ErrorCode = errorCode;
         ErrorMessage = errorMessage;
     }
@@ -40,6 +42,8 @@ public sealed class CreateBlogPostResult
 
     public string? Content { get; }
 
+    public IReadOnlyList<string> Tags { get; }
+
     public string? ErrorCode { get; }
 
     public string? ErrorMessage { get; }
@@ -54,6 +58,7 @@ public sealed class CreateBlogPostResult
             title: post.Title,
             summary: post.Summary,
             content: post.Content,
+            tags: post.Tags,
             errorCode: null,
             errorMessage: null);
     }
@@ -68,6 +73,7 @@ public sealed class CreateBlogPostResult
             title: null,
             summary: null,
             content: null,
+            tags: Array.Empty<string>(),
             errorCode: errorCode,
             errorMessage: errorMessage);
     }

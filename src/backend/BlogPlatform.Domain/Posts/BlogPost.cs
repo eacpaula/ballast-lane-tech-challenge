@@ -10,7 +10,8 @@ public sealed class BlogPost
         string? summary,
         string content,
         bool isPublic,
-        bool isAvailable)
+        bool isAvailable,
+        IReadOnlyList<string> tags)
     {
         Id = id;
         AuthorUserId = authorUserId;
@@ -20,6 +21,7 @@ public sealed class BlogPost
         Content = content;
         IsPublic = isPublic;
         IsAvailable = isAvailable;
+        Tags = tags;
     }
 
     public int Id { get; }
@@ -40,6 +42,8 @@ public sealed class BlogPost
 
     public bool IsPubliclyReadable => IsPublic && IsAvailable;
 
+    public IReadOnlyList<string> Tags { get; }
+
     public static BlogPost Create(
         int authorUserId,
         int categoryId,
@@ -47,7 +51,8 @@ public sealed class BlogPost
         string? summary,
         string content,
         bool isPublic = true,
-        bool isAvailable = true)
+        bool isAvailable = true,
+        IEnumerable<string>? tags = null)
     {
         if (authorUserId <= 0)
         {
@@ -71,7 +76,8 @@ public sealed class BlogPost
             summary: normalizedSummary,
             content: normalizedContent,
             isPublic: isPublic,
-            isAvailable: isAvailable);
+            isAvailable: isAvailable,
+            tags: tags?.ToList() ?? (IReadOnlyList<string>)Array.Empty<string>());
     }
 
     public static BlogPost Rehydrate(
@@ -82,7 +88,8 @@ public sealed class BlogPost
         string? summary,
         string content,
         bool isPublic = true,
-        bool isAvailable = true)
+        bool isAvailable = true,
+        IEnumerable<string>? tags = null)
     {
         if (id <= 0)
         {
@@ -101,13 +108,15 @@ public sealed class BlogPost
             summary: normalizedSummary,
             content: normalizedContent,
             isPublic: isPublic,
-            isAvailable: isAvailable);
+            isAvailable: isAvailable,
+            tags: tags?.ToList() ?? (IReadOnlyList<string>)Array.Empty<string>());
     }
 
     public BlogPost Update(
         string title,
         string? summary,
-        string content)
+        string content,
+        IEnumerable<string>? tags = null)
     {
         if (Id <= 0)
         {
@@ -126,7 +135,8 @@ public sealed class BlogPost
             summary: normalizedSummary,
             content: normalizedContent,
             isPublic: IsPublic,
-            isAvailable: IsAvailable);
+            isAvailable: IsAvailable,
+            tags: tags?.ToList() ?? (IReadOnlyList<string>)Array.Empty<string>());
     }
 
     private static string NormalizeRequired(string value, string paramName)

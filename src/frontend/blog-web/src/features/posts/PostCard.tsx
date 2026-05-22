@@ -17,6 +17,15 @@ export default function PostCard({ post }: { post: PublicPostSummary }) {
           {post.summary || 'This post has no summary yet.'}
         </p>
       </div>
+      {post.tags.length > 0 && (
+        <div className="post-detail-tags">
+          {post.tags.map((tag) => (
+            <span key={tag} className="post-detail-tag">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
       <div className="post-card-footer">
         <span className="post-card-meta">Public article</span>
         <NavLink to={`/posts/${post.id}`} className="post-card-link">

@@ -4,4 +4,5 @@ public sealed record CreatePostRequest(
     int CategoryId,
     string Title,
     string? Summary,
-    string Content);
+    string Content,
+    IReadOnlyList<string>? Tags = null);

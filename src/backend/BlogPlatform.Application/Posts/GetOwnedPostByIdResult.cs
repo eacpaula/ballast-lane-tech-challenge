@@ -14,6 +14,7 @@ public sealed class GetOwnedPostByIdResult
         string? content,
         bool? isPublic,
         bool? isAvailable,
+        IReadOnlyList<string> tags,
         string? errorCode,
         string? errorMessage)
     {
@@ -26,6 +27,7 @@ public sealed class GetOwnedPostByIdResult
         Content = content;
         IsPublic = isPublic;
         IsAvailable = isAvailable;
+        Tags = tags;
         ErrorCode = errorCode;
         ErrorMessage = errorMessage;
     }
@@ -39,6 +41,7 @@ public sealed class GetOwnedPostByIdResult
     public string? Content { get; }
     public bool? IsPublic { get; }
     public bool? IsAvailable { get; }
+    public IReadOnlyList<string> Tags { get; }
     public string? ErrorCode { get; }
     public string? ErrorMessage { get; }
 
@@ -55,10 +58,11 @@ public sealed class GetOwnedPostByIdResult
             post.Content,
             post.IsPublic,
             post.IsAvailable,
+            post.Tags,
             null,
             null);
     }
 
     public static GetOwnedPostByIdResult Failure(string errorCode, string errorMessage)
-        => new(false, null, null, null, null, null, null, null, null, errorCode, errorMessage);
+        => new(false, null, null, null, null, null, null, null, null, Array.Empty<string>(), errorCode, errorMessage);
 }

@@ -4,4 +4,5 @@ public sealed record PublicPostDetailResponse(
     int Id,
     string Title,
     string? Summary,
-    string Content);
+    string Content,
+    IReadOnlyList<string> Tags);

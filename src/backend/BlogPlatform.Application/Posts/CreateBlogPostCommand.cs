@@ -5,4 +5,5 @@ public sealed record CreateBlogPostCommand(
     int CategoryId,
     string Title,
     string? Summary,
-    string Content);
+    string Content,
+    IReadOnlyList<string>? Tags = null);

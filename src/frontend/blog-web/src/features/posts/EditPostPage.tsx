@@ -6,6 +6,7 @@ import { useAuth } from '../auth/useAuth'
 import { getOwnedPost, updatePost } from './owned-posts.api'
 import PostForm from './PostForm'
 import { listAvailableCategories } from './public-posts.api'
+import { parseTags } from './tags'
 import type { AvailableCategory, OwnedPostDetail, PostEditorDraft } from './post.types'
 
 export default function EditPostPage() {
@@ -47,7 +48,7 @@ export default function EditPostPage() {
       title: post?.title ?? '',
       summary: post?.summary ?? '',
       content: post?.content ?? '',
-      tags: '',
+      tags: (post?.tags ?? []).join(', '),
       publishDate: '',
       expireDate: '',
       isPublic: post?.isPublic ?? true,
@@ -71,6 +72,7 @@ export default function EditPostPage() {
           title: value.title,
           summary: value.summary,
           content: value.content,
+          tags: parseTags(value.tags),
         },
         user.token,
       )
