@@ -18,12 +18,15 @@ public sealed class CreateCategoryApiTests : IClassFixture<BlogPlatformApiFactor
         await _factory.Database.ResetToSeedStateAsync();
         using var client = await ApiAuthenticationTestHelper.CreateAdminClientAsync(_factory);
 
-        var response = await client.PostAsJsonAsync("/api/categories", new CreateCategoryRequest("New API Category"));
+        var response = await client.PostAsJsonAsync(
+            "/api/categories",
+            new CreateCategoryRequest("New API Category", "Category created through API tests"));
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         var body = await response.Content.ReadFromJsonAsync<CategoryResponse>();
         Assert.NotNull(body);
         Assert.True(body!.Id > 0);
+        Assert.Equal("Category created through API tests", body.Description);
     }
 
     [Fact]

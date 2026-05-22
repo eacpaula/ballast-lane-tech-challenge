@@ -19,9 +19,14 @@ public sealed class UpdateCategoryApiTests : IClassFixture<BlogPlatformApiFactor
         var categoryId = await _factory.Database.GetCategoryIdByTitleAsync("Architecture");
         using var client = await ApiAuthenticationTestHelper.CreateAdminClientAsync(_factory);
 
-        var response = await client.PutAsJsonAsync($"/api/categories/{categoryId}", new UpdateCategoryRequest("Architecture Updated"));
+        var response = await client.PutAsJsonAsync(
+            $"/api/categories/{categoryId}",
+            new UpdateCategoryRequest("Architecture Updated", "Updated from integration tests"));
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var body = await response.Content.ReadFromJsonAsync<CategoryResponse>();
+        Assert.NotNull(body);
+        Assert.Equal("Updated from integration tests", body!.Description);
     }
 
     [Fact]
@@ -30,7 +35,7 @@ public sealed class UpdateCategoryApiTests : IClassFixture<BlogPlatformApiFactor
         await _factory.Database.ResetToSeedStateAsync();
         using var client = await ApiAuthenticationTestHelper.CreateAdminClientAsync(_factory);
 
-        var response = await client.PutAsJsonAsync("/api/categories/999999", new UpdateCategoryRequest("Missing Category"));
+        var response = await client.PutAsJsonAsync("/api/categories/999999", new UpdateCategoryRequest("Missing Category", "Missing"));
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.NotNull(await response.Content.ReadFromJsonAsync<ProblemDetails>());

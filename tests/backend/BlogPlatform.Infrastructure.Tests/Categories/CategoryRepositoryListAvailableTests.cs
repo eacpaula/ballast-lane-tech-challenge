@@ -1,6 +1,8 @@
 using BlogPlatform.Infrastructure.Categories;
 using BlogPlatform.Infrastructure.Configuration;
 using BlogPlatform.Infrastructure.Data;
+using BlogPlatform.Application.Posts;
+using BlogPlatform.Infrastructure.Tests.TestSupport;
 
 namespace BlogPlatform.Infrastructure.Tests.Categories;
 
@@ -16,16 +18,32 @@ public sealed class CategoryRepositoryListAvailableTests : IClassFixture<Postgre
     {
         await _database.VerifyConnectivityAsync();
         await _database.ResetToSeedStateAsync();
-        await _database.InsertCategoryAsync("Hidden Category", isAvailable: false);
+        await _database.InsertCategoryAsync("Hidden Category", isAvailable: false, description: "Should not appear");
 
         var repository = new PostgreSqlCategoryRepository(
             new NpgsqlConnectionFactory(_database.CreateSettings()));
 
-        var result = await repository.ListAvailableAsync();
+        var result = await repository.ListAvailableAsync(CategoryPageRequest.Create(page: 1, pageSize: 10));
 
-        Assert.Contains(result, category => category.Title == "Architecture");
-        Assert.Contains(result, category => category.Title == "Testing");
-        Assert.DoesNotContain(result, category => category.Title == "Hidden Category");
-        Assert.All(result, category => Assert.True(category.IsAvailable));
+        CategoryPaginationTestData.AssertValidPage(result, 1, 10);
+        Assert.Contains(result.Items, category => category.Title == "Architecture" && category.Description is not null);
+        Assert.Contains(result.Items, category => category.Title == "Testing");
+        Assert.DoesNotContain(result.Items, category => category.Title == "Hidden Category");
+        Assert.All(result.Items, category => Assert.True(category.IsAvailable));
+    }
+
+    [Fact]
+    public async Task ListAvailableAsync_ReturnsEmptyItemsForPageBeyondRange()
+    {
+        await _database.VerifyConnectivityAsync();
+        await _database.ResetToSeedStateAsync();
+
+        var repository = new PostgreSqlCategoryRepository(
+            new NpgsqlConnectionFactory(_database.CreateSettings()));
+
+        var result = await repository.ListAvailableAsync(CategoryPageRequest.Create(page: 5, pageSize: 10));
+
+        Assert.Empty(result.Items);
+        Assert.Equal(5, result.Page);
     }
 }

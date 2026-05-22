@@ -9,46 +9,40 @@ public sealed class ListAllCategoriesHandlerTests
     [Fact]
     public async Task HandleAsync_ReturnsAvailableAndUnavailableCategoriesForAdministrator()
     {
-        var repository = new TrackingCategoryRepository([
-            PostCategory.Rehydrate(1, "Architecture", isAvailable: true),
-            PostCategory.Rehydrate(2, "Hidden", isAvailable: false),
-        ]);
+        var repository = new CategoryRepositoryStub
+        {
+            ListAllHandler = request => new PaginatedCategoryResult<PostCategory>(
+                [
+                    PostCategory.Rehydrate(1, "Architecture", "System design posts", isAvailable: true),
+                    PostCategory.Rehydrate(2, "Hidden", "Internal only", isAvailable: false),
+                ],
+                request.Page,
+                request.PageSize,
+                totalCount: 12),
+        };
         var handler = new ListAllPostCategoriesHandler(repository);
 
-        var result = await handler.HandleAsync(isAdministrator: true);
+        var result = await handler.HandleAsync(isAdministrator: true, page: 2, pageSize: 2);
 
-        Assert.Equal(2, result.Count);
-        Assert.Contains(result, category => category.Title == "Hidden" && category.IsAvailable == false);
+        Assert.Equal(2, result.Items.Count);
+        Assert.Equal(2, result.Page);
+        Assert.Equal(2, result.PageSize);
+        Assert.Equal(12, result.TotalCount);
+        Assert.Equal(6, result.TotalPages);
+        Assert.True(result.HasNextPage);
+        Assert.Contains(result.Items, category => category.Title == "Hidden" && category.IsAvailable == false && category.Description == "Internal only");
     }
 
     [Fact]
     public async Task HandleAsync_ReturnsEmptyForNonAdministrator()
     {
-        var repository = new TrackingCategoryRepository([PostCategory.Rehydrate(1, "Architecture")]);
+        var repository = new CategoryRepositoryStub();
         var handler = new ListAllPostCategoriesHandler(repository);
 
-        var result = await handler.HandleAsync(isAdministrator: false);
+        var result = await handler.HandleAsync(isAdministrator: false, page: 1, pageSize: 10);
 
-        Assert.Empty(result);
+        Assert.Empty(result.Items);
+        Assert.Equal(0, result.TotalCount);
         Assert.False(repository.ListAllWasCalled);
-    }
-
-    private sealed class TrackingCategoryRepository(IReadOnlyList<PostCategory> categories) : ICategoryRepository
-    {
-        public bool ListAllWasCalled { get; private set; }
-
-        public Task<IReadOnlyList<PostCategory>> ListAllAsync(CancellationToken cancellationToken = default)
-        {
-            ListAllWasCalled = true;
-            return Task.FromResult(categories);
-        }
-
-        public Task<IReadOnlyList<PostCategory>> ListAvailableAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<bool> ExistsAndAvailableAsync(int categoryId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<bool> TitleExistsAsync(string title, int? excludingCategoryId = null, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<PostCategory> CreateAsync(PostCategory category, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<PostCategory?> GetByIdAsync(int categoryId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<PostCategory> UpdateAsync(PostCategory category, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<PostCategory> DeactivateAsync(PostCategory category, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

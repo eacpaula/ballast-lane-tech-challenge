@@ -4,4 +4,5 @@ public sealed record UpdatePostCategoryCommand(
     int AuthenticatedUserId,
     bool IsAdministrator,
     int CategoryId,
-    string Title);
+    string Title,
+    string? Description = null);

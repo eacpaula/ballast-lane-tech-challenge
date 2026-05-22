@@ -20,7 +20,12 @@ export default function CategoryListItem({
       <td className="category-admin-cell">
         <div className="category-admin-name">
           <span className="category-admin-name-marker" aria-hidden="true" />
-          <span>{category.title}</span>
+          <div>
+            <div>{category.title}</div>
+            {category.description ? (
+              <p className="mt-2 text-sm leading-6 text-ink-soft">{category.description}</p>
+            ) : null}
+          </div>
         </div>
       </td>
       <td className="category-admin-cell">

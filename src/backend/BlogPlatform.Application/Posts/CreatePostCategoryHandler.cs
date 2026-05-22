@@ -27,7 +27,7 @@ public sealed class CreatePostCategoryHandler
 
         try
         {
-            category = PostCategory.CreateNew(command.Title);
+            category = PostCategory.CreateNew(command.Title, command.Description);
         }
         catch (ArgumentException exception)
         {

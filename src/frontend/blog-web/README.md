@@ -49,6 +49,14 @@ npm run build
 - Logged-in users can receive their own matching private posts in search
   results; anonymous users only receive public and available matches.
 
+## Category Notes
+
+- The administrator category page now consumes paginated responses from
+  `GET /api/categories?page=...&pageSize=...`.
+- Category create and update flows submit an optional `description` value.
+- Post create and edit forms continue loading available categories from the
+  public API by requesting a practical first page for the current demo scale.
+
 ## Styling Notes
 
 - TailwindCSS with the Vite integration plugin is the styling foundation.

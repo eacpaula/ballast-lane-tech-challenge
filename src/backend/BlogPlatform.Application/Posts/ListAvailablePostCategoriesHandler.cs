@@ -11,13 +11,13 @@ public sealed class ListAvailablePostCategoriesHandler
         _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
     }
 
-    public async Task<IReadOnlyList<AvailablePostCategoryListItem>> HandleAsync(CancellationToken cancellationToken = default)
+    public async Task<PaginatedCategoryResult<AvailablePostCategoryListItem>> HandleAsync(
+        int? page = null,
+        int? pageSize = null,
+        CancellationToken cancellationToken = default)
     {
-        var categories = await _categoryRepository.ListAvailableAsync(cancellationToken);
-
-        return categories
-            .Where(category => category.IsAvailable)
-            .Select(AvailablePostCategoryListItem.From)
-            .ToArray();
+        var request = CategoryPageRequest.Create(page, pageSize);
+        var categories = await _categoryRepository.ListAvailableAsync(request, cancellationToken);
+        return categories.Map(AvailablePostCategoryListItem.From);
     }
 }

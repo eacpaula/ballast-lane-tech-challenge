@@ -23,6 +23,8 @@ export type ReactionResponse = {
 export type AvailableCategory = {
   id: number
   title: string
+  description: string | null
+  isAvailable: boolean
 }
 
 export type OwnedPostSummary = {

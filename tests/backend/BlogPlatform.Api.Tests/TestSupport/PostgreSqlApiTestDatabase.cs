@@ -123,11 +123,12 @@ public sealed class PostgreSqlApiTestDatabase
     public async Task<int> InsertCategoryAsync(
         string title,
         bool isAvailable = true,
+        string? description = null,
         CancellationToken cancellationToken = default)
     {
         const string sql = """
-            INSERT INTO post_categories (title, available)
-            VALUES (@title, @available)
+            INSERT INTO post_categories (title, description, available)
+            VALUES (@title, @description, @available)
             RETURNING id;
             """;
 
@@ -135,6 +136,7 @@ public sealed class PostgreSqlApiTestDatabase
         await connection.OpenAsync(cancellationToken);
         await using var command = new NpgsqlCommand(sql, connection);
         command.Parameters.AddWithValue("title", title);
+        command.Parameters.AddWithValue("description", (object?)description ?? DBNull.Value);
         command.Parameters.AddWithValue("available", isAvailable);
         var result = await command.ExecuteScalarAsync(cancellationToken);
         return Convert.ToInt32(result);

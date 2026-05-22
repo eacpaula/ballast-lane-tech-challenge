@@ -11,16 +11,20 @@ public sealed class ListAllPostCategoriesHandler
         _categoryRepository = categoryRepository ?? throw new ArgumentNullException(nameof(categoryRepository));
     }
 
-    public async Task<IReadOnlyList<ManagedPostCategoryListItem>> HandleAsync(
+    public async Task<PaginatedCategoryResult<ManagedPostCategoryListItem>> HandleAsync(
         bool isAdministrator,
+        int? page = null,
+        int? pageSize = null,
         CancellationToken cancellationToken = default)
     {
         if (!isAdministrator)
         {
-            return [];
+            var emptyRequest = CategoryPageRequest.Create(page, pageSize);
+            return new PaginatedCategoryResult<ManagedPostCategoryListItem>([], emptyRequest.Page, emptyRequest.PageSize, 0);
         }
 
-        var categories = await _categoryRepository.ListAllAsync(cancellationToken);
-        return categories.Select(ManagedPostCategoryListItem.From).ToArray();
+        var request = CategoryPageRequest.Create(page, pageSize);
+        var categories = await _categoryRepository.ListAllAsync(request, cancellationToken);
+        return categories.Map(ManagedPostCategoryListItem.From);
     }
 }

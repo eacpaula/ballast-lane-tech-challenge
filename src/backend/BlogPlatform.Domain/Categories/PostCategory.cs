@@ -2,10 +2,11 @@ namespace BlogPlatform.Domain.Categories;
 
 public sealed class PostCategory
 {
-    private PostCategory(int id, string title, bool isAvailable)
+    private PostCategory(int id, string title, string? description, bool isAvailable)
     {
         Id = id;
         Title = title;
+        Description = description;
         IsAvailable = isAvailable;
     }
 
@@ -13,19 +14,22 @@ public sealed class PostCategory
 
     public string Title { get; }
 
+    public string? Description { get; }
+
     public bool IsAvailable { get; }
 
-    public static PostCategory CreateNew(string title)
+    public static PostCategory CreateNew(string title, string? description = null)
     {
         var normalizedTitle = NormalizeRequired(title, nameof(title));
 
         return new PostCategory(
             id: 0,
             title: normalizedTitle,
+            description: NormalizeOptional(description),
             isAvailable: true);
     }
 
-    public static PostCategory Rehydrate(int id, string title, bool isAvailable = true)
+    public static PostCategory Rehydrate(int id, string title, string? description = null, bool isAvailable = true)
     {
         if (id <= 0)
         {
@@ -37,10 +41,11 @@ public sealed class PostCategory
         return new PostCategory(
             id: id,
             title: normalizedTitle,
+            description: NormalizeOptional(description),
             isAvailable: isAvailable);
     }
 
-    public PostCategory UpdateTitle(string title)
+    public PostCategory UpdateDetails(string title, string? description)
     {
         if (Id <= 0)
         {
@@ -52,6 +57,7 @@ public sealed class PostCategory
         return new PostCategory(
             id: Id,
             title: normalizedTitle,
+            description: NormalizeOptional(description),
             isAvailable: IsAvailable);
     }
 
@@ -65,6 +71,7 @@ public sealed class PostCategory
         return new PostCategory(
             id: Id,
             title: Title,
+            description: Description,
             isAvailable: false);
     }
 
@@ -76,5 +83,12 @@ public sealed class PostCategory
         }
 
         return value.Trim();
+    }
+
+    private static string? NormalizeOptional(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value)
+            ? null
+            : value.Trim();
     }
 }

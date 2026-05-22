@@ -3,15 +3,17 @@ import Button from '../../components/Button'
 
 type Props = {
   initialTitle?: string
+  initialDescription?: string
   submitLabel: string
   isSubmitting?: boolean
   secondaryActionLabel?: string
   onSecondaryAction?: () => void
-  onSubmit: (title: string) => void | Promise<void>
+  onSubmit: (title: string, description: string) => void | Promise<void>
 }
 
 export default function CategoryForm({
   initialTitle = '',
+  initialDescription = '',
   submitLabel,
   isSubmitting = false,
   secondaryActionLabel,
@@ -19,13 +21,14 @@ export default function CategoryForm({
   onSubmit,
 }: Props) {
   const [title, setTitle] = useState(initialTitle)
+  const [description, setDescription] = useState(initialDescription)
 
   return (
     <form
       className="category-admin-form"
       onSubmit={(event) => {
         event.preventDefault()
-        void onSubmit(title)
+        void onSubmit(title, description)
       }}
     >
       <label className="form-field" htmlFor="categoryTitle">
@@ -47,14 +50,13 @@ export default function CategoryForm({
         <textarea
           id="categoryDescription"
           name="categoryDescription"
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
           placeholder="Add context for how this category should be used across posts."
           className="input-control input-textarea category-admin-input category-admin-textarea"
           rows={5}
-          disabled
         />
-        <span className="field-help">
-          Description is shown in the approved design, but the current application does not persist it yet.
-        </span>
+        <span className="field-help">Description adds optional context for administrators and authors.</span>
       </label>
 
       <div className="category-admin-actions">

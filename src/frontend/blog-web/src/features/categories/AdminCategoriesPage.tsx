@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Button from '../../components/Button'
 import EmptyState from '../../components/EmptyState'
 import ErrorMessage from '../../components/ErrorMessage'
 import LoadingState from '../../components/LoadingState'
@@ -6,15 +7,17 @@ import { useAuth } from '../auth/useAuth'
 import CategoryForm from './CategoryForm'
 import CategoryListItem from './CategoryListItem'
 import { createCategory, deactivateCategory, listManagedCategories, updateCategory } from './categories.api'
-import type { ManagedCategory } from './category.types'
+import type { ManagedCategory, PaginatedCategoryResponse } from './category.types'
 
 export default function AdminCategoriesPage() {
   const { user } = useAuth()
-  const [categories, setCategories] = useState<ManagedCategory[] | null>(null)
+  const [categories, setCategories] = useState<PaginatedCategoryResponse<ManagedCategory> | null>(null)
   const [editing, setEditing] = useState<ManagedCategory | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [busyCategoryId, setBusyCategoryId] = useState<number | null>(null)
+  const [page, setPage] = useState(1)
+  const pageSize = 10
 
   useEffect(() => {
     if (!user?.token) {
@@ -22,10 +25,11 @@ export default function AdminCategoriesPage() {
     }
 
     let active = true
-    void listManagedCategories(user.token)
+    void listManagedCategories(user.token, { page, pageSize })
       .then((response) => {
         if (active) {
           setCategories(response)
+          setError(null)
         }
       })
       .catch((caught) => {
@@ -37,9 +41,9 @@ export default function AdminCategoriesPage() {
     return () => {
       active = false
     }
-  }, [user?.token])
+  }, [page, pageSize, user?.token])
 
-  async function handleCreate(title: string) {
+  async function handleCreate(title: string, description: string) {
     if (!user?.token) {
       return
     }
@@ -47,8 +51,11 @@ export default function AdminCategoriesPage() {
     setError(null)
     setIsSubmitting(true)
     try {
-      const created = await createCategory(title, user.token)
-      setCategories((current) => [...(current ?? []), created])
+      await createCategory(title, description, user.token)
+      setEditing(null)
+      setPage(1)
+      const response = await listManagedCategories(user.token, { page: 1, pageSize })
+      setCategories(response)
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Unable to create category.')
     } finally {
@@ -56,7 +63,7 @@ export default function AdminCategoriesPage() {
     }
   }
 
-  async function handleUpdate(title: string) {
+  async function handleUpdate(title: string, description: string) {
     if (!user?.token || !editing) {
       return
     }
@@ -64,10 +71,9 @@ export default function AdminCategoriesPage() {
     setError(null)
     setIsSubmitting(true)
     try {
-      const updated = await updateCategory(editing.id, title, user.token)
-      setCategories((current) =>
-        current?.map((category) => (category.id === updated.id ? updated : category)) ?? [],
-      )
+      await updateCategory(editing.id, title, description, user.token)
+      const response = await listManagedCategories(user.token, { page, pageSize })
+      setCategories(response)
       setEditing(null)
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Unable to update category.')
@@ -85,7 +91,12 @@ export default function AdminCategoriesPage() {
     try {
       const updated = await deactivateCategory(categoryId, user.token)
       setCategories((current) =>
-        current?.map((category) => (category.id === updated.id ? updated : category)) ?? [],
+        current
+          ? {
+              ...current,
+              items: current.items.map((category) => (category.id === updated.id ? updated : category)),
+            }
+          : current,
       )
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Unable to deactivate category.')
@@ -125,6 +136,7 @@ export default function AdminCategoriesPage() {
           <CategoryForm
             key={editing?.id ?? 'create'}
             initialTitle={editing?.title ?? ''}
+            initialDescription={editing?.description ?? ''}
             submitLabel={editing ? 'Save Category' : 'Add Category'}
             isSubmitting={isSubmitting}
             secondaryActionLabel={editing ? 'Cancel edit' : undefined}
@@ -137,7 +149,7 @@ export default function AdminCategoriesPage() {
           <div className="category-admin-table-head">
             <p className="category-admin-table-kicker">Existing Categories</p>
           </div>
-          {categories.length === 0 ? (
+          {categories.items.length === 0 ? (
             <EmptyState
               title="No categories created yet"
               message="Create the first category to make post organization available to authors."
@@ -155,7 +167,7 @@ export default function AdminCategoriesPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {categories.map((category) => (
+                    {categories.items.map((category) => (
                       <CategoryListItem
                         key={category.id}
                         category={category}
@@ -177,8 +189,27 @@ export default function AdminCategoriesPage() {
 
               <div className="category-admin-table-footer">
                 <span>
-                  Showing {categories.length} categor{categories.length === 1 ? 'y' : 'ies'}
+                  Showing page {categories.page} of {Math.max(categories.totalPages, 1)} · {categories.totalCount}{' '}
+                  categor{categories.totalCount === 1 ? 'y' : 'ies'}
                 </span>
+                <div className="category-admin-row-actions">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={categories.page <= 1}
+                    onClick={() => setPage((current) => Math.max(1, current - 1))}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={!categories.hasNextPage}
+                    onClick={() => setPage((current) => current + 1)}
+                  >
+                    Next
+                  </Button>
+                </div>
               </div>
             </>
           )}
