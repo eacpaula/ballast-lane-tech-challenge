@@ -141,7 +141,6 @@ function EditPostForm({
       categories={categories}
       isSubmitting={isSubmitting}
       submitLabel="Save Post"
-      mode="edit"
       disableCategorySelection
       onChange={setDraft}
       onSubmit={() => onSubmit(draft)}

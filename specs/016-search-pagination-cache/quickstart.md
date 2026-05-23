@@ -42,27 +42,46 @@ npm run build
    - confirm a loading indicator appears for next-page fetch
    - confirm an end-of-list state appears when no more pages exist
 
-5. Validate search pagination:
+5. Validate authenticated default listing behavior:
+   - log in as the seeded regular user
+   - load the default feed without a search term
+   - confirm the feed remains public-only and does not add owned private posts
+     just because the user is authenticated
+
+6. Validate search pagination:
    - search for a seeded public term
    - confirm results reset to page one
    - load additional pages if available
    - clear the search and confirm the default paginated listing returns
 
-6. Validate authenticated private-result isolation:
+7. Validate authenticated private-result isolation:
    - log in as the seeded regular user
    - search for a term that matches an owned private post fixture
    - confirm the owned private match can appear
    - confirm another user’s private match does not appear
 
-7. Spot-check the paginated API directly:
+8. Spot-check the paginated API directly:
 
 ```bash
 curl "http://localhost:5034/api/posts?page=1&pageSize=6"
 curl "http://localhost:5034/api/posts?q=architecture&page=1&pageSize=6"
 ```
 
-8. If Redis inspection is useful during validation, confirm cache entries are
-   appearing and expiring under viewer-safe keys from the local Redis service.
+9. Validate Redis cache key isolation and expiry directly:
+
+```bash
+curl "http://localhost:5034/api/posts?page=1&pageSize=6"
+docker exec blog-platform-redis redis-cli keys 'posts:list*'
+docker exec blog-platform-redis redis-cli ttl 'posts:list|query:__all__|page:1|size:6|viewer:anonymous'
+sleep 32
+docker exec blog-platform-redis redis-cli exists 'posts:list|query:__all__|page:1|size:6|viewer:anonymous'
+```
+
+   Expected notes:
+   - anonymous requests create viewer-safe keys such as
+     `posts:list|query:__all__|page:1|size:6|viewer:anonymous`
+   - TTL starts at roughly 30 seconds
+   - the cache entry is gone after the TTL window expires
 
 ## Expected Outcome
 

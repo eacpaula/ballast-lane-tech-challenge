@@ -12,7 +12,6 @@ type Props = {
   isSubmitting: boolean
   submitLabel: string
   error?: string | null
-  mode: 'create' | 'edit'
   disableCategorySelection?: boolean
   onChange: (value: PostEditorDraft) => void
   onSubmit: () => void | Promise<void>
@@ -24,7 +23,6 @@ export default function PostForm({
   isSubmitting,
   submitLabel,
   error,
-  mode: _mode,
   disableCategorySelection = false,
   onChange,
   onSubmit,

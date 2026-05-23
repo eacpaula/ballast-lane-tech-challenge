@@ -11,18 +11,47 @@ namespace BlogPlatform.Api.Controllers;
 public sealed class PublicPostsController : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<PublicPostSummaryResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<PaginatedPublicPostResponse>(StatusCodes.Status200OK)]
     public async Task<IActionResult> List(
         [FromQuery(Name = "q")] string? query,
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize,
         [FromServices] ListPublicPostsHandler handler,
         CancellationToken cancellationToken)
     {
-        var posts = await handler.HandleAsync(query, TryGetAuthenticatedUserId(), cancellationToken);
-        var response = posts
-            .Select(post => new PublicPostSummaryResponse(post.PostId, post.Title, post.Summary, post.Tags, post.PublishDate, post.ExpirationDate))
-            .ToArray();
+        try
+        {
+            var posts = await handler.HandleAsync(
+                query,
+                page ?? PostListPageRequest.DefaultPage,
+                pageSize ?? PostListPageRequest.DefaultPageSize,
+                TryGetAuthenticatedUserId(),
+                cancellationToken);
+            var response = new PaginatedPublicPostResponse(
+                posts.Items
+                    .Select(post => new PublicPostSummaryResponse(
+                        post.PostId,
+                        post.Title,
+                        post.Summary,
+                        post.Tags,
+                        post.PublishDate,
+                        post.ExpirationDate))
+                    .ToArray(),
+                posts.Page,
+                posts.PageSize,
+                posts.TotalCount,
+                posts.TotalPages,
+                posts.HasNextPage);
 
-        return Ok(response);
+            return Ok(response);
+        }
+        catch (ArgumentOutOfRangeException exception)
+        {
+            return ValidationProblem(new ValidationProblemDetails(new Dictionary<string, string[]>
+            {
+                [exception.ParamName ?? "page"] = [exception.Message],
+            }));
+        }
     }
 
     [HttpGet("{postId:int}")]

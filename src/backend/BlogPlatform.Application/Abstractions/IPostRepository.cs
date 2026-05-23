@@ -18,6 +18,19 @@ public interface IPostRepository
 
     Task<IReadOnlyList<BlogPost>> ListPublicReadAsync(CancellationToken cancellationToken = default);
 
+    async Task<BlogPlatform.Application.Posts.PaginatedBlogPostReadResult> ListPublicReadPageAsync(
+        BlogPlatform.Application.Posts.PostListPageRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var items = request.Query is null
+            ? await ListPublicReadAsync(cancellationToken)
+            : await SearchPublicReadAsync(request.Query, request.RequestingUserId, cancellationToken);
+
+        return new BlogPlatform.Application.Posts.PaginatedBlogPostReadResult(items, items.Count);
+    }
+
     Task<IReadOnlyList<BlogPost>> SearchPublicReadAsync(
         string query,
         int? requestingUserId,

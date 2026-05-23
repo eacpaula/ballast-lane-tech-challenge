@@ -37,9 +37,11 @@ public static class ServiceCollectionExtensions
         Configuration.JwtAuthenticationSettings jwtSettings)
     {
         var databaseSettings = PostgreSqlConnectionSettings.FromConfiguration(configuration);
+        var redisSettings = RedisCacheSettings.FromConfiguration(configuration);
         return Infrastructure.DependencyInjection.AddBlogPlatformInfrastructure(
             services,
             databaseSettings,
+            redisSettings,
             jwtSettings.ToInfrastructureSettings());
     }
 }

@@ -1,9 +1,13 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using BlogPlatform.Api.Contracts.Auth;
+using BlogPlatform.Application.Abstractions;
 using BlogPlatform.Infrastructure.Configuration;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BlogPlatform.Api.Tests.TestSupport;
 
@@ -15,6 +19,15 @@ public sealed class BlogPlatformApiFactory : WebApplicationFactory<Program>, IAs
     }
 
     public PostgreSqlApiTestDatabase Database { get; }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.ConfigureServices(services =>
+        {
+            services.RemoveAll<IPostListCache>();
+            services.AddSingleton<IPostListCache, InMemoryPostListCache>();
+        });
+    }
 
     public async Task InitializeAsync()
     {

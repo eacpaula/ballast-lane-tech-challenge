@@ -87,7 +87,6 @@ export default function CreatePostPage() {
         isSubmitting={isSubmitting}
         submitLabel="Save Post"
         error={error}
-        mode="create"
         onChange={setDraft}
         onSubmit={handleSubmit}
       />

@@ -17,13 +17,13 @@ public sealed class PublicPostSearchAnonymousTests : IClassFixture<BlogPlatformA
         await _factory.Database.ResetToSeedStateAsync();
         using var client = _factory.CreateClient();
 
-        var response = await client.GetAsync("/api/posts?q=architecture");
+        var response = await client.GetAsync("/api/posts?q=architecture&page=1&pageSize=10");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.NotEmpty(posts!);
-        Assert.Contains(posts!, p => p.Title == "Building a Lightweight Clean Architecture");
+        Assert.NotEmpty(posts!.Items);
+        Assert.Contains(posts.Items, p => p.Title == "Building a Lightweight Clean Architecture");
     }
 
     [Fact]
@@ -32,12 +32,12 @@ public sealed class PublicPostSearchAnonymousTests : IClassFixture<BlogPlatformA
         await _factory.Database.ResetToSeedStateAsync();
         using var client = _factory.CreateClient();
 
-        var response = await client.GetAsync("/api/posts?q=Advanced+Repository+Testing");
+        var response = await client.GetAsync("/api/posts?q=Advanced+Repository+Testing&page=1&pageSize=10");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.DoesNotContain(posts!, p => p.Title == "Upcoming: Advanced Repository Testing Patterns");
+        Assert.DoesNotContain(posts!.Items, p => p.Title == "Upcoming: Advanced Repository Testing Patterns");
     }
 
     [Fact]
@@ -46,25 +46,25 @@ public sealed class PublicPostSearchAnonymousTests : IClassFixture<BlogPlatformA
         await _factory.Database.ResetToSeedStateAsync();
         using var client = _factory.CreateClient();
 
-        var response = await client.GetAsync("/api/posts?q=Archived+Early+Design");
+        var response = await client.GetAsync("/api/posts?q=Archived+Early+Design&page=1&pageSize=10");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.DoesNotContain(posts!, p => p.Title == "Archived: Early Design Decisions");
+        Assert.DoesNotContain(posts!.Items, p => p.Title == "Archived: Early Design Decisions");
     }
 
     [Fact]
-    public async Task SearchPublicPosts_WithNoMatches_ReturnsEmptyArray()
+    public async Task SearchPublicPosts_WithNoMatches_ReturnsEmptyEnvelope()
     {
         await _factory.Database.ResetToSeedStateAsync();
         using var client = _factory.CreateClient();
 
-        var response = await client.GetAsync("/api/posts?q=does-not-exist");
+        var response = await client.GetAsync("/api/posts?q=does-not-exist&page=1&pageSize=10");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.Empty(posts!);
+        Assert.Empty(posts!.Items);
     }
 }

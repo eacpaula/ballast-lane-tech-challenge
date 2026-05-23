@@ -11,8 +11,11 @@
 ## Request Behavior
 
 - Anonymous requests remain allowed.
-- Authenticated requests may include a bearer token and can receive owned
-  private matches when existing visibility rules allow them.
+- Authenticated requests may include a bearer token.
+- Authenticated default listing remains public-only when no search term is
+  provided.
+- Authenticated search requests can receive owned private or non-public matches
+  when existing visibility rules allow them.
 - Blank `q` behaves like the default paginated list.
 - Invalid pagination inputs use the existing ProblemDetails-style validation
   behavior.
@@ -27,7 +30,9 @@ The response becomes a paginated envelope rather than a bare array:
     {
       "id": 1,
       "title": "Post title",
-      "summary": "Optional summary"
+      "summary": "Optional summary",
+      "publishDate": "2026-05-22T10:00:00Z",
+      "expirationDate": null
     }
   ],
   "page": 1,
@@ -41,8 +46,10 @@ The response becomes a paginated envelope rather than a bare array:
 ## Visibility Contract
 
 - Anonymous users receive only public and available posts.
-- Authenticated users receive public and available posts plus owned private or
-  non-public matches when allowed by the current business rules.
+- Authenticated users receive the same public and available posts as anonymous
+  users in the default listing.
+- Authenticated users may also receive owned private or non-public matches in
+  search results when allowed by the current business rules.
 - Private posts owned by other users must never appear, whether the result is
   served live or from cache.
 
