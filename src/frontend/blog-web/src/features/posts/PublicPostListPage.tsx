@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, useSearchParams } from 'react-router-dom'
 import EmptyState from '../../components/EmptyState'
 import ErrorMessage from '../../components/ErrorMessage'
@@ -8,48 +8,140 @@ import { listPublicPosts } from './public-posts.api'
 import type { PublicPostSummary } from './post.types'
 import { useAuth } from '../auth/useAuth'
 
+const PAGE_SIZE = 6
+
+type FeedState = {
+  requestKey: string
+  posts: PublicPostSummary[]
+  currentPage: number
+  hasNextPage: boolean
+  totalCount: number
+  error: string | null
+  loaded: boolean
+  isLoadingNextPage: boolean
+}
+
 export default function PublicPostListPage() {
   const { isAuthenticated, user } = useAuth()
   const [searchParams] = useSearchParams()
-  const [posts, setPosts] = useState<PublicPostSummary[] | null>(null)
-  const [error, setError] = useState<string | null>(null)
   const query = searchParams.get('q')?.trim() ?? ''
   const requestKey = `${query}::${user?.token ?? ''}`
-  const [resolvedRequestKey, setResolvedRequestKey] = useState<string | null>(null)
+  const [feedState, setFeedState] = useState<FeedState>(() => ({
+    requestKey,
+    posts: [],
+    currentPage: 0,
+    hasNextPage: false,
+    totalCount: 0,
+    error: null,
+    loaded: false,
+    isLoadingNextPage: false,
+  }))
+  const requestVersionRef = useRef(0)
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
+  const isStale = feedState.requestKey !== requestKey
+
+  function mergeUniquePosts(existing: PublicPostSummary[], next: PublicPostSummary[]) {
+    const seen = new Set(existing.map((post) => post.id))
+    return [...existing, ...next.filter((post) => !seen.has(post.id))]
+  }
 
   useEffect(() => {
-    let active = true
+    const version = requestVersionRef.current + 1
+    requestVersionRef.current = version
 
-    void listPublicPosts({ query, token: user?.token })
+    void listPublicPosts({ query, page: 1, pageSize: PAGE_SIZE, token: user?.token })
       .then((response) => {
-        if (active) {
-          setPosts(response)
-          setError(null)
-          setResolvedRequestKey(requestKey)
+        if (requestVersionRef.current === version) {
+          setFeedState({
+            requestKey,
+            posts: response.items,
+            currentPage: response.page,
+            hasNextPage: response.hasNextPage,
+            totalCount: response.totalCount,
+            error: null,
+            loaded: true,
+            isLoadingNextPage: false,
+          })
         }
       })
       .catch((caught) => {
-        if (active) {
-          setPosts(null)
-          setError(caught instanceof Error ? caught.message : 'Unable to load posts.')
-          setResolvedRequestKey(requestKey)
+        if (requestVersionRef.current === version) {
+          setFeedState({
+            requestKey,
+            posts: [],
+            currentPage: 0,
+            hasNextPage: false,
+            totalCount: 0,
+            error: caught instanceof Error ? caught.message : 'Unable to load posts.',
+            loaded: true,
+            isLoadingNextPage: false,
+          })
         }
       })
-
-    return () => {
-      active = false
-    }
   }, [query, requestKey, user?.token])
 
-  if (resolvedRequestKey !== requestKey) {
+  useEffect(() => {
+    const node = loadMoreRef.current
+
+    if (!node || isStale || !feedState.loaded || feedState.isLoadingNextPage || !feedState.hasNextPage || feedState.error) {
+      return
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0]
+
+      if (!entry?.isIntersecting) {
+        return
+      }
+
+      const version = requestVersionRef.current
+      const nextPage = feedState.currentPage + 1
+      setFeedState((current) =>
+        current.requestKey === requestKey
+          ? { ...current, isLoadingNextPage: true, error: null }
+          : current)
+      observer.disconnect()
+
+      void listPublicPosts({ query, page: nextPage, pageSize: PAGE_SIZE, token: user?.token })
+        .then((response) => {
+          if (requestVersionRef.current === version) {
+            setFeedState((current) => ({
+              ...current,
+              posts: mergeUniquePosts(current.posts, response.items),
+              currentPage: response.page,
+              hasNextPage: response.hasNextPage,
+              totalCount: response.totalCount,
+              error: null,
+              loaded: true,
+              isLoadingNextPage: false,
+            }))
+          }
+        })
+        .catch((caught) => {
+          if (requestVersionRef.current === version) {
+            setFeedState((current) => ({
+              ...current,
+              error: caught instanceof Error ? caught.message : 'Unable to load additional posts.',
+              isLoadingNextPage: false,
+            }))
+          }
+        })
+    }, { rootMargin: '240px 0px' })
+
+    observer.observe(node)
+
+    return () => observer.disconnect()
+  }, [feedState.currentPage, feedState.error, feedState.hasNextPage, feedState.isLoadingNextPage, feedState.loaded, isStale, query, requestKey, user?.token])
+
+  if (isStale || !feedState.loaded) {
     return <LoadingState message="Loading public posts…" />
   }
 
-  if (error) {
-    return <ErrorMessage detail={error} />
+  if (feedState.error && feedState.posts.length === 0) {
+    return <ErrorMessage detail={feedState.error} />
   }
 
-  if (!posts || posts.length === 0) {
+  if (feedState.posts.length === 0) {
     if (query) {
       return (
         <section className="content-stack">
@@ -72,8 +164,8 @@ export default function PublicPostListPage() {
     )
   }
 
-  const featuredPost = posts[0]
-  const latestPosts = posts.slice(1)
+  const featuredPost = feedState.posts[0]
+  const latestPosts = feedState.posts.slice(1)
 
   return (
     <section className="content-stack">
@@ -154,6 +246,21 @@ export default function PublicPostListPage() {
           </section>
         </section>
       ) : null}
+
+      <section className="status-panel" aria-live="polite">
+        {feedState.error ? (
+          <ErrorMessage title="Unable to load more posts" detail={feedState.error} />
+        ) : feedState.isLoadingNextPage ? (
+          <LoadingState message="Loading more posts…" />
+        ) : feedState.hasNextPage ? (
+          <p className="text-sm text-ink-soft">Scroll to load more posts from the feed.</p>
+        ) : (
+          <p className="text-sm text-ink-soft">
+            {feedState.totalCount > 0 ? 'You have reached the end of the public feed.' : 'No posts are available right now.'}
+          </p>
+        )}
+        <div ref={loadMoreRef} aria-hidden="true" className="h-px w-full" />
+      </section>
 
       <section className="home-promo-panel">
         <div className="home-promo-copy">

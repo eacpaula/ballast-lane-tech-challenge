@@ -10,6 +10,11 @@ flow with simple page-based pagination and short-lived Redis caching, while
 keeping visibility rules in Application and keeping the frontend changes limited
 to incremental page loading.
 
+**Re-implementation note**: If this feature is re-implemented through Spec Kit
+automation, `.specify/feature.json` must point to
+`specs/016-search-pagination-cache` before task or implementation commands are
+run.
+
 ## Summary
 
 Add stable pagination and 30-second Redis caching to the current `GET /api/posts`
@@ -22,8 +27,13 @@ through simple infinite scrolling.
   implementation in Infrastructure.
 - Use viewer-safe cache keys that include search term, page, page size, and
   requester context.
+- Keep the current visibility behavior explicit: default listing remains
+  public-only, while authenticated search can include the requester's own
+  private or non-public matches.
 - Keep cache usage limited to list/search reads, with documented short-lived
   stale data after mutations.
+- Preserve the existing public post summary item fields, including publish and
+  expiration dates already present in the current branch.
 - Update the frontend post list/search flow to append pages, show next-page
   loading, and stop at end-of-list.
 
@@ -39,6 +49,10 @@ through simple infinite scrolling.
   - default `page = 1`
   - default `pageSize = 6`
   - clamp page size to a small upper bound suitable for the demo, such as `20`
+- Keep current visibility semantics explicit:
+  - default listing remains public-only even for authenticated users
+  - authenticated search may include owned private or non-public matches when
+    current rules allow them
 - Keep ordering deterministic by using one explicit database sort for both
   default listing and search results.
 - Resolve the final result page in Application, then consult or populate Redis
@@ -95,8 +109,9 @@ through simple infinite scrolling.
   - totalCount
   - totalPages
   - hasNextPage
-- Keep item payload shape aligned with the current post summary DTO so the
-  frontend redesign is unnecessary.
+- Keep item payload shape aligned with the current post summary DTO, including
+  publish and expiration dates, so the frontend redesign is unnecessary and
+  later date-support work is not regressed.
 - Preserve existing detail and reaction endpoints unchanged.
 
 **5. Cache abstraction strategy**:

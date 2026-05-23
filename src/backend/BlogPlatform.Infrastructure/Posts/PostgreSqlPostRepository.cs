@@ -1,4 +1,5 @@
 using BlogPlatform.Application.Abstractions;
+using BlogPlatform.Application.Posts;
 using BlogPlatform.Domain.Posts;
 using BlogPlatform.Infrastructure.Data;
 using Npgsql;
@@ -190,23 +191,54 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         return posts;
     }
 
-    public async Task<IReadOnlyList<BlogPost>> SearchPublicReadAsync(
-        string query,
-        int? requestingUserId,
+    public async Task<PaginatedBlogPostReadResult> ListPublicReadPageAsync(
+        PostListPageRequest request,
         CancellationToken cancellationToken = default)
     {
-        const string sql = """
-            SELECT DISTINCT
-                p.id,
-                p.user_id,
-                p.post_category_id,
-                p.title,
-                p.description,
-                p.content,
-                p.public_post,
-                p.available,
-                p.publish_date,
-                p.expire_date,
+        ArgumentNullException.ThrowIfNull(request);
+
+        const string countSql = """
+            SELECT COUNT(*) FROM (
+                SELECT DISTINCT p.id
+                FROM posts p
+                INNER JOIN post_categories pc ON pc.id = p.post_category_id
+                LEFT JOIN post_tags pt ON pt.post_id = p.id
+                LEFT JOIN tags t ON t.id = pt.tag_id
+                WHERE p.available = TRUE
+                  AND (
+                        (
+                            @is_search = FALSE
+                            AND p.public_post = TRUE
+                            AND (p.publish_date IS NULL OR p.publish_date <= NOW())
+                            AND (p.expire_date IS NULL OR p.expire_date > NOW())
+                        )
+                        OR (
+                            @is_search = TRUE
+                            AND (
+                                (
+                                    p.public_post = TRUE
+                                    AND (p.publish_date IS NULL OR p.publish_date <= NOW())
+                                    AND (p.expire_date IS NULL OR p.expire_date > NOW())
+                                )
+                                OR (@requesting_user_id IS NOT NULL AND p.user_id = @requesting_user_id)
+                            )
+                        )
+                      )
+                  AND (
+                        @pattern IS NULL
+                        OR p.title ILIKE @pattern
+                        OR COALESCE(p.description, '') ILIKE @pattern
+                        OR p.content ILIKE @pattern
+                        OR pc.title ILIKE @pattern
+                        OR COALESCE(t.title, '') ILIKE @pattern
+                      )
+            ) filtered_posts;
+            """;
+
+        const string pageSql = """
+            SELECT
+                p.id, p.user_id, p.post_category_id, p.title, p.description, p.content, p.public_post, p.available,
+                p.publish_date, p.expire_date,
                 COALESCE(
                     (SELECT array_agg(t2.title ORDER BY pt2.creation_date, t2.id)
                      FROM post_tags pt2
@@ -214,46 +246,75 @@ public sealed class PostgreSqlPostRepository : IPostRepository
                      WHERE pt2.post_id = p.id),
                     ARRAY[]::varchar[]) AS tags
             FROM posts p
-            INNER JOIN post_categories pc ON pc.id = p.post_category_id
-            LEFT JOIN post_tags pt ON pt.post_id = p.id
-            LEFT JOIN tags t ON t.id = pt.tag_id
-            WHERE p.available = TRUE
-              AND (
-                    (
-                        p.public_post = TRUE
-                        AND (p.publish_date IS NULL OR p.publish_date <= NOW())
-                        AND (p.expire_date IS NULL OR p.expire_date > NOW())
-                    )
-                    OR (@requesting_user_id IS NOT NULL AND p.user_id = @requesting_user_id)
-                  )
-              AND (
-                    p.title ILIKE @pattern
-                    OR COALESCE(p.description, '') ILIKE @pattern
-                    OR p.content ILIKE @pattern
-                    OR pc.title ILIKE @pattern
-                    OR COALESCE(t.title, '') ILIKE @pattern
-                  )
+            WHERE p.id IN (
+                SELECT DISTINCT p2.id
+                FROM posts p2
+                INNER JOIN post_categories pc ON pc.id = p2.post_category_id
+                LEFT JOIN post_tags pt ON pt.post_id = p2.id
+                LEFT JOIN tags t ON t.id = pt.tag_id
+                WHERE p2.available = TRUE
+                  AND (
+                        (
+                            @is_search = FALSE
+                            AND p2.public_post = TRUE
+                            AND (p2.publish_date IS NULL OR p2.publish_date <= NOW())
+                            AND (p2.expire_date IS NULL OR p2.expire_date > NOW())
+                        )
+                        OR (
+                            @is_search = TRUE
+                            AND (
+                                (
+                                    p2.public_post = TRUE
+                                    AND (p2.publish_date IS NULL OR p2.publish_date <= NOW())
+                                    AND (p2.expire_date IS NULL OR p2.expire_date > NOW())
+                                )
+                                OR (@requesting_user_id IS NOT NULL AND p2.user_id = @requesting_user_id)
+                            )
+                        )
+                      )
+                  AND (
+                        @pattern IS NULL
+                        OR p2.title ILIKE @pattern
+                        OR COALESCE(p2.description, '') ILIKE @pattern
+                        OR p2.content ILIKE @pattern
+                        OR pc.title ILIKE @pattern
+                        OR COALESCE(t.title, '') ILIKE @pattern
+                      )
+                ORDER BY p2.id
+                LIMIT @limit
+                OFFSET @offset
+            )
             ORDER BY p.id;
             """;
 
         var posts = new List<BlogPost>();
 
         await using var connection = await _connectionFactory.CreateOpenConnectionAsync(cancellationToken);
-        await using var command = new NpgsqlCommand(sql, connection);
-        command.Parameters.AddWithValue("pattern", $"%{query}%");
-        var userParameter = new NpgsqlParameter<int?>("requesting_user_id", NpgsqlDbType.Integer)
-        {
-            TypedValue = requestingUserId,
-        };
-        command.Parameters.Add(userParameter);
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        await using var countCommand = BuildPaginatedReadCommand(countSql, connection, request);
+        var totalCount = Convert.ToInt32(await countCommand.ExecuteScalarAsync(cancellationToken));
+        await using var itemsCommand = BuildPaginatedReadCommand(pageSql, connection, request);
+        itemsCommand.Parameters.AddWithValue("limit", request.PageSize);
+        itemsCommand.Parameters.AddWithValue("offset", request.Offset);
+        await using var reader = await itemsCommand.ExecuteReaderAsync(cancellationToken);
 
         while (await reader.ReadAsync(cancellationToken))
         {
             posts.Add(MapPost(reader));
         }
 
-        return posts;
+        return new PaginatedBlogPostReadResult(posts, totalCount);
+    }
+
+    public async Task<IReadOnlyList<BlogPost>> SearchPublicReadAsync(
+        string query,
+        int? requestingUserId,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await ListPublicReadPageAsync(
+            PostListPageRequest.Create(query, page: 1, pageSize: PostListPageRequest.MaxPageSize, requestingUserId: requestingUserId),
+            cancellationToken);
+
+        return result.Items;
     }
 
     public async Task<IReadOnlyList<BlogPost>> ListByAuthorAsync(int authorUserId, CancellationToken cancellationToken = default)
@@ -451,6 +512,16 @@ public sealed class PostgreSqlPostRepository : IPostRepository
         command.Parameters.Add(new NpgsqlParameter<DateTimeOffset?>("expire_date", NpgsqlDbType.TimestampTz) { TypedValue = post.ExpirationDate });
         command.Parameters.AddWithValue("update_user_id", post.AuthorUserId);
         command.Parameters.AddWithValue("id", post.Id);
+        return command;
+    }
+
+    private static NpgsqlCommand BuildPaginatedReadCommand(string sql, NpgsqlConnection connection, PostListPageRequest request)
+    {
+        var command = new NpgsqlCommand(sql, connection);
+        var pattern = request.Query is null ? null : $"%{request.Query}%";
+        command.Parameters.Add(new NpgsqlParameter<string?>("pattern", NpgsqlDbType.Text) { TypedValue = pattern });
+        command.Parameters.Add(new NpgsqlParameter<int?>("requesting_user_id", NpgsqlDbType.Integer) { TypedValue = request.RequestingUserId });
+        command.Parameters.Add(new NpgsqlParameter<bool>("is_search", NpgsqlDbType.Boolean) { TypedValue = request.Query is not null });
         return command;
     }
 

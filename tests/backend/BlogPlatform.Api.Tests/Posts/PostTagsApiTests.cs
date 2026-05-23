@@ -100,8 +100,8 @@ public sealed class PostTagsApiTests : IClassFixture<BlogPlatformApiFactory>
         var response = await client.GetAsync("/api/posts");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<IReadOnlyList<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.All(posts!, p => Assert.NotNull(p.Tags));
+        Assert.All(posts!.Items, p => Assert.NotNull(p.Tags));
     }
 }

@@ -20,9 +20,9 @@ public sealed class PublicPostListTests : IClassFixture<BlogPlatformApiFactory>
         var response = await client.GetAsync("/api/posts");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.True(posts!.Count >= 2);
+        Assert.True(posts!.Items.Count >= 2);
     }
 
     [Fact]
@@ -34,9 +34,9 @@ public sealed class PublicPostListTests : IClassFixture<BlogPlatformApiFactory>
         var response = await client.GetAsync("/api/posts");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.DoesNotContain(posts!, p => p.Title == "Upcoming: Advanced Repository Testing Patterns");
-        Assert.DoesNotContain(posts!, p => p.Title == "Archived: Early Design Decisions");
+        Assert.DoesNotContain(posts!.Items, p => p.Title == "Upcoming: Advanced Repository Testing Patterns");
+        Assert.DoesNotContain(posts.Items, p => p.Title == "Archived: Early Design Decisions");
     }
 }

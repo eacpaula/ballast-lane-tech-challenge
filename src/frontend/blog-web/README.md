@@ -21,7 +21,7 @@ Open the local URL printed by Vite, typically `http://localhost:5173`.
 To run the full stack through Docker Compose from the repository root:
 
 ```bash
-docker compose up -d postgres api frontend
+docker compose up -d postgres redis api frontend
 ```
 
 ## Validation Commands
@@ -45,9 +45,14 @@ npm run build
 ## Search Behavior
 
 - The header search field keeps using the `?q=` route query string.
+- Public post listing and search now consume paginated responses from
+  `GET /api/posts?page=...&pageSize=...`.
 - Search results now come from the backend instead of client-side filtering.
+- The home feed uses infinite scrolling with a simple next-page loading state.
 - Logged-in users can receive their own matching private posts in search
   results; anonymous users only receive public and available matches.
+- Logged-in users still see a public-only default feed when no search term is
+  provided.
 
 ## Category Notes
 

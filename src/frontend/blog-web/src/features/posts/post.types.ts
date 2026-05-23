@@ -3,6 +3,17 @@ export type PublicPostSummary = {
   title: string
   summary: string | null
   tags: string[]
+  publishDate: string | null
+  expirationDate: string | null
+}
+
+export type PaginatedPublicPostResponse = {
+  items: PublicPostSummary[]
+  page: number
+  pageSize: number
+  totalCount: number
+  totalPages: number
+  hasNextPage: boolean
 }
 
 export type PublicPostDetail = {
@@ -11,6 +22,8 @@ export type PublicPostDetail = {
   summary: string | null
   content: string
   tags: string[]
+  publishDate: string | null
+  expirationDate: string | null
 }
 
 export type ReactionType = 'like' | 'dislike'

@@ -193,17 +193,19 @@ Current Compose services:
 
 ### Redis
 
-- Redis is not part of the current `docker-compose.yml` runtime.
-- There is feature/spec documentation for planned Redis-backed post-list caching under [`specs/016-search-pagination-cache/`](./specs/016-search-pagination-cache/), but that wiring is not currently present in this branch.
+- Redis is part of the current `docker-compose.yml` runtime.
+- `GET /api/posts` now supports Redis-backed 30-second caching for paginated list
+  and search reads under viewer-safe cache keys.
 
 ## Optional Local Execution Without Full Compose
 
-If you prefer to run the app processes locally but still use Docker for PostgreSQL:
+If you prefer to run the app processes locally but still use Docker for
+PostgreSQL and Redis:
 
-### Start PostgreSQL
+### Start PostgreSQL and Redis
 
 ```bash
-docker compose up -d postgres
+docker compose up -d postgres redis
 docker compose ps
 ```
 
@@ -302,7 +304,9 @@ These accounts are seeded for local review only:
 
 - User registration and login with JWT authentication
 - Public post listing and post detail endpoints
-- Backend-powered post search through `GET /api/posts?q=...`
+- Backend-powered paginated post listing and search through
+  `GET /api/posts?q=...&page=...&pageSize=...`
+- Redis-backed 30-second caching for paginated public post list and search reads
 - Like/dislike reactions for public posts
 - Authenticated “My Posts” workflow
 - Create, edit, and delete owned posts
@@ -338,8 +342,10 @@ GenAI usage is documented separately in [docs/genai-usage.md](./docs/genai-usage
 ## Known Limitations and Trade-offs
 
 - The project is intentionally MVP-scoped and does not aim to be a full CMS.
-- Public post listing and search are implemented, but they are not currently paginated.
-- Redis caching is documented in feature specs but is not wired into the current runtime or Compose stack.
+- Public post listing uses simple page-based pagination and infinite scrolling
+  rather than numbered page navigation.
+- Redis-backed post list/search caching intentionally allows up to 30 seconds of
+  stale read data after writes.
 - Frontend tag management beyond post create/edit usage is out of scope.
 - `tests/frontend` does not currently contain automated frontend tests.
 - Category management is implemented, but broader admin tooling is intentionally limited.

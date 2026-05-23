@@ -21,6 +21,13 @@ services:
       - ./database/scripts:/docker-entrypoint-initdb.d:ro
       - ./database/seeds:/seed-data:ro
 
+  redis:
+    image: redis:7-alpine
+    container_name: blog-platform-redis
+    restart: unless-stopped
+    ports:
+      - "${BLOG_PLATFORM_REDIS_PORT:-6379}:6379"
+
   api:
     build:
       context: .
@@ -30,6 +37,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_started
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: ${BLOG_PLATFORM_API_URLS:-http://0.0.0.0:8080}
@@ -38,6 +47,8 @@ services:
       BLOG_PLATFORM_DB_NAME: ${BLOG_PLATFORM_DB_NAME:-blogplatform}
       BLOG_PLATFORM_DB_USER: ${BLOG_PLATFORM_DB_USER:-blogplatform}
       BLOG_PLATFORM_DB_PASSWORD: ${BLOG_PLATFORM_DB_PASSWORD:-blogplatform}
+      BLOG_PLATFORM_REDIS_HOST: redis
+      BLOG_PLATFORM_REDIS_PORT: 6379
       BLOG_PLATFORM_FRONTEND_ORIGINS: ${BLOG_PLATFORM_FRONTEND_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
       BLOG_PLATFORM_JWT_ISSUER: ${BLOG_PLATFORM_JWT_ISSUER:-blogplatform-api}
       BLOG_PLATFORM_JWT_AUDIENCE: ${BLOG_PLATFORM_JWT_AUDIENCE:-blogplatform-clients}

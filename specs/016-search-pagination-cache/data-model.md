@@ -38,8 +38,10 @@
   - `requestingUserId` (optional)
 - **Rules**:
   - anonymous viewers may see only public and available posts
+  - authenticated viewers see the same public and available posts as anonymous
+    viewers in the default listing when no search term is provided
   - authenticated viewers may also see their own matching private or non-public
-    available posts
+    available posts in search results when current business rules allow them
   - viewer context must be included in the cache-key strategy
 
 ## PostSearchCacheEntry

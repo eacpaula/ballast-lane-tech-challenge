@@ -21,37 +21,46 @@ scroll-based loading flow.
   search for authenticated users.
 - **FR-003**: Anonymous users MUST receive only public and available posts in
   paginated results.
-- **FR-004**: Authenticated users MUST receive public and available posts plus
+- **FR-004**: Authenticated users MUST receive the same public and available
+  posts as anonymous users in the default paginated listing when no search term
+  is provided.
+- **FR-005**: Authenticated users MUST receive public and available posts plus
   their own matching private or non-public posts when existing visibility rules
-  allow those posts to appear in search.
-- **FR-005**: Authenticated users MUST NOT receive private or non-public posts
+  allow those posts to appear in paginated search results.
+- **FR-006**: Authenticated users MUST NOT receive private or non-public posts
   owned by other users in either live or cached results.
-- **FR-006**: Empty search input MUST behave like the default paginated post
+- **FR-007**: Empty search input MUST behave like the default paginated post
   listing.
-- **FR-007**: The system MUST return pagination metadata together with the
-  current page of post results.
-- **FR-008**: Pagination order MUST be deterministic and stable enough for a
+- **FR-008**: The system MUST return pagination metadata together with the
+  current page of post results while preserving the existing public post summary
+  fields already used by the frontend.
+- **FR-009**: Pagination order MUST be deterministic and stable enough for a
   simple technical challenge demo so repeated requests for the same page do not
   shuffle results unexpectedly.
-- **FR-009**: The system MUST cache read-only post list and post search
+- **FR-010**: The system MUST cache read-only post list and post search
   responses for 30 seconds.
-- **FR-010**: Cached responses MUST be segmented so anonymous results, one
+- **FR-011**: Cached responses MUST be segmented so anonymous results, one
   user’s private-inclusive results, and another user’s results cannot be mixed
   or leaked.
-- **FR-011**: The system MUST use caching only for read/search/list operations
+- **FR-012**: The system MUST use caching only for read/search/list operations
   in this feature.
-- **FR-012**: Write operations such as post create, post update, post delete,
+- **FR-013**: Write operations such as post create, post update, post delete,
   and reactions MAY serve slightly stale cached list results during the 30-second
   cache window, and this trade-off MUST be documented.
-- **FR-013**: The frontend MUST replace the current single-load search/list
+- **FR-014**: The frontend MUST replace the current single-load search/list
   behavior with paginated requests and simple scroll or infinite loading while
   preserving the existing visual direction and accessibility baseline.
 
 ## 4. Pagination Rules
 
 - Pagination applies to both default listing and search results.
+- Default pagination uses `page = 1` and `pageSize = 6` when callers do not
+  provide explicit values.
+- `pageSize` is bounded to a small demo-friendly maximum of `20`.
 - Pagination must be stable for identical inputs during the same data window.
 - The same visibility rules apply on every page, not only on the first page.
+- Invalid or non-positive `page` and `pageSize` values return the existing
+  validation failure behavior rather than being silently corrected.
 - A page request beyond the available result set returns an empty item list with
   correct pagination metadata rather than an error.
 - Empty or whitespace-only search requests use the same pagination rules as the
@@ -85,7 +94,8 @@ scroll-based loading flow.
 ## 7. Backend Scope
 
 - Add backend pagination parameters to the existing post listing and search flow.
-- Return paginated response metadata together with result items.
+- Return paginated response metadata together with result items while preserving
+  the existing public post summary payload shape.
 - Add Redis-backed caching for paginated read/search/list responses.
 - Add or update Application behavior to orchestrate pagination and viewer-safe
   cached reads without moving business rules into controllers.
@@ -134,8 +144,9 @@ scroll-based loading flow.
 - An anonymous visitor can paginate through post results and search results and
   sees only public and available posts.
 - An authenticated user can paginate through matching post results and sees
-  public posts plus their own private or non-public matching posts when allowed,
-  but never another user’s private posts.
+  public posts in the default listing plus their own private or non-public
+  matching posts only in search results when allowed, but never another user’s
+  private posts.
 - Empty search behaves like the default paginated listing.
 - Repeated identical requests within 30 seconds can use cached results without
   leaking viewer-specific data.

@@ -18,12 +18,12 @@ public sealed class PublicPostSearchAuthenticatedTests : IClassFixture<BlogPlatf
         var fixtures = await SearchPostTestData.InsertPrivateVisibilityFixturesAsync(_factory.Database);
         using var client = await ApiAuthenticationTestHelper.CreateUserClientAsync(_factory);
 
-        var response = await client.GetAsync($"/api/posts?q={SearchPostTestData.SharedSearchTerm}");
+        var response = await client.GetAsync($"/api/posts?q={SearchPostTestData.SharedSearchTerm}&page=1&pageSize=10");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.Contains(posts!, post => post.Id == fixtures.OwnedPrivatePostId);
+        Assert.Contains(posts!.Items, post => post.Id == fixtures.OwnedPrivatePostId);
     }
 
     [Fact]
@@ -37,12 +37,12 @@ public sealed class PublicPostSearchAuthenticatedTests : IClassFixture<BlogPlatf
             publishDate: DateTimeOffset.UtcNow.AddDays(7));
         using var client = await ApiAuthenticationTestHelper.CreateUserClientAsync(_factory);
 
-        var response = await client.GetAsync("/api/posts?q=Scheduled+Search+Result");
+        var response = await client.GetAsync("/api/posts?q=Scheduled+Search+Result&page=1&pageSize=10");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.Contains(posts!, p => p.Id == scheduledPostId);
+        Assert.Contains(posts!.Items, p => p.Id == scheduledPostId);
     }
 
     [Fact]
@@ -56,12 +56,12 @@ public sealed class PublicPostSearchAuthenticatedTests : IClassFixture<BlogPlatf
             publishDate: DateTimeOffset.UtcNow.AddDays(7));
         using var client = await ApiAuthenticationTestHelper.CreateUserClientAsync(_factory);
 
-        var response = await client.GetAsync("/api/posts?q=Other+Users+Scheduled+Post");
+        var response = await client.GetAsync("/api/posts?q=Other+Users+Scheduled+Post&page=1&pageSize=10");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.DoesNotContain(posts!, p => p.Id == scheduledPostId);
+        Assert.DoesNotContain(posts!.Items, p => p.Id == scheduledPostId);
     }
 
     [Fact]
@@ -71,11 +71,11 @@ public sealed class PublicPostSearchAuthenticatedTests : IClassFixture<BlogPlatf
         var fixtures = await SearchPostTestData.InsertPrivateVisibilityFixturesAsync(_factory.Database);
         using var client = await ApiAuthenticationTestHelper.CreateUserClientAsync(_factory);
 
-        var response = await client.GetAsync($"/api/posts?q={SearchPostTestData.SharedSearchTerm}");
+        var response = await client.GetAsync($"/api/posts?q={SearchPostTestData.SharedSearchTerm}&page=1&pageSize=10");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var posts = await response.Content.ReadFromJsonAsync<List<PublicPostSummaryResponse>>();
+        var posts = await response.Content.ReadFromJsonAsync<PaginatedPublicPostResponse>();
         Assert.NotNull(posts);
-        Assert.DoesNotContain(posts!, post => post.Id == fixtures.OtherUsersPrivatePostId);
+        Assert.DoesNotContain(posts!.Items, post => post.Id == fixtures.OtherUsersPrivatePostId);
     }
 }
